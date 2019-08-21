@@ -16,6 +16,9 @@ public class Vehicule {
     private String modele;
     private int nbPlaceDispo;
 
+    public Vehicule() {
+    }
+
     public Vehicule(String immatriculation, String marque, String modele, int nbPlaceDispo) {
         this.immatriculation = immatriculation;
         this.marque = marque;

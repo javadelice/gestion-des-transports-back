@@ -16,6 +16,10 @@ public class AnnonceCovoit {
     private Vehicule vehicule;
     private LocalDateTime dateTime;
 
+
+    public AnnonceCovoit() {
+    }
+
     public AnnonceCovoit(Collegue conducteur, Itineraire itineraire, Vehicule vehicule, LocalDateTime dateTime) {
         this.conducteur = conducteur;
         this.itineraire = itineraire;

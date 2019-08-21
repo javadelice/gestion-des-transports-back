@@ -1,17 +1,16 @@
 package dev;
 
-import dev.domain.Collegue;
-import dev.domain.Role;
-import dev.domain.RoleCollegue;
-import dev.domain.Version;
-import dev.repository.CollegueRepo;
-import dev.repository.VersionRepo;
+import dev.domain.*;
+import dev.repository.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Arrays;
 
 /**
@@ -25,12 +24,20 @@ public class StartupListener {
     private VersionRepo versionRepo;
     private PasswordEncoder passwordEncoder;
     private CollegueRepo collegueRepo;
+    private AnnonceCovoitRepo annonceCovoitRepo;
+    private ItineraireRepo itineraireRepo;
+    private VehiculeRepo vehiculeRepo;
 
-    public StartupListener(@Value("${app.version}") String appVersion, VersionRepo versionRepo, PasswordEncoder passwordEncoder, CollegueRepo collegueRepo) {
+    public StartupListener(@Value("${app.version}") String appVersion, VersionRepo versionRepo, PasswordEncoder passwordEncoder,
+                           CollegueRepo collegueRepo, AnnonceCovoitRepo annonceCovoitRepo,
+                           ItineraireRepo itineraireRepo, VehiculeRepo vehiculeRepo) {
         this.appVersion = appVersion;
         this.versionRepo = versionRepo;
         this.passwordEncoder = passwordEncoder;
         this.collegueRepo = collegueRepo;
+        this.annonceCovoitRepo = annonceCovoitRepo;
+        this.itineraireRepo = itineraireRepo;
+        this.vehiculeRepo = vehiculeRepo;
     }
 
     @EventListener(ContextRefreshedEvent.class)
@@ -54,6 +61,17 @@ public class StartupListener {
         col2.setMotDePasse(passwordEncoder.encode("superpass"));
         col2.setRoles(Arrays.asList(new RoleCollegue(col2, Role.ROLE_UTILISATEUR)));
         this.collegueRepo.save(col2);
+
+        //Création d'un jeu de donnée pour une reservation
+
+        Itineraire itineraire = new Itineraire("Montpellier","Nantes","7h",825);
+        this.itineraireRepo.save(itineraire);
+        Vehicule vehicule = new Vehicule("AB-344-CA","Renault","Clio",3);
+        this.vehiculeRepo.save(vehicule);
+        AnnonceCovoit annonceCovoit = new AnnonceCovoit(col2,itineraire,vehicule, LocalDateTime.of(LocalDate.of(2019,9,3), LocalTime.of(8,30)));
+        this.annonceCovoitRepo.save(annonceCovoit);
+
+
     }
 
 }

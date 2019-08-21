@@ -16,6 +16,9 @@ public class Itineraire {
    private String duree;
    private float distance;
 
+    public Itineraire() {
+    }
+
     public Itineraire(String adresseDepart, String adresseDest, String duree, float distance) {
         this.adresseDepart = adresseDepart;
         this.adresseDest = adresseDest;

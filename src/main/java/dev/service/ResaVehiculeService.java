@@ -15,10 +15,13 @@ public class ResaVehiculeService {
 
     @Autowired
     private ResaVehiculeRepository resaVehiculeRepo;
-
+    
+    
     public List<ResaVehicule> getResaV() {
-
-        return resaVehiculeRepo.findAll().stream().filter(resa -> resa.getDateDebutResaV().isAfter(LocalDateTime.now()))
+        
+        return resaVehiculeRepo.findAll()
+                .stream()
+                .filter(resa -> resa.getDateDebutResaV().isAfter(LocalDateTime.now()))
                 .collect(Collectors.toList());
     }
 }

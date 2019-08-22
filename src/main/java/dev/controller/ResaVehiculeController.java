@@ -16,7 +16,7 @@ public class ResaVehiculeController {
     @Autowired
     private ResaVehiculeService resaVehiculeService;
     
-    @RequestMapping(method = RequestMethod.GET, path="/reservation")
+    @RequestMapping(method = RequestMethod.GET, path="/reservations")
     public List<ResaVehicule> reservation(){
         return resaVehiculeService.getResaV();
     }

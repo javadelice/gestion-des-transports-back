@@ -13,8 +13,8 @@ import javax.persistence.Table;
 public class ResaVehicule {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int idResV;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer idResV;
 
     private LocalDateTime dateDebutResaV;
     private LocalDateTime dateFinResV;
@@ -27,6 +27,19 @@ public class ResaVehicule {
 
     public ResaVehicule(LocalDateTime dateDebutResaV, LocalDateTime dateFinResV, String immatriculation, String marque,
             int modele) {
+        this.dateDebutResaV = dateDebutResaV;
+        this.dateFinResV = dateFinResV;
+        this.immatriculation = immatriculation;
+        this.marque = marque;
+        this.modele = modele;
+    }
+
+    
+    
+    
+    public ResaVehicule(Integer idResV, LocalDateTime dateDebutResaV, LocalDateTime dateFinResV, String immatriculation,
+            String marque, int modele) {
+        this.idResV = idResV;
         this.dateDebutResaV = dateDebutResaV;
         this.dateFinResV = dateFinResV;
         this.immatriculation = immatriculation;

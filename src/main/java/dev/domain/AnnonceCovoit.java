@@ -1,12 +1,14 @@
 package dev.domain;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
 @Entity
@@ -15,30 +17,38 @@ public class AnnonceCovoit {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
-	@ManyToOne
-	private Collegue conducteur;
-	@OneToOne
+	/*
+	 * @ManyToOne private Collegue conducteur;
+	 */
+
+	@OneToOne(cascade = { CascadeType.ALL })
+	@JoinColumn(name = "itineraire_id")
 	private Itineraire itineraire;
-	@OneToOne
+
+	@OneToOne(cascade = { CascadeType.ALL })
+	@JoinColumn(name = "vehiucle_id")
 	private Vehicule vehicule;
-	private LocalDateTime dateDeDepart;
+
+	private LocalTime heureDeDepart;
+	private LocalDate dateDeDepart;
 
 	public AnnonceCovoit() {
 	}
 
-	public AnnonceCovoit(Collegue conducteur, Itineraire itineraire, Vehicule vehicule, LocalDateTime dateDeDepart) {
-		this.conducteur = conducteur;
+	public AnnonceCovoit(Itineraire itineraire, Vehicule vehicule, LocalDate dateDeDepart, LocalTime heureDeDepart) {
+		super();
 		this.itineraire = itineraire;
 		this.vehicule = vehicule;
 		this.dateDeDepart = dateDeDepart;
+		this.heureDeDepart = heureDeDepart;
 	}
 
-	public Vehicule getVehicule() {
-		return vehicule;
+	public int getId() {
+		return id;
 	}
 
-	public void setVehicule(Vehicule vehicule) {
-		this.vehicule = vehicule;
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public Itineraire getItineraire() {
@@ -49,21 +59,41 @@ public class AnnonceCovoit {
 		this.itineraire = itineraire;
 	}
 
-	public LocalDateTime getDateDeDepart() {
+	public Vehicule getVehicule() {
+		return vehicule;
+	}
+
+	public void setVehicule(Vehicule vehicule) {
+		this.vehicule = vehicule;
+	}
+
+	public LocalTime getHeureDeDepart() {
+		return heureDeDepart;
+	}
+
+	public void setHeureDeDepart(LocalTime heureDeDepart) {
+		this.heureDeDepart = heureDeDepart;
+	}
+
+	public LocalDate getDateDeDepart() {
 		return dateDeDepart;
 	}
 
-	public void setDateDeDepart(LocalDateTime dateDeDepart) {
+	public void setDateDeDepart(LocalDate dateDeDepart) {
 		this.dateDeDepart = dateDeDepart;
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Annonce [vehicule=");
-		builder.append(vehicule);
+		builder.append("AnnonceCovoit [id=");
+		builder.append(id);
 		builder.append(", itineraire=");
 		builder.append(itineraire);
+		builder.append(", vehicule=");
+		builder.append(vehicule);
+		builder.append(", heureDeDepart=");
+		builder.append(heureDeDepart);
 		builder.append(", dateDeDepart=");
 		builder.append(dateDeDepart);
 		builder.append("]");
@@ -75,6 +105,8 @@ public class AnnonceCovoit {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((dateDeDepart == null) ? 0 : dateDeDepart.hashCode());
+		result = prime * result + ((heureDeDepart == null) ? 0 : heureDeDepart.hashCode());
+		result = prime * result + id;
 		result = prime * result + ((itineraire == null) ? 0 : itineraire.hashCode());
 		result = prime * result + ((vehicule == null) ? 0 : vehicule.hashCode());
 		return result;
@@ -93,6 +125,13 @@ public class AnnonceCovoit {
 			if (other.dateDeDepart != null)
 				return false;
 		} else if (!dateDeDepart.equals(other.dateDeDepart))
+			return false;
+		if (heureDeDepart == null) {
+			if (other.heureDeDepart != null)
+				return false;
+		} else if (!heureDeDepart.equals(other.heureDeDepart))
+			return false;
+		if (id != other.id)
 			return false;
 		if (itineraire == null) {
 			if (other.itineraire != null)

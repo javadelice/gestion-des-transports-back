@@ -8,14 +8,19 @@ public class ReservationCovoit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @OneToOne
+    @ManyToOne
     private AnnonceCovoit annonceCovoit;
-    @OneToMany
-    private List<Collegue> passagers;
+    @ManyToOne
+    private Collegue passagers;
 
-    public ReservationCovoit(AnnonceCovoit annonceCovoit, List<Collegue> passagers) {
+
+    public ReservationCovoit() {
+    }
+
+    public ReservationCovoit(AnnonceCovoit annonceCovoit, Collegue passagers) {
         this.annonceCovoit = annonceCovoit;
         this.passagers = passagers;
+
     }
 
     public int getId() {
@@ -34,11 +39,11 @@ public class ReservationCovoit {
         this.annonceCovoit = annonceCovoit;
     }
 
-    public List<Collegue> getPassagers() {
+    public Collegue getPassagers() {
         return passagers;
     }
 
-    public void setPassagers(List<Collegue> passagers) {
+    public void setPassagers(Collegue passagers) {
         this.passagers = passagers;
     }
 }

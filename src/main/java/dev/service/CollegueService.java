@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import dev.controller.vm.CollegueVM;
 import dev.domain.Collegue;
 import dev.repository.CollegueRepo;
 
@@ -21,10 +22,14 @@ public class CollegueService {
 
     }
 	
-	public List<Collegue> lister() {
+	public List<CollegueVM> lister() {
         return collegueRepo.findAll()
                 .stream()
-                .map(c -> new Collegue(c.getMatricule(), c.getNom(), c.getPrenom(), c.getRoles()))
+                .map(c -> {
+                	Collegue col = new Collegue(c.getMatricule(), c.getEmail(), c.getNom(), c.getPrenom(), c.getRoles());
+                	return new CollegueVM(col);
+                	}
+                )
                 .collect(Collectors.toList());
     }
 	

@@ -72,9 +72,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                  // en cas d'erreur, un code 403 est envoyé
                 .exceptionHandling().authenticationEntryPoint((request, response, authException) -> response.setStatus(HttpServletResponse.SC_FORBIDDEN))
+                
                 .and()
+                .authorizeRequests()
+                .antMatchers("/h2-console/**").permitAll()
+                
                 // toutes les requêtes doivent être authentifiées
-                .authorizeRequests().anyRequest().authenticated()
+                .anyRequest().authenticated()
+                .and().headers().frameOptions().disable()
                 .and()
                 // génération d'un formulaire de login
                 // il faut produire une requête avec les caractéristiques suivantes :

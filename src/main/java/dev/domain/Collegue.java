@@ -36,9 +36,10 @@ public class Collegue {
     
     
 
-	public Collegue(String matricule, String nom, String prenom, List<RoleCollegue> roles) {
+	public Collegue(String matricule, String email, String nom, String prenom, List<RoleCollegue> roles) {
 		super();
 		this.matricule = matricule;
+		this.email = email;
 		this.nom = nom;
 		this.prenom = prenom;
 		this.roles = roles;

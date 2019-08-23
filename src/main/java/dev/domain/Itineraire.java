@@ -23,8 +23,8 @@ public class Itineraire {
 	public Itineraire(String adresseDepart, String adresseDestination, String dureeDeTrajet, Integer distance) {
 		this.adresseDepart = adresseDepart;
 		this.adresseDestination = adresseDestination;
-		this.dureeDeTrajet = dureeDeTrajet;
-		this.distance = distance;
+		this.dureeDeTrajet = "3h54";
+		this.distance = 356;
 	}
 
 	public String getAdresseDepart() {

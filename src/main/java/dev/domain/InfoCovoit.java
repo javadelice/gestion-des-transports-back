@@ -16,13 +16,11 @@ public class InfoCovoit {
 	public InfoCovoit() {
 	}
 
-	public InfoCovoit(String adresseDepart, String adresseDestination, String dureeDeTrajet, Integer distance, String immatriculation, String marque,
+	public InfoCovoit(String adresseDepart, String adresseDestination, String immatriculation, String marque,
 	        String modele, Integer nombrePassager, String heureDeDepart, String dateDeDepart) {
 		super();
 		this.adresseDepart = adresseDepart;
 		this.adresseDestination = adresseDestination;
-		this.dureeDeTrajet = dureeDeTrajet;
-		this.distance = distance;
 		this.immatriculation = immatriculation;
 		this.marque = marque;
 		this.modele = modele;

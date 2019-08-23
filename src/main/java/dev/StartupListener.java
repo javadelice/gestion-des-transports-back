@@ -63,12 +63,9 @@ public class StartupListener {
         col2.setRoles(Arrays.asList(new RoleCollegue(col2, Role.ROLE_UTILISATEUR)));
         this.collegueRepo.save(col2);
         
-        resaVehiculeRepo.save(new ResaVehicule(1,LocalDateTime.of(2019, 8, 22, 17, 30), LocalDateTime.of(2019, 8, 25, 12, 30), "AA-2520-BB",
-                "Renault", 2001));
-        resaVehiculeRepo.save(new ResaVehicule(2,LocalDateTime.of(2019, 8, 28, 11, 00), LocalDateTime.of(2019, 8, 31, 12, 30), "AC-2520-DE",
-                "Peugeot", 2009));
-        resaVehiculeRepo.save(new ResaVehicule(3,LocalDateTime.of(2017, 12, 01, 11, 00), LocalDateTime.of(2017, 12, 01, 15, 00), "AC-2520-DE",
-                "Peugeot", 2009));
+        resaVehiculeRepo.save(new ResaVehicule(1L,LocalDateTime.of(2019, 8, 23, 17, 30), LocalDateTime.of(2019, 8, 25, 12, 30)));
+        resaVehiculeRepo.save(new ResaVehicule(2L,LocalDateTime.of(2019, 8, 28, 11, 00), LocalDateTime.of(2019, 8, 31, 12, 30)));
+        resaVehiculeRepo.save(new ResaVehicule(3L,LocalDateTime.of(2017, 12, 01, 11, 00), LocalDateTime.of(2017, 12, 01, 15, 00)));
     }
 
 }

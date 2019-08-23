@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import dev.domain.ResaVehicule;
 
-public interface ResaVehiculeRepository extends JpaRepository<ResaVehicule, Integer>{
+public interface ResaVehiculeRepository extends JpaRepository<ResaVehicule, Long>{
     
 }

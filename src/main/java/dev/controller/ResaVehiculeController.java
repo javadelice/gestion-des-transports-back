@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import dev.domain.ResaVehicule;
+import dev.controller.dto.ResaVehiculeDto;
 import dev.service.ResaVehiculeService;
 
 @RestController
@@ -17,7 +17,7 @@ public class ResaVehiculeController {
     private ResaVehiculeService resaVehiculeService;
     
     @RequestMapping(method = RequestMethod.GET, path="/reservations")
-    public List<ResaVehicule> reservation(){
-        return resaVehiculeService.getResaV();
+    public List<ResaVehiculeDto> reservation(){
+        return resaVehiculeService.getReserveationEnCours();
     }
 }

@@ -2,10 +2,14 @@ package dev.domain;
 
 import java.time.LocalDateTime;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -14,44 +18,36 @@ public class ResaVehicule {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idResV;
+    private Long idResV;
 
     private LocalDateTime dateDebutResaV;
     private LocalDateTime dateFinResV;
-    private String immatriculation;
-    private String marque;
-    private int modele;
+
+    @ManyToOne
+    @JoinColumn(name = "collegue_id")
+    private Collegue passager;
+
+    @OneToMany(mappedBy = "vehiculeSociete", cascade = CascadeType.PERSIST)
+    private VehiculeSociete vehiculeSociete;
 
     public ResaVehicule() {
     }
 
-    public ResaVehicule(LocalDateTime dateDebutResaV, LocalDateTime dateFinResV, String immatriculation, String marque,
-            int modele) {
-        this.dateDebutResaV = dateDebutResaV;
-        this.dateFinResV = dateFinResV;
-        this.immatriculation = immatriculation;
-        this.marque = marque;
-        this.modele = modele;
-    }
-
-    
-    
-    
-    public ResaVehicule(Integer idResV, LocalDateTime dateDebutResaV, LocalDateTime dateFinResV, String immatriculation,
-            String marque, int modele) {
+    public ResaVehicule(Long idResV, LocalDateTime dateDebutResaV, LocalDateTime dateFinResV, Collegue passager,
+            VehiculeSociete vehiculeSociete) {
+        super();
         this.idResV = idResV;
         this.dateDebutResaV = dateDebutResaV;
         this.dateFinResV = dateFinResV;
-        this.immatriculation = immatriculation;
-        this.marque = marque;
-        this.modele = modele;
+        this.passager = passager;
+        this.vehiculeSociete = vehiculeSociete;
     }
 
-    public int getIdResV() {
+    public Long getIdResV() {
         return idResV;
     }
 
-    public void setIdResV(int idResV) {
+    public void setIdResV(Long idResV) {
         this.idResV = idResV;
     }
 
@@ -71,28 +67,20 @@ public class ResaVehicule {
         this.dateFinResV = dateFinResV;
     }
 
-    public String getImmatriculation() {
-        return immatriculation;
+    public Collegue getPassager() {
+        return passager;
     }
 
-    public void setImmatriculation(String immatriculation) {
-        this.immatriculation = immatriculation;
+    public void setPassager(Collegue passager) {
+        this.passager = passager;
     }
 
-    public String getMarque() {
-        return marque;
+    public VehiculeSociete getVehiculeSociete() {
+        return vehiculeSociete;
     }
 
-    public void setMarque(String marque) {
-        this.marque = marque;
-    }
-
-    public int getModele() {
-        return modele;
-    }
-
-    public void setModele(int modele) {
-        this.modele = modele;
+    public void setVehiculeSociete(VehiculeSociete vehiculeSociete) {
+        this.vehiculeSociete = vehiculeSociete;
     }
 
     @Override
@@ -104,12 +92,10 @@ public class ResaVehicule {
         builder.append(dateDebutResaV);
         builder.append(", dateFinResV=");
         builder.append(dateFinResV);
-        builder.append(", immatriculation=");
-        builder.append(immatriculation);
-        builder.append(", marque=");
-        builder.append(marque);
-        builder.append(", modele=");
-        builder.append(modele);
+        builder.append(", passager=");
+        builder.append(passager);
+        builder.append(", vehiculeSociete=");
+        builder.append(vehiculeSociete);
         builder.append("]");
         return builder.toString();
     }

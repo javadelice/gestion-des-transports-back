@@ -44,5 +44,26 @@ public class CovoitService {
         }
         return annonceCovoitList;
     }
+    public List<AnnonceCovoit> getLesAnnonceOldReservedBy(String email){
+        Optional<Collegue> colOpt = this.collegueRepo.findByEmail(email);
+        List<ReservationCovoit> reservationCovoitList = new ArrayList<>();
+        colOpt.ifPresent(col->{
+            Optional<List<ReservationCovoit>> optionalReservationCovoitList = this.reservationCovoitRepo.getAllByPassagers(col);
+            optionalReservationCovoitList.ifPresent(mesResa->{
+                for(ReservationCovoit resa : mesResa){
+                    reservationCovoitList.add(resa);
+                }
+            });
+        });
+        List<AnnonceCovoit> annonceCovoitList = new ArrayList<>();
+        if(reservationCovoitList.size() > 0){
+            for(ReservationCovoit resa : reservationCovoitList){
+                Optional<AnnonceCovoit> annonceCovoitOpt = this.annonceCovoitRepo.findById(resa.getId()).filter(annonceCovoit -> annonceCovoit.getDateTime().isBefore(LocalDateTime.now()));
+                annonceCovoitOpt.ifPresent(annonceCovoit-> annonceCovoitList.add(annonceCovoit));
+            }
+
+        }
+        return annonceCovoitList;
+    }
 
 }

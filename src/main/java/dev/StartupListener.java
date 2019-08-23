@@ -94,6 +94,18 @@ public class StartupListener {
         ReservationCovoit reservationCovoit3 = new ReservationCovoit(annonceCovoit2,col1);
         this.reservationCovoitRepo.save(reservationCovoit3);
 
+        for(int i = 0;i<15;i++){
+            this.reservationCovoitRepo.save(
+                    new ReservationCovoit(
+                            this.annonceCovoitRepo.save(
+                                    new AnnonceCovoit(col2,
+                                            itineraire1,
+                                            vehicule,
+                                            LocalDateTime.of(LocalDate.of(2019,7,i+1),
+                                                    LocalTime.of(8,30)))),
+                            col1));
+        }
+
 
 
     }

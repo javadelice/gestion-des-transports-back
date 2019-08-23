@@ -38,4 +38,23 @@ public class ReservationCovoitController {
                 })
                 .collect(Collectors.toList());
     }
+
+    @Secured("ROLE_UTILISATEUR")
+    @RequestMapping(method = RequestMethod.GET,
+            path = "/collaborateur/reservations_old")
+    public List<AnnonceCovoitDTO> getListResaOld(){
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        List<AnnonceCovoit> annonceCovoitList = this.covoitService.getLesAnnonceOldReservedBy(email);
+        return annonceCovoitList.stream()
+                .map(annonce->{
+                    AnnonceCovoitDTO annonceCovoitDTO = new AnnonceCovoitDTO();
+                    annonceCovoitDTO.setId(annonce.getId());
+                    annonceCovoitDTO.setCollegue(new CollegueDTO(annonce.getConducteur()));
+                    annonceCovoitDTO.setItineraire(annonce.getItineraire());
+                    annonceCovoitDTO.setVehicule(annonce.getVehicule());
+                    annonceCovoitDTO.setDateTime(annonce.getDateTime());
+                    return annonceCovoitDTO;
+                })
+                .collect(Collectors.toList());
+    }
 }

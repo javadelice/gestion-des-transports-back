@@ -1,7 +1,6 @@
 package dev.domain;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 public class ReservationCovoit {
@@ -20,7 +19,6 @@ public class ReservationCovoit {
     public ReservationCovoit(AnnonceCovoit annonceCovoit, Collegue passagers) {
         this.annonceCovoit = annonceCovoit;
         this.passagers = passagers;
-
     }
 
     public int getId() {

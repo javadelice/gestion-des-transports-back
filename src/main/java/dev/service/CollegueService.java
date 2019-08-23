@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository;
 
 import dev.controller.vm.CollegueVM;
 import dev.domain.Collegue;
+import dev.domain.Role;
+import dev.domain.RoleCollegue;
 import dev.repository.CollegueRepo;
 
 
@@ -40,4 +42,18 @@ public class CollegueService {
     public Collegue chercherParMatricule(String matricule) {
         return collegueRepo.findByMatricule(matricule).orElseThrow(() -> new CollegueNonTrouveException());
     }
+    
+    public void modifierRoles (String matricule, Role roleChauffeur) {
+    	
+    	Collegue collegue = chercherParMatricule(matricule);
+    	
+    	if (!matricule.equals(matricule)) {
+            throw new CollegueNonTrouveException();
+        }
+    	
+    	collegue.setRoles(roleChauffeur);
+    	collegueRepo.save(collegue);
+    	
+    }
+
 }

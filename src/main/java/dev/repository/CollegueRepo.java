@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface CollegueRepo extends JpaRepository<Collegue, Long> {
 
-    Optional<Collegue> findByEmail(String email);
+	Optional<Collegue> findByEmail(String email);
     
     Optional<Collegue> findByMatricule(String matricule);
     

@@ -100,5 +100,10 @@ public class Collegue {
 	public void setMatricule(String matricule) {
 		this.matricule = matricule;
 	}
+
+	public void setRoles(Role roleChauffeur) {
+		// TODO Auto-generated method stub
+		
+	}
     
 }

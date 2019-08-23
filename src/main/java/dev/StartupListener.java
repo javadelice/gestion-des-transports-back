@@ -40,20 +40,31 @@ public class StartupListener {
         // Création de deux utilisateurs
 
         Collegue col1 = new Collegue();
+        col1.setMatricule("1234-5678");
         col1.setNom("Admin");
         col1.setPrenom("DEV");
         col1.setEmail("admin@dev.fr");
         col1.setMotDePasse(passwordEncoder.encode("superpass"));
-        col1.setRoles(Arrays.asList(new RoleCollegue(col1, Role.ROLE_ADMINISTRATEUR), new RoleCollegue(col1, Role.ROLE_UTILISATEUR)));
+        col1.setRoles(Arrays.asList(new RoleCollegue(col1, Role.ROLE_ADMINISTRATEUR), new RoleCollegue(col1, Role.ROLE_COLLABORATEUR)));
         this.collegueRepo.save(col1);
 
         Collegue col2 = new Collegue();
+        col2.setMatricule("0000-0000");
         col2.setNom("User");
         col2.setPrenom("DEV");
         col2.setEmail("user@dev.fr");
         col2.setMotDePasse(passwordEncoder.encode("superpass"));
-        col2.setRoles(Arrays.asList(new RoleCollegue(col2, Role.ROLE_UTILISATEUR)));
+        col2.setRoles(Arrays.asList(new RoleCollegue(col2, Role.ROLE_COLLABORATEUR)));
         this.collegueRepo.save(col2);
+        
+        Collegue col3 = new Collegue();
+        col3.setMatricule("0000-0000");
+        col2.setNom("Dupont");
+        col2.setPrenom("Robert");
+        col2.setEmail("robert.dupont@dev.fr");
+        col2.setMotDePasse(passwordEncoder.encode("superpass"));
+        col2.setRoles(Arrays.asList(new RoleCollegue(col2, Role.ROLE_CHAUFFEUR)));
+        this.collegueRepo.save(col3);
     }
 
 }

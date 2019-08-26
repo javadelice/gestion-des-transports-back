@@ -1,18 +1,19 @@
 package dev.service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import dev.domain.AnnonceCovoit;
 import dev.domain.Collegue;
 import dev.domain.ReservationCovoit;
 import dev.repository.AnnonceCovoitRepo;
 import dev.repository.CollegueRepo;
 import dev.repository.ReservationCovoitRepo;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CovoitService {
@@ -34,10 +35,12 @@ public class CovoitService {
                 }
             });
         });
+        
         List<AnnonceCovoit> annonceCovoitList = new ArrayList<>();
         if(reservationCovoitList.size() > 0){
             for(ReservationCovoit resa : reservationCovoitList){
-                Optional<AnnonceCovoit> annonceCovoitOpt = this.annonceCovoitRepo.findById(resa.getId()).filter(annonceCovoit -> annonceCovoit.getDateTime().isAfter(LocalDateTime.now()));
+                Optional<AnnonceCovoit> annonceCovoitOpt = this.annonceCovoitRepo.findById(resa.getId())
+                		.filter(annonceCovoit -> annonceCovoit.getDateTime().isAfter(LocalDateTime.now()));
                 annonceCovoitOpt.ifPresent(annonceCovoit-> annonceCovoitList.add(annonceCovoit));
             }
 

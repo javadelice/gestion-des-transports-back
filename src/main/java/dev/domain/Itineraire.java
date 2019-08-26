@@ -22,8 +22,8 @@ public class Itineraire {
 	public Itineraire(String adresseDepart, String adresseDest, String duree, float distance) {
 		this.adresseDepart = adresseDepart;
 		this.adresseDest = adresseDest;
-		this.duree = duree;
-		this.distance = distance;
+		this.duree = "2H25"; 
+		this.distance = 250f; 
 	}
 
 	public String getAdresseDepart() {

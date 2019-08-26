@@ -9,9 +9,9 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import dev.controller.dto.ResaVehiculeDto;
 import dev.domain.Collegue;
 import dev.domain.ResaVehicule;
+import dev.dto.ResaVehiculeDto;
 import dev.repository.CollegueRepo;
 import dev.repository.ResaVehiculeRepository;
 

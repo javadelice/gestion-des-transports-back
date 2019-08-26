@@ -23,6 +23,9 @@ public class ResaVehicule {
     private LocalDateTime dateDebutResaV;
     private LocalDateTime dateFinResV;
 
+    /*
+     * passager = collaborateur qui réserve
+     */
     @ManyToOne
     @JoinColumn(name = "collegue_id")
     private Collegue passager;

@@ -8,25 +8,42 @@ import javax.persistence.Table;
 
 @Entity
 @Table
-public abstract class Vehicule {
+public class Vehicule {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idVehiSociete;
+    private Long id;
     private String immatriculation;
     private String marque;
     private int modele;
-    private String categorie;
+    private int nbPlaceDispo;
 
     public Vehicule() {
     }
 
-    public Vehicule(Long idVehiSociete, String immatriculation, String marque, int modele, String categorie) {
-        this.idVehiSociete = idVehiSociete;
+    public Vehicule(Long id, String immatriculation, String marque, int modele, int nbPlaceDispo) {
+        this.id = id;
         this.immatriculation = immatriculation;
         this.marque = marque;
         this.modele = modele;
-        this.categorie = categorie;
+        this.nbPlaceDispo = nbPlaceDispo;
+    }
+
+    
+    
+    public Vehicule(String immatriculation, String marque, int modele, int nbPlaceDispo) {
+        this.immatriculation = immatriculation;
+        this.marque = marque;
+        this.modele = modele;
+        this.nbPlaceDispo = nbPlaceDispo;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getImmatriculation() {
@@ -53,37 +70,72 @@ public abstract class Vehicule {
         this.modele = modele;
     }
 
-    public Long getIdVehiSociete() {
-        return idVehiSociete;
+    public int getNbPlaceDispo() {
+        return nbPlaceDispo;
     }
 
-    public void setIdVehiSociete(Long idVehiSociete) {
-        this.idVehiSociete = idVehiSociete;
-    }
-
-    public String getCategorie() {
-        return categorie;
-    }
-
-    public void setCategorie(String categorie) {
-        this.categorie = categorie;
+    public void setNbPlaceDispo(int nbPlaceDispo) {
+        this.nbPlaceDispo = nbPlaceDispo;
     }
 
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("Vehicule [idVehiSociete=");
-        builder.append(idVehiSociete);
+        builder.append("Vehicule [id=");
+        builder.append(id);
         builder.append(", immatriculation=");
         builder.append(immatriculation);
         builder.append(", marque=");
         builder.append(marque);
         builder.append(", modele=");
         builder.append(modele);
-        builder.append(", categorie=");
-        builder.append(categorie);
+        builder.append(", nbPlaceDispo=");
+        builder.append(nbPlaceDispo);
         builder.append("]");
         return builder.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        result = prime * result + ((immatriculation == null) ? 0 : immatriculation.hashCode());
+        result = prime * result + ((marque == null) ? 0 : marque.hashCode());
+        result = prime * result + modele;
+        result = prime * result + nbPlaceDispo;
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Vehicule other = (Vehicule) obj;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        if (immatriculation == null) {
+            if (other.immatriculation != null)
+                return false;
+        } else if (!immatriculation.equals(other.immatriculation))
+            return false;
+        if (marque == null) {
+            if (other.marque != null)
+                return false;
+        } else if (!marque.equals(other.marque))
+            return false;
+        if (modele != other.modele)
+            return false;
+        if (nbPlaceDispo != other.nbPlaceDispo)
+            return false;
+        return true;
     }
 
 }

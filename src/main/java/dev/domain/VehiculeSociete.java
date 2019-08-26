@@ -17,7 +17,7 @@ public class VehiculeSociete extends Vehicule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idVehiSociete;
-
+    private String categorie;
     @ManyToOne
     @JoinColumn(name = "idResV")
     private List<ResaVehicule> resaVehicule;
@@ -25,9 +25,16 @@ public class VehiculeSociete extends Vehicule {
     public VehiculeSociete() {
     }
 
-    public VehiculeSociete(Long idVehiSociete, List<ResaVehicule> resaVehicule) {
+    public VehiculeSociete(Long idVehiSociete, String categorie, List<ResaVehicule> resaVehicule) {
         super();
         this.idVehiSociete = idVehiSociete;
+        this.categorie = categorie;
+        this.resaVehicule = resaVehicule;
+    }
+
+    public VehiculeSociete(String categorie, List<ResaVehicule> resaVehicule) {
+        super();
+        this.categorie = categorie;
         this.resaVehicule = resaVehicule;
     }
 
@@ -45,6 +52,14 @@ public class VehiculeSociete extends Vehicule {
 
     public void setResaVehicule(List<ResaVehicule> resaVehicule) {
         this.resaVehicule = resaVehicule;
+    }
+
+    public String getCategorie() {
+        return categorie;
+    }
+
+    public void setCategorie(String categorie) {
+        this.categorie = categorie;
     }
 
 }

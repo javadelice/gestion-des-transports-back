@@ -78,12 +78,15 @@ public class StartupListener {
         col2.setRoles(Arrays.asList(new RoleCollegue(col2, Role.ROLE_UTILISATEUR)));
         this.collegueRepo.save(col2);
         
-        resaVehiculeRepo.save(new ResaVehicule(1L,LocalDateTime.of(2019, 8, 23, 17, 30), LocalDateTime.of(2019, 8, 25, 12, 30), col2, null));
-        resaVehiculeRepo.save(new ResaVehicule(2L,LocalDateTime.of(2019, 8, 28, 11, 00), LocalDateTime.of(2019, 8, 31, 12, 30), col2, null));
-        resaVehiculeRepo.save(new ResaVehicule(3L,LocalDateTime.of(2017, 12, 01, 11, 00), LocalDateTime.of(2017, 12, 01, 15, 00), col2, null));
-
+        //Création véhicule de société
+        Vehicule vehiculeSo = new Vehicule("AB-344-CA","Renault",2008,3, true);
+        this.vehiculeRepo.save(vehiculeSo);
         
-        
+        //Création des réservations
+        resaVehiculeRepo.save(new ResaVehicule(LocalDateTime.of(2019, 8, 26, 17, 30), LocalDateTime.of(2019, 8, 25, 12, 30), col2, vehiculeSo));
+        resaVehiculeRepo.save(new ResaVehicule(LocalDateTime.of(2019, 8, 28, 11, 00), LocalDateTime.of(2019, 8, 31, 12, 30), col2, vehiculeSo));
+        resaVehiculeRepo.save(new ResaVehicule(LocalDateTime.of(2017, 12, 01, 11, 00), LocalDateTime.of(2017, 12, 01, 15, 00), col2, vehiculeSo));
+   
         
         //Création d'un jeu de donnée pour une reservation
 
@@ -92,7 +95,8 @@ public class StartupListener {
 
         Itineraire itineraire1 = new Itineraire("Nantes","Montpellier","7h",825);
         this.itineraireRepo.save(itineraire1);
-        Vehicule vehicule = new Vehicule("AB-344-CA","Renault",2008,3);
+        
+        Vehicule vehicule = new Vehicule("AB-344-CA","Renault",2008,3, false);
         this.vehiculeRepo.save(vehicule);
 
         //Annonces

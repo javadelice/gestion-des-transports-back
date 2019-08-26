@@ -21,21 +21,17 @@ public class Collegue {
     @OneToMany(mappedBy = "collegue", cascade = CascadeType.PERSIST)
     private List<RoleCollegue> roles;
 
-    @OneToMany(mappedBy = "collegue", cascade = CascadeType.PERSIST)
-    private List<ResaVehicule> resaVehicule;
 
     public Collegue() {
     }
 
-    public Collegue(Long id, String nom, String prenom, String email, String motDePasse, List<RoleCollegue> roles,
-            List<ResaVehicule> resaVehicule) {
+    public Collegue(Long id, String nom, String prenom, String email, String motDePasse, List<RoleCollegue> roles) {
         this.id = id;
         this.nom = nom;
         this.prenom = prenom;
         this.email = email;
         this.motDePasse = motDePasse;
         this.roles = roles;
-        this.resaVehicule = resaVehicule;
     }
 
     public Long getId() {
@@ -84,14 +80,6 @@ public class Collegue {
 
     public void setPrenom(String prenom) {
         this.prenom = prenom;
-    }
-
-    public List<ResaVehicule> getResaVehicule() {
-        return resaVehicule;
-    }
-
-    public void setResaVehicule(List<ResaVehicule> resaVehicule) {
-        this.resaVehicule = resaVehicule;
     }
 
     @Override

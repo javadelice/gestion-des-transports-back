@@ -17,25 +17,26 @@ public class Vehicule {
     private String marque;
     private int modele;
     private int nbPlaceDispo;
+    private boolean estSociete;
 
     public Vehicule() {
     }
 
-    public Vehicule(Long id, String immatriculation, String marque, int modele, int nbPlaceDispo) {
+    public Vehicule(Long id, String immatriculation, String marque, int modele, int nbPlaceDispo, boolean estSociete) {
         this.id = id;
         this.immatriculation = immatriculation;
         this.marque = marque;
         this.modele = modele;
         this.nbPlaceDispo = nbPlaceDispo;
+        this.estSociete = estSociete;
     }
 
-    
-    
-    public Vehicule(String immatriculation, String marque, int modele, int nbPlaceDispo) {
+    public Vehicule(String immatriculation, String marque, int modele, int nbPlaceDispo, boolean estSociete) {
         this.immatriculation = immatriculation;
         this.marque = marque;
         this.modele = modele;
         this.nbPlaceDispo = nbPlaceDispo;
+        this.estSociete = estSociete;
     }
 
     public Long getId() {
@@ -76,6 +77,14 @@ public class Vehicule {
 
     public void setNbPlaceDispo(int nbPlaceDispo) {
         this.nbPlaceDispo = nbPlaceDispo;
+    }
+
+    public boolean isEstSociete() {
+        return estSociete;
+    }
+
+    public void setEstSociete(boolean estSociete) {
+        this.estSociete = estSociete;
     }
 
     @Override

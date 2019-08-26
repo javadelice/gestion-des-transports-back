@@ -1,13 +1,15 @@
 package dev.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
-import dev.dto.ResaVehiculeDto;
+import dev.dto.ResaVehiculeDTO;
 import dev.service.ResaVehiculeService;
 
 @RestController
@@ -15,9 +17,19 @@ public class ResaVehiculeController {
 
     @Autowired
     private ResaVehiculeService resaVehiculeService;
-    
-    @RequestMapping(method = RequestMethod.GET, path="/reservations")
-    public List<ResaVehiculeDto> reservation(){
-        return resaVehiculeService.getReserveationEnCours();
+
+    @Secured("ROLE_UTILISATEUR")
+    @RequestMapping(method = RequestMethod.GET, path = "/reservations")
+    public List<ResaVehiculeDTO> reservation() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        return resaVehiculeService.getReserveationEnCours(email).stream()
+           .map(reservation -> {
+            ResaVehiculeDTO resaVehiculeDto = new ResaVehiculeDTO();
+            resaVehiculeDto.setIdResaDto(reservation.getIdResV());
+            resaVehiculeDto.setDateDeDebut(reservation.getDateDebutResaV());
+            resaVehiculeDto.setDateDeFin(reservation.getDateFinResV());
+            resaVehiculeDto.setVehiculeSociete(reservation.getVehicule());
+            return resaVehiculeDto;
+        }).collect(Collectors.toList());
     }
 }

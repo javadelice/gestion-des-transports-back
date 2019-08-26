@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import dev.domain.Collegue;
 import dev.domain.ResaVehicule;
-import dev.dto.ResaVehiculeDto;
 import dev.repository.CollegueRepo;
 import dev.repository.ResaVehiculeRepository;
 
@@ -25,17 +24,19 @@ public class ResaVehiculeService {
     private ResaVehiculeRepository resaVehiculeRepo;
 
     public List<ResaVehicule> getReserveationEnCours(String email) {
-        Optional<Collegue> collegue = this.collegueRepos.findByEmail(email);
+        Optional<Collegue> collegueOpt = this.collegueRepos.findByEmail(email);
 
         List<ResaVehicule> reservationVehicule = new ArrayList<>();
-        collegue.ifPresent(reservation -> {
-            for (ResaVehicule resa : reservation) {
-                Optional<ResaVehicule> resaVehicule = this.resaVehiculeRepo.findById(resa.getIdResV())
-                        .filter(resaV -> resaV.getDateDebutResaV().isAfter(LocalDateTime.now()));
-                reservationVehicule.add(resa);
-            }
+        collegueOpt.ifPresent(collegue -> {
+            Optional<List<ResaVehicule>> reservationOpt = this.resaVehiculeRepo.getAllByPassager(collegue);
+            reservationOpt.ifPresent(reservations -> {
+                for (ResaVehicule resa : reservations) {
+                    reservationVehicule.add(resa);
+                }
+            });
         });
-        return reservationVehicule;
 
+        return reservationVehicule.stream().filter(resa -> resa.getDateDebutResaV().isAfter(LocalDateTime.now()))
+                .collect(Collectors.toList());
     }
 }

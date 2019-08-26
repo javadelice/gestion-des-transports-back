@@ -2,18 +2,15 @@ package dev.domain;
 
 import java.time.LocalDateTime;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "Vehicule")
+@Table
 public class ResaVehicule {
 
     @Id
@@ -27,23 +24,29 @@ public class ResaVehicule {
      * passager = collaborateur qui réserve
      */
     @ManyToOne
-    @JoinColumn(name = "collegue_id")
     private Collegue passager;
 
-    @OneToMany(mappedBy = "vehiculeSociete", cascade = CascadeType.PERSIST)
-    private VehiculeSociete vehiculeSociete;
+    @ManyToOne
+    private Vehicule vehicule;
 
     public ResaVehicule() {
     }
 
     public ResaVehicule(Long idResV, LocalDateTime dateDebutResaV, LocalDateTime dateFinResV, Collegue passager,
-            VehiculeSociete vehiculeSociete) {
-        super();
+            Vehicule vehicule) {
         this.idResV = idResV;
         this.dateDebutResaV = dateDebutResaV;
         this.dateFinResV = dateFinResV;
         this.passager = passager;
-        this.vehiculeSociete = vehiculeSociete;
+        this.vehicule = vehicule;
+    }
+
+    public ResaVehicule(LocalDateTime dateDebutResaV, LocalDateTime dateFinResV, Collegue passager,
+            Vehicule vehicule) {
+        this.dateDebutResaV = dateDebutResaV;
+        this.dateFinResV = dateFinResV;
+        this.passager = passager;
+        this.vehicule = vehicule;
     }
 
     public Long getIdResV() {
@@ -78,12 +81,12 @@ public class ResaVehicule {
         this.passager = passager;
     }
 
-    public VehiculeSociete getVehiculeSociete() {
-        return vehiculeSociete;
+    public Vehicule getVehicule() {
+        return vehicule;
     }
 
-    public void setVehiculeSociete(VehiculeSociete vehiculeSociete) {
-        this.vehiculeSociete = vehiculeSociete;
+    public void setVehicule(Vehicule vehicule) {
+        this.vehicule = vehicule;
     }
 
     @Override
@@ -97,8 +100,8 @@ public class ResaVehicule {
         builder.append(dateFinResV);
         builder.append(", passager=");
         builder.append(passager);
-        builder.append(", vehiculeSociete=");
-        builder.append(vehiculeSociete);
+        builder.append(", vehicule=");
+        builder.append(vehicule);
         builder.append("]");
         return builder.toString();
     }

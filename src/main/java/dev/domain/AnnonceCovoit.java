@@ -14,6 +14,7 @@ public class AnnonceCovoit {
     private Itineraire itineraire;
     @ManyToOne
     private Vehicule vehicule;
+    
     private LocalDateTime dateTime;
 
 

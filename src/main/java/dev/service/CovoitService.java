@@ -9,6 +9,7 @@ import dev.repository.ReservationCovoitRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,13 @@ public class CovoitService {
     			.stream()
     			.map(c -> new AnnonceCovoit(c.getDateTime(), c.getItineraire().getAdresseDepart(), c.getItineraire().getAdresseDest(), c.getVehicule().getModele(), c.getConducteur().getNom(), c.getConducteur().getPrenom(), c.getVehicule().getNbPlaceDispo()))
     			.collect(Collectors.toList());
+
+    	
+    }
+    
+    public List<AnnonceCovoit> selectByDate (LocalDateTime start, LocalDateTime end) {
+    	
+    	return annonceCovoitRepo.getAllByDateTimeBetween(start, end);
     }
 
     public List<AnnonceCovoit> getLesAnnonceReservedBy(String email){

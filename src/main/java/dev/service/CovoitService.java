@@ -35,9 +35,9 @@ public class CovoitService {
     }
     
     public List<AnnonceCovoit> selectByDate (LocalDateTime start, LocalDateTime end) {
-    	
     	return annonceCovoitRepo.getAllByDateTimeBetween(start, end);
     }
+    
 
     public List<AnnonceCovoit> getLesAnnonceReservedBy(String email){
         Optional<Collegue> colOpt = this.collegueRepo.findByEmail(email);

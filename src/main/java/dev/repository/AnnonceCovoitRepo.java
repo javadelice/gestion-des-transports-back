@@ -12,5 +12,6 @@ public interface AnnonceCovoitRepo extends JpaRepository<AnnonceCovoit, Integer>
 
 	List<AnnonceCovoit> getAllByDateTimeBetween (LocalDateTime start, LocalDateTime end);
 	
+	
 }
 

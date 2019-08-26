@@ -1,30 +1,18 @@
-package dev.domain;
+package dev.dto;
 
-import javax.persistence.*;
+import dev.domain.Itineraire;
+import dev.domain.Vehicule;
+
 import java.time.LocalDateTime;
 
-@Entity
-public class AnnonceCovoit {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class AnnonceCovoitDTO {
     private int id;
-    @ManyToOne
-    private Collegue conducteur;
-    @ManyToOne
+    private CollegueDTO collegue;
     private Itineraire itineraire;
-    @ManyToOne
     private Vehicule vehicule;
     private LocalDateTime dateTime;
 
-
-    public AnnonceCovoit() {
-    }
-
-    public AnnonceCovoit(Collegue conducteur, Itineraire itineraire, Vehicule vehicule, LocalDateTime dateTime) {
-        this.conducteur = conducteur;
-        this.itineraire = itineraire;
-        this.vehicule = vehicule;
-        this.dateTime = dateTime;
+    public AnnonceCovoitDTO() {
     }
 
     public int getId() {
@@ -35,12 +23,12 @@ public class AnnonceCovoit {
         this.id = id;
     }
 
-    public Collegue getConducteur() {
-        return conducteur;
+    public CollegueDTO getCollegue() {
+        return collegue;
     }
 
-    public void setConducteur(Collegue conducteur) {
-        this.conducteur = conducteur;
+    public void setCollegue(CollegueDTO collegue) {
+        this.collegue = collegue;
     }
 
     public Itineraire getItineraire() {

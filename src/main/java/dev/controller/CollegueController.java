@@ -30,7 +30,7 @@ public class CollegueController {
 	@Secured("ROLE_ADMINISTRATEUR")
 	@RequestMapping(
             method = RequestMethod.GET,
-            path = "/chauffeurs"
+           path = "/chauffeurs"
             )
     
     public List<CollegueVM> getAllCollegues (){
@@ -54,5 +54,5 @@ public class CollegueController {
         	collegueService.modifierRoles(matricule, Role.ROLE_CHAUFFEUR);
         } 
 
-    }
+  }
 }

@@ -36,7 +36,7 @@ public class ResaVehiculeService {
             });
         });
 
-        return reservationVehicule.stream().filter(resa -> resa.getDateDebutResaV().isAfter(LocalDateTime.now()))
+        return reservationVehicule.stream().filter(resa -> resa.getDateFinResV().isAfter(LocalDateTime.now()))
                 .collect(Collectors.toList());
     }
     
@@ -55,7 +55,7 @@ public class ResaVehiculeService {
             });
         });
 
-        return reservationVehicule.stream().filter(resa -> resa.getDateDebutResaV().isBefore(LocalDateTime.now()))
+        return reservationVehicule.stream().filter(resa -> resa.getDateFinResV().isBefore(LocalDateTime.now()))
                 .collect(Collectors.toList());
     }
     

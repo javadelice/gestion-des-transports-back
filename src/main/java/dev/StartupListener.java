@@ -1,5 +1,11 @@
 package dev;
 
+import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.Arrays;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import dev.domain.*;
 import dev.repository.*;
 import org.springframework.beans.factory.annotation.Value;
@@ -8,10 +14,14 @@ import org.springframework.context.event.EventListener;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.Arrays;
+import dev.domain.Collegue;
+import dev.domain.ResaVehicule;
+import dev.domain.Role;
+import dev.domain.RoleCollegue;
+import dev.domain.Version;
+import dev.repository.CollegueRepo;
+import dev.repository.ResaVehiculeRepository;
+import dev.repository.VersionRepo;
 
 /**
  * Code de démarrage de l'application.
@@ -29,6 +39,9 @@ public class StartupListener {
     private VehiculeRepo vehiculeRepo;
     private ReservationCovoitRepo reservationCovoitRepo;
 
+    @Autowired
+    private ResaVehiculeRepository resaVehiculeRepo;
+    
     public StartupListener(@Value("${app.version}") String appVersion, VersionRepo versionRepo, PasswordEncoder passwordEncoder,
                            CollegueRepo collegueRepo, AnnonceCovoitRepo annonceCovoitRepo,
                            ItineraireRepo itineraireRepo, VehiculeRepo vehiculeRepo,
@@ -64,7 +77,28 @@ public class StartupListener {
         col2.setMotDePasse(passwordEncoder.encode("superpass"));
         col2.setRoles(Arrays.asList(new RoleCollegue(col2, Role.ROLE_UTILISATEUR)));
         this.collegueRepo.save(col2);
+        
+        //Création véhicule de société
+        Vehicule vehiculeSo = new Vehicule("AC-985-CA","Peugeot",2008,3, true);
+        this.vehiculeRepo.save(vehiculeSo);
+        
+        Vehicule vehiculeSo2 = new Vehicule("VF-133-ZE","Ford",1999,3, true);
+        this.vehiculeRepo.save(vehiculeSo2);
+        
+        Vehicule vehiculeSo3 = new Vehicule("XS-975-HT","Renault",2001,3, true);
+        this.vehiculeRepo.save(vehiculeSo3);
+        
+        Vehicule vehiculeSo4 = new Vehicule("XS-975-HT","Renault",2001,3, true);
+        this.vehiculeRepo.save(vehiculeSo4);
+        
+        //Création des réservations
+        resaVehiculeRepo.save(new ResaVehicule(LocalDateTime.of(2019, 8, 26, 17, 30), LocalDateTime.of(2019, 9, 25, 12, 30), col2, vehiculeSo));
+        resaVehiculeRepo.save(new ResaVehicule(LocalDateTime.of(2019, 8, 28, 11, 00), LocalDateTime.of(2019, 8, 31, 12, 30), col1, vehiculeSo2));
+        resaVehiculeRepo.save(new ResaVehicule(LocalDateTime.of(2017, 12, 01, 11, 00), LocalDateTime.of(2017, 12, 01, 15, 00), col2, vehiculeSo3));
+        resaVehiculeRepo.save(new ResaVehicule(LocalDateTime.of(2017, 01, 01, 11, 00), LocalDateTime.of(2017, 01, 11, 15, 00), col1, vehiculeSo3));
 
+   
+        
         //Création d'un jeu de donnée pour une reservation
 
         Itineraire itineraire = new Itineraire("Montpellier","Nantes","7h",825);
@@ -72,7 +106,8 @@ public class StartupListener {
 
         Itineraire itineraire1 = new Itineraire("Nantes","Montpellier","7h",825);
         this.itineraireRepo.save(itineraire1);
-        Vehicule vehicule = new Vehicule("AB-344-CA","Renault","Clio",3);
+        
+        Vehicule vehicule = new Vehicule("AB-344-CA","Renault",2008,3, false);
         this.vehiculeRepo.save(vehicule);
 
         //Annonces

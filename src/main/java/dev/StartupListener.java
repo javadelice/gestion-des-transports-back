@@ -65,6 +65,14 @@ public class StartupListener {
         col2.setRoles(Arrays.asList(new RoleCollegue(col2, Role.ROLE_UTILISATEUR)));
         this.collegueRepo.save(col2);
 
+        Collegue col3 = new Collegue();
+        col3.setNom("Chauffeur");
+        col3.setPrenom("Michel");
+        col3.setEmail("michou@dev.fr");
+        col3.setMotDePasse(passwordEncoder.encode("s"));
+        col3.setRoles(Arrays.asList(new RoleCollegue(col3, Role.ROLE_UTILISATEUR), new RoleCollegue(col3, Role.ROLE_CHAUFFEUR)));
+        this.collegueRepo.save(col3);
+
         //Création d'un jeu de donnée pour une reservation
 
         Itineraire itineraire = new Itineraire("Montpellier","Nantes","7h",825);

@@ -19,8 +19,9 @@ import dev.domain.AnnonceCovoit;
 import dev.domain.InfoCovoit;
 import dev.domain.Itineraire;
 import dev.domain.Vehicule;
-import dev.dto.AnnonceCovoitDTO;
 import dev.dto.CollegueDTO;
+import dev.dto.ListeAnnonceCovoitDTO;
+import dev.exception.AnnonceInvalidException;
 import dev.service.AnnonceCovoitService;
 
 @CrossOrigin(allowCredentials = "true")
@@ -30,56 +31,75 @@ public class AnnonceCovoitController {
 
 	@Autowired
 	AnnonceCovoitService annonceService;
+	
+	private static final int PLACE_MINIMUM_DISPONIBLE = 1;
+	private static final int PLACE_MAXIMUM_DISPONIBLE = 20; 
 
 	@RequestMapping(method = RequestMethod.POST, path = "/annonces/creer")
-	public void addAnnonceCovoit(@RequestBody InfoCovoit infoCo) {
+	public void addAnnonceCovoit(@RequestBody InfoCovoit infoCo) throws AnnonceInvalidException {
 
 		String email = SecurityContextHolder.getContext().getAuthentication().getName();
-		Itineraire itineraire = new Itineraire(infoCo.getAdresseDepart(), infoCo.getAdresseDestination(), infoCo.getDuree(), infoCo.getDistance());
-		Vehicule vehicule = new Vehicule(infoCo.getImmatriculation(), infoCo.getMarque(), infoCo.getModele(), infoCo.getNbPlaceDispo());
+
 		LocalDate dateDeDepart = LocalDate.parse(infoCo.getDateDeDepart(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 		String infoHoraire = infoCo.getHeureDeDepart() + ":" + infoCo.getMinuteDeDepart();
 		LocalTime horaireDeDepart = LocalTime.parse(infoHoraire, DateTimeFormatter.ofPattern("HH:mm"));
-		LocalDateTime dateTime = LocalDateTime.of(dateDeDepart, horaireDeDepart);
-
-		annonceService.ajouterUneAnnonce(email, itineraire, vehicule, dateTime);
-	}
-	
-	@RequestMapping(method = RequestMethod.GET, path = "/annonces")
-	public List<AnnonceCovoitDTO> getListAnnonces () {
-		//Je récupère le conducteur connecté
-		String email = SecurityContextHolder.getContext().getAuthentication().getName();
-		// Je créé une liste avec les éléments d'une annonce
-        List<AnnonceCovoit> annonceCovoitList = this.annonceService.getAnnoncesEnCours(email);
-        return annonceCovoitList.stream()
-                .map(annonce->{
-                    AnnonceCovoitDTO annonceCovoitDTO = new AnnonceCovoitDTO();
-                    annonceCovoitDTO.setId(annonce.getId());
-                    annonceCovoitDTO.setCollegue(new CollegueDTO(annonce.getConducteur()));
-                    annonceCovoitDTO.setItineraire(annonce.getItineraire());
-                    annonceCovoitDTO.setVehicule(annonce.getVehicule());
-                    annonceCovoitDTO.setDateTime(annonce.getDateTime());
-                    return annonceCovoitDTO;
-                })
-                .collect(Collectors.toList());	
-        }
-	
-	@RequestMapping(method = RequestMethod.GET, path = "/annonces_old")
-	public List<AnnonceCovoitDTO> getOldListAnnonces(){
-		String email = SecurityContextHolder.getContext().getAuthentication().getName(); 
 		
-		List <AnnonceCovoit> annonceCovoitList = this.annonceService.getAnciennesAnnonces(email); 
-		 return annonceCovoitList.stream()
-	                .map(annonce->{
-	                    AnnonceCovoitDTO annonceCovoitDTO = new AnnonceCovoitDTO();
-	                    annonceCovoitDTO.setId(annonce.getId());
-	                    annonceCovoitDTO.setCollegue(new CollegueDTO(annonce.getConducteur()));
-	                    annonceCovoitDTO.setItineraire(annonce.getItineraire());
-	                    annonceCovoitDTO.setVehicule(annonce.getVehicule());
-	                    annonceCovoitDTO.setDateTime(annonce.getDateTime());
-	                    return annonceCovoitDTO;
-	                })
-	                .collect(Collectors.toList());	
+		if (dateDeDepart !=null
+				&& dateDeDepart.isAfter(LocalDate.now())
+				&& horaireDeDepart !=null
+				&& horaireDeDepart.isAfter(LocalTime.now())
+				&& infoCo.getNbPlaceDispo() >= PLACE_MINIMUM_DISPONIBLE
+				&& infoCo.getNbPlaceDispo() <= PLACE_MAXIMUM_DISPONIBLE
+				&& infoCo.getMarque() !=null
+				&& infoCo.getModele() !=null
+				)
+		{
+			Itineraire itineraire = new Itineraire(infoCo.getAdresseDepart(), infoCo.getAdresseDestination(), infoCo.getDuree(), infoCo.getDistance());
+			Vehicule vehicule = new Vehicule(infoCo.getImmatriculation().toUpperCase(), infoCo.getMarque(), infoCo.getModele(), infoCo.getNbPlaceDispo());
+			LocalDateTime dateTime = LocalDateTime.of(dateDeDepart, horaireDeDepart);
+
+			annonceService.ajouterUneAnnonce(email, itineraire, vehicule, dateTime);
+		}
+		
+		throw new AnnonceInvalidException("erreur de saisies");
+
 	}
-	
+
+	@RequestMapping(method = RequestMethod.GET, path = "/annonces")
+	public List<ListeAnnonceCovoitDTO> getListAnnonces() {
+		String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+		List<AnnonceCovoit> annonceCovoitList = this.annonceService.getAnnoncesEnCours(email);
+		return annonceCovoitList.stream()
+		        .map(annonce -> {
+			        ListeAnnonceCovoitDTO annonceCovoitDTO = new ListeAnnonceCovoitDTO();
+			        annonceCovoitDTO.setId(annonce.getId());
+			        annonceCovoitDTO.setCollegue(new CollegueDTO(annonce.getConducteur()));
+			        annonceCovoitDTO.setItineraire(annonce.getItineraire());
+			        annonceCovoitDTO.setVehicule(annonce.getVehicule());
+			        annonceCovoitDTO.setDateTime(annonce.getDateTime());
+			        annonceCovoitDTO.setNbVoyageurs(this.annonceService.getNbPassagers(annonce));
+			        return annonceCovoitDTO;
+		        })
+		        .collect(Collectors.toList());
+	}
+
+	@RequestMapping(method = RequestMethod.GET, path = "/annonces_old")
+	public List<ListeAnnonceCovoitDTO> getOldListAnnonces() {
+		String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+		List<AnnonceCovoit> annonceCovoitList = this.annonceService.getAnciennesAnnonces(email);
+		return annonceCovoitList.stream()
+		        .map(annonce -> {
+			        ListeAnnonceCovoitDTO annonceCovoitDTO = new ListeAnnonceCovoitDTO();
+			        annonceCovoitDTO.setId(annonce.getId());
+			        annonceCovoitDTO.setCollegue(new CollegueDTO(annonce.getConducteur()));
+			        annonceCovoitDTO.setItineraire(annonce.getItineraire());
+			        annonceCovoitDTO.setVehicule(annonce.getVehicule());
+			        annonceCovoitDTO.setDateTime(annonce.getDateTime());
+			        annonceCovoitDTO.setNbVoyageurs(this.annonceService.getNbPassagers(annonce));
+			        return annonceCovoitDTO;
+		        })
+		        .collect(Collectors.toList());
+	}
 }

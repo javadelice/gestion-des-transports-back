@@ -1,9 +1,9 @@
 package dev.dto;
 
+import java.time.LocalDateTime;
+
 import dev.domain.Itineraire;
 import dev.domain.Vehicule;
-
-import java.time.LocalDateTime;
 
 public class AnnonceCovoitDTO {
     private int id;
@@ -54,4 +54,5 @@ public class AnnonceCovoitDTO {
     public void setDateTime(LocalDateTime dateTime) {
         this.dateTime = dateTime;
     }
+
 }

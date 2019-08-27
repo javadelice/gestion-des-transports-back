@@ -1,17 +1,30 @@
 package dev;
 
-import dev.domain.*;
-import dev.repository.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.Arrays;
+import dev.domain.AnnonceCovoit;
+import dev.domain.Collegue;
+import dev.domain.Itineraire;
+import dev.domain.ReservationCovoit;
+import dev.domain.Role;
+import dev.domain.RoleCollegue;
+import dev.domain.Vehicule;
+import dev.domain.Version;
+import dev.repository.AnnonceCovoitRepo;
+import dev.repository.CollegueRepo;
+import dev.repository.ItineraireRepo;
+import dev.repository.ReservationCovoitRepo;
+import dev.repository.VehiculeRepo;
+import dev.repository.VersionRepo;
 
 /**
  * Code de démarrage de l'application.
@@ -64,6 +77,14 @@ public class StartupListener {
         col2.setMotDePasse(passwordEncoder.encode("superpass"));
         col2.setRoles(Arrays.asList(new RoleCollegue(col2, Role.ROLE_UTILISATEUR)));
         this.collegueRepo.save(col2);
+        
+        Collegue col3 = new Collegue();
+        col3.setNom("TestAnnonce");
+        col3.setPrenom("VED");
+        col3.setEmail("usertest@dev.fr");
+        col3.setMotDePasse(passwordEncoder.encode("superpass"));
+        col3.setRoles(Arrays.asList(new RoleCollegue(col3, Role.ROLE_UTILISATEUR)));
+        this.collegueRepo.save(col3);
 
         //Création d'un jeu de donnée pour une reservation
 
@@ -93,6 +114,9 @@ public class StartupListener {
 
         ReservationCovoit reservationCovoit3 = new ReservationCovoit(annonceCovoit2,col1);
         this.reservationCovoitRepo.save(reservationCovoit3);
+        
+        ReservationCovoit reservationCovoit4 = new ReservationCovoit(annonceCovoit2, col3);
+        this.reservationCovoitRepo.save(reservationCovoit4);
 
         for(int i = 0;i<15;i++){
             this.reservationCovoitRepo.save(

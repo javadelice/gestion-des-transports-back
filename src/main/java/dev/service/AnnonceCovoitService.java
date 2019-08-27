@@ -12,11 +12,13 @@ import org.springframework.stereotype.Service;
 import dev.domain.AnnonceCovoit;
 import dev.domain.Collegue;
 import dev.domain.Itineraire;
+import dev.domain.ReservationCovoit;
 import dev.domain.Vehicule;
 import dev.repository.AnnonceCovoitRepo;
 import dev.repository.AnnonceRepo;
 import dev.repository.CollegueRepo;
 import dev.repository.ItineraireRepo;
+import dev.repository.ReservationCovoitRepo;
 import dev.repository.VehiculeRepo;
 
 @Service
@@ -38,15 +40,20 @@ public class AnnonceCovoitService {
 	@Autowired
 	private AnnonceCovoitRepo annonceCoRepo;
 
+	@Autowired
+	private ReservationCovoitRepo reservationRepo;
+	
+	
+
 	public void ajouterUneAnnonce(String email, Itineraire itineraire, Vehicule vehicule, LocalDateTime dateTime) {
 
 		Optional<Collegue> collegueConnecte = this.collegueRepo.findByEmail(email);
+		
 		collegueConnecte.ifPresent(conducteur -> {
 			itiRepo.save(itineraire);
 			vehiRepo.save(vehicule);
 			annonceRepo.save(new AnnonceCovoit(conducteur, itineraire, vehicule, dateTime));
 		});
-
 	}
 
 	public List<AnnonceCovoit> getAnnoncesEnCours(String email) {
@@ -60,7 +67,7 @@ public class AnnonceCovoitService {
 		        .collect(Collectors.toList());
 		return optionalCovoitList;
 	}
-	
+
 	public List<AnnonceCovoit> getAnciennesAnnonces(String email) {
 
 		Optional<Collegue> collegueConnecte = this.collegueRepo.findByEmail(email);
@@ -72,6 +79,20 @@ public class AnnonceCovoitService {
 		        .collect(Collectors.toList());
 		return optionalCovoitList;
 	}
+
+	public int getNbPassagers(AnnonceCovoit annonceCovoit) {
+		Optional<List<ReservationCovoit>> optCovoitList = this.reservationRepo.getAllByAnnonceCovoit(annonceCovoit);
+
+		int nbPassager = 0;
+
+		List<ReservationCovoit> resaList = new ArrayList<>();
+		optCovoitList.ifPresent(covoitList -> {
+			for (ReservationCovoit resa : covoitList) {
+				resaList.add(resa);
+			}
+		});
+		nbPassager = resaList.size();
+		return nbPassager;
+	}
+
 }
-
-

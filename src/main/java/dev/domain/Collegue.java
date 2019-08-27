@@ -29,11 +29,15 @@ public class Collegue {
 	}
     
     public Collegue(String matricule, String nom, String prenom) {
-		this.matricule = matricule;
+		this(nom, prenom);
+    	this.matricule = matricule;
+		
+	}
+    
+    public Collegue(String nom, String prenom) {
 		this.nom = nom;
 		this.prenom = prenom;
 	}
-    
     
 
 	public Collegue(String matricule, String email, String nom, String prenom, List<RoleCollegue> roles) {

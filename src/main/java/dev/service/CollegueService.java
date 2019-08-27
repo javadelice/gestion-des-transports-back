@@ -10,6 +10,7 @@ import dev.controller.vm.CollegueVM;
 import dev.domain.Collegue;
 import dev.domain.Role;
 import dev.domain.RoleCollegue;
+import dev.exceptions.CollegueNonTrouveException;
 import dev.repository.CollegueRepo;
 
 
@@ -38,22 +39,11 @@ public class CollegueService {
 	public List<Collegue> chercherParNom(String nom) {
         return collegueRepo.findByNom(nom);
     }
+	
+	public Collegue chercherParEmail (String email) {
+		return collegueRepo.findByEmail(email)
+				.orElseThrow(() -> new CollegueNonTrouveException());
+	}
 
-    public Collegue chercherParMatricule(String matricule) {
-        return collegueRepo.findByMatricule(matricule).orElseThrow(() -> new CollegueNonTrouveException());
-    }
-    
-    public void modifierRoles (String matricule, Role roleChauffeur) {
-    	
-    	Collegue collegue = chercherParMatricule(matricule);
-    	
-    	if (!matricule.equals(matricule)) {
-            throw new CollegueNonTrouveException();
-        }
-    	
-    	collegue.setRoles(roleChauffeur);
-    	collegueRepo.save(collegue);
-    	
-    }
 
 }

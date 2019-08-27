@@ -11,6 +11,7 @@ public class AnnonceCovoitDTO {
     private Itineraire itineraire;
     private Vehicule vehicule;
     private LocalDateTime dateTime;
+    private int nbPlacesLibres;
 
     public AnnonceCovoitDTO() {
     }
@@ -54,4 +55,14 @@ public class AnnonceCovoitDTO {
     public void setDateTime(LocalDateTime dateTime) {
         this.dateTime = dateTime;
     }
+
+	public int getNbPlacesLibres() {
+		return nbPlacesLibres;
+	}
+
+	public void setNbPlacesLibres(int nbPlacesLibres) {
+		this.nbPlacesLibres = nbPlacesLibres;
+	}
+    
+    
 }

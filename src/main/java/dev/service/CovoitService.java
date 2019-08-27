@@ -3,6 +3,9 @@ package dev.service;
 import dev.domain.AnnonceCovoit;
 import dev.domain.Collegue;
 import dev.domain.ReservationCovoit;
+import dev.dto.AnnonceCovoitDTO;
+import dev.dto.CollegueDTO;
+import dev.exceptions.AnnonceNonTrouveException;
 import dev.repository.AnnonceCovoitRepo;
 import dev.repository.CollegueRepo;
 import dev.repository.ReservationCovoitRepo;
@@ -25,14 +28,39 @@ public class CovoitService {
     @Autowired
     ReservationCovoitRepo reservationCovoitRepo;
     
-    public List<AnnonceCovoit> getAllAnoncesCovoit () {
-    	return annonceCovoitRepo.findAll()
-    			.stream()
-    			.map(c -> new AnnonceCovoit(c.getDateTime(), c.getItineraire().getAdresseDepart(), c.getItineraire().getAdresseDest(), c.getVehicule().getModele(), c.getConducteur().getNom(), c.getConducteur().getPrenom(), c.getVehicule().getNbPlaceDispo()))
-    			.collect(Collectors.toList());
-
+    
+    public void addBooking (AnnonceCovoit annonce, Collegue passager) {    	
+    	int nbPlaceLibre = this.getNbPlacesLibres(annonce);    	
+    	ReservationCovoit resa = new ReservationCovoit(annonce, passager);
     	
+    	if(nbPlaceLibre > 0) {  		
+    		annonceCovoitRepo.save(annonce);
+    		collegueRepo.save(passager);
+    		reservationCovoitRepo.save(resa);
+    	}
+ 
+    	else {
+    		throw new VoyageCompletException("Plus de disponibilités pour ce trajet");
+    	}
     }
+    
+    public int getNbPlacesLibres (AnnonceCovoit annonce) {
+    	Optional<List<ReservationCovoit>> optionalReservationCovoitList = this.reservationCovoitRepo.getAllByAnnonceCovoit(annonce);
+    	List<ReservationCovoit> resaCovoit = new ArrayList<>();
+    	optionalReservationCovoitList.ifPresent(listResa -> {
+    		for(ReservationCovoit resa : listResa) {
+    			resaCovoit.add(resa);
+    		}
+    	});
+    	int nbResa = resaCovoit.size();
+    	int nbPlaceLibre = annonce.getVehicule().getNbPlaceDispo()-nbResa;
+    	return nbPlaceLibre;
+    }
+    
+    public AnnonceCovoit getResaCovoit (int id) {
+    	return annonceCovoitRepo.findById(id).orElseThrow(() -> new AnnonceNonTrouveException ());
+    }
+    
     
     public List<AnnonceCovoit> selectByDate (LocalDateTime start, LocalDateTime end) {
     	return annonceCovoitRepo.getAllByDateTimeBetween(start, end);

@@ -101,8 +101,17 @@ public class StartupListener {
 
         Itineraire itineraire1 = new Itineraire("Nantes","Montpellier","7h",825);
         this.itineraireRepo.save(itineraire1);
+        
+        Itineraire itineraire2 = new Itineraire("Paris","Nantes","3h45",385);
+        this.itineraireRepo.save(itineraire2);
+        
+        
+        //Vehicules
         Vehicule vehicule = new Vehicule("AB-344-CA","Renault","Clio",3);
         this.vehiculeRepo.save(vehicule);
+        
+        Vehicule vehicule2 = new Vehicule("DT-811-PP","Audi","A3",3);
+        this.vehiculeRepo.save(vehicule2);
 
         //Annonces
         AnnonceCovoit annonceCovoit = new AnnonceCovoit(col2,itineraire,vehicule, LocalDateTime.of(LocalDate.of(2019,9,3), LocalTime.of(8,30)));
@@ -113,6 +122,11 @@ public class StartupListener {
 
         AnnonceCovoit annonceCovoit2 = new AnnonceCovoit(col2,itineraire1,vehicule,LocalDateTime.of(LocalDate.of(2019,8,3), LocalTime.of(8,30)));
         this.annonceCovoitRepo.save(annonceCovoit2);
+        
+        AnnonceCovoit annonceCovoit3 = new AnnonceCovoit(col4,itineraire2,vehicule2,LocalDateTime.of(LocalDate.of(2019,9,3), LocalTime.of(10,30)));
+        this.annonceCovoitRepo.save(annonceCovoit3);
+        
+        
         //Reservations
         ReservationCovoit reservationCovoit1 = new ReservationCovoit(annonceCovoit,col1);
         this.reservationCovoitRepo.save(reservationCovoit1);

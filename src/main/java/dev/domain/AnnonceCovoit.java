@@ -28,11 +28,8 @@ public class AnnonceCovoit {
         this.dateTime = dateTime;
     }
     
-
-    public AnnonceCovoit(LocalDateTime dateTime2, String adresseDepart, String adresseDest, String modele, String nom,
-			String prenom, int nbPlaceDispo) {
-		// TODO Auto-generated constructor stub
-	}
+    
+    
 
 	public int getId() {
         return id;

@@ -1,13 +1,13 @@
-package dev.service;
+package dev.exceptions;
 
 public class CollegueNonTrouveException extends RuntimeException {
 
     
-    CollegueNonTrouveException(){
+    public CollegueNonTrouveException(){
         super();
     }
     
-    CollegueNonTrouveException(String s){
+    public CollegueNonTrouveException(String s){
         super(s);
     }
     

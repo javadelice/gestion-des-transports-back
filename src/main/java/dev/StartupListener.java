@@ -79,13 +79,24 @@ public class StartupListener {
         this.collegueRepo.save(col2);
         
         //Création véhicule de société
-        Vehicule vehiculeSo = new Vehicule("AB-344-CA","Renault",2008,3, true);
+        Vehicule vehiculeSo = new Vehicule("AC-985-CA","Peugeot",2008,3, true);
         this.vehiculeRepo.save(vehiculeSo);
         
+        Vehicule vehiculeSo2 = new Vehicule("VF-133-ZE","Ford",1999,3, true);
+        this.vehiculeRepo.save(vehiculeSo2);
+        
+        Vehicule vehiculeSo3 = new Vehicule("XS-975-HT","Renault",2001,3, true);
+        this.vehiculeRepo.save(vehiculeSo3);
+        
+        Vehicule vehiculeSo4 = new Vehicule("XS-975-HT","Renault",2001,3, true);
+        this.vehiculeRepo.save(vehiculeSo4);
+        
         //Création des réservations
-        resaVehiculeRepo.save(new ResaVehicule(LocalDateTime.of(2019, 8, 26, 17, 30), LocalDateTime.of(2019, 8, 25, 12, 30), col2, vehiculeSo));
-        resaVehiculeRepo.save(new ResaVehicule(LocalDateTime.of(2019, 8, 28, 11, 00), LocalDateTime.of(2019, 8, 31, 12, 30), col2, vehiculeSo));
-        resaVehiculeRepo.save(new ResaVehicule(LocalDateTime.of(2017, 12, 01, 11, 00), LocalDateTime.of(2017, 12, 01, 15, 00), col2, vehiculeSo));
+        resaVehiculeRepo.save(new ResaVehicule(LocalDateTime.of(2019, 8, 26, 17, 30), LocalDateTime.of(2019, 9, 25, 12, 30), col2, vehiculeSo));
+        resaVehiculeRepo.save(new ResaVehicule(LocalDateTime.of(2019, 8, 28, 11, 00), LocalDateTime.of(2019, 8, 31, 12, 30), col1, vehiculeSo2));
+        resaVehiculeRepo.save(new ResaVehicule(LocalDateTime.of(2017, 12, 01, 11, 00), LocalDateTime.of(2017, 12, 01, 15, 00), col2, vehiculeSo3));
+        resaVehiculeRepo.save(new ResaVehicule(LocalDateTime.of(2017, 01, 01, 11, 00), LocalDateTime.of(2017, 01, 11, 15, 00), col1, vehiculeSo3));
+
    
         
         //Création d'un jeu de donnée pour une reservation

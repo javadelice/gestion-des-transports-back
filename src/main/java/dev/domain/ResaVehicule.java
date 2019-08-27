@@ -25,7 +25,6 @@ public class ResaVehicule {
      */
     @ManyToOne
     private Collegue passager;
-
     @ManyToOne
     private Vehicule vehicule;
 

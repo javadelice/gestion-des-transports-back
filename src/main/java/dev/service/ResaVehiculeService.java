@@ -23,7 +23,7 @@ public class ResaVehiculeService {
     @Autowired
     private ResaVehiculeRepository resaVehiculeRepo;
 
-    public List<ResaVehicule> getReserveationEnCours(String email) {
+    public List<ResaVehicule> getReservertionEnCours(String email) {
         Optional<Collegue> collegueOpt = this.collegueRepos.findByEmail(email);
 
         List<ResaVehicule> reservationVehicule = new ArrayList<>();
@@ -39,4 +39,25 @@ public class ResaVehiculeService {
         return reservationVehicule.stream().filter(resa -> resa.getDateDebutResaV().isAfter(LocalDateTime.now()))
                 .collect(Collectors.toList());
     }
+    
+    
+    
+    public List<ResaVehicule> getHistorique(String email) {
+        Optional<Collegue> collegueOpt = this.collegueRepos.findByEmail(email);
+
+        List<ResaVehicule> reservationVehicule = new ArrayList<>();
+        collegueOpt.ifPresent(collegue -> {
+            Optional<List<ResaVehicule>> reservationOpt = this.resaVehiculeRepo.getAllByPassager(collegue);
+            reservationOpt.ifPresent(reservations -> {
+                for (ResaVehicule resa : reservations) {
+                    reservationVehicule.add(resa);
+                }
+            });
+        });
+
+        return reservationVehicule.stream().filter(resa -> resa.getDateDebutResaV().isBefore(LocalDateTime.now()))
+                .collect(Collectors.toList());
+    }
+    
+    
 }

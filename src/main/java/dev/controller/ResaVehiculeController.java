@@ -22,8 +22,21 @@ public class ResaVehiculeController {
     @RequestMapping(method = RequestMethod.GET, path = "/reservations")
     public List<ResaVehiculeDTO> reservation() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        return resaVehiculeService.getReserveationEnCours(email).stream()
-           .map(reservation -> {
+        return resaVehiculeService.getReservertionEnCours(email).stream().map(reservation -> {
+            ResaVehiculeDTO resaVehiculeDto = new ResaVehiculeDTO();
+            resaVehiculeDto.setIdResaDto(reservation.getIdResV());
+            resaVehiculeDto.setDateDeDebut(reservation.getDateDebutResaV());
+            resaVehiculeDto.setDateDeFin(reservation.getDateFinResV());
+            resaVehiculeDto.setVehiculeSociete(reservation.getVehicule());
+            return resaVehiculeDto;
+        }).collect(Collectors.toList());
+    }
+
+    @Secured("ROLE_UTILISATEUR")
+    @RequestMapping(method = RequestMethod.GET, path = "/historique")
+    public List<ResaVehiculeDTO> historique() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        return resaVehiculeService.getHistorique(email).stream().map(reservation -> {
             ResaVehiculeDTO resaVehiculeDto = new ResaVehiculeDTO();
             resaVehiculeDto.setIdResaDto(reservation.getIdResV());
             resaVehiculeDto.setDateDeDebut(reservation.getDateDebutResaV());

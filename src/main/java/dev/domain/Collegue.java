@@ -23,7 +23,15 @@ public class Collegue {
 
 
     public Collegue() {
-    }
+
+	}
+
+
+    public Collegue(String nom, String prenom) {
+		this.nom = nom;
+		this.prenom = prenom;
+	}
+
 
     public Collegue(Long id, String nom, String prenom, String email, String motDePasse, List<RoleCollegue> roles) {
         this.id = id;

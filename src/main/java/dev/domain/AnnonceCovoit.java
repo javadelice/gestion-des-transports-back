@@ -14,6 +14,7 @@ public class AnnonceCovoit {
     private Itineraire itineraire;
     @ManyToOne
     private Vehicule vehicule;
+    
     private LocalDateTime dateTime;
 
 
@@ -26,8 +27,11 @@ public class AnnonceCovoit {
         this.vehicule = vehicule;
         this.dateTime = dateTime;
     }
+    
+    
+    
 
-    public int getId() {
+	public int getId() {
         return id;
     }
 

@@ -1,4 +1,4 @@
-package dev.exceptions;
+package dev.exception;
 
 public class CollegueNonTrouveException extends RuntimeException {
 

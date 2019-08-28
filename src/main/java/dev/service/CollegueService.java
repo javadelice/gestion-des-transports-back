@@ -1,7 +1,7 @@
 package dev.service;
 
 import dev.domain.Collegue;
-import dev.exceptions.CollegueNonTrouveException;
+import dev.exception.CollegueNonTrouveException;
 import dev.repository.CollegueRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;

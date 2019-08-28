@@ -56,6 +56,7 @@ public class AnnonceCovoitDTO {
         this.dateTime = dateTime;
     }
 
+
 	public int getNbPlacesLibres() {
 		return nbPlacesLibres;
 	}
@@ -63,6 +64,6 @@ public class AnnonceCovoitDTO {
 	public void setNbPlacesLibres(int nbPlacesLibres) {
 		this.nbPlacesLibres = nbPlacesLibres;
 	}
-    
-    
+
+
 }

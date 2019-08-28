@@ -3,16 +3,31 @@ package dev;
 import dev.domain.*;
 import dev.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.Arrays;
+import dev.domain.AnnonceCovoit;
+import dev.domain.Collegue;
+import dev.domain.Itineraire;
+import dev.domain.ReservationCovoit;
+import dev.domain.Role;
+import dev.domain.RoleCollegue;
+import dev.domain.Vehicule;
+import dev.domain.Version;
+import dev.repository.AnnonceCovoitRepo;
+import dev.repository.CollegueRepo;
+import dev.repository.ItineraireRepo;
+import dev.repository.ReservationCovoitRepo;
+import dev.repository.VehiculeRepo;
+import dev.repository.VersionRepo;
 
 /**
  * Code de démarrage de l'application.
@@ -69,6 +84,14 @@ public class StartupListener {
         col2.setRoles(Arrays.asList(new RoleCollegue(col2, Role.ROLE_UTILISATEUR)));
         this.collegueRepo.save(col2);
 
+        Collegue col9 = new Collegue();
+        col9.setNom("TestAnnonce");
+        col9.setPrenom("VED");
+        col9.setEmail("usertest@dev.fr");
+        col9.setMotDePasse(passwordEncoder.encode("superpass"));
+        col9.setRoles(Arrays.asList(new RoleCollegue(col9, Role.ROLE_UTILISATEUR)));
+        this.collegueRepo.save(col9);
+
         Collegue col3 = new Collegue();
         col3.setNom("Dupont");
         col3.setPrenom("Robert");
@@ -119,8 +142,8 @@ public class StartupListener {
         col7.setPrenom("Michel");
         col7.setEmail("michou@dev.fr");
         col7.setMotDePasse(passwordEncoder.encode("s"));
-        col7.setRoles(Arrays.asList(new RoleCollegue(col3, Role.ROLE_UTILISATEUR), new RoleCollegue(col3, Role.ROLE_CHAUFFEUR)));
-        this.collegueRepo.save(col3);
+        col7.setRoles(Arrays.asList(new RoleCollegue(col7, Role.ROLE_UTILISATEUR), new RoleCollegue(col7, Role.ROLE_CHAUFFEUR)));
+        this.collegueRepo.save(col7);
 
         //Création d'un jeu de donnée pour une reservation
 
@@ -168,6 +191,9 @@ public class StartupListener {
 
         ReservationCovoit reservationCovoit3 = new ReservationCovoit(annonceCovoit2,col1);
         this.reservationCovoitRepo.save(reservationCovoit3);
+
+        ReservationCovoit reservationCovoit4 = new ReservationCovoit(annonceCovoit2, col3);
+        this.reservationCovoitRepo.save(reservationCovoit4);
 
         for(int i = 0;i<15;i++){
             this.reservationCovoitRepo.save(

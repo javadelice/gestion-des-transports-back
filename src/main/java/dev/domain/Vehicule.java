@@ -7,7 +7,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table
 public class Vehicule {
 
     @Id
@@ -22,6 +21,12 @@ public class Vehicule {
     public Vehicule() {
     }
 
+	public Vehicule(String immatriculation, String marque, int modele, int nbPlaceDispo) {
+		this.immatriculation = immatriculation;
+		this.marque = marque;
+		this.modele = modele;
+		this.nbPlaceDispo = nbPlaceDispo;
+	}
     public Vehicule(Long id, String immatriculation, String marque, int modele, int nbPlaceDispo, boolean estSociete) {
         this.id = id;
         this.immatriculation = immatriculation;

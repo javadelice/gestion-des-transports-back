@@ -17,8 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dev.domain.AnnonceCovoit;
 import dev.domain.InfoCovoit;
-import dev.domain.Itineraire;
-import dev.domain.Vehicule;
 import dev.dto.CollegueDTO;
 import dev.dto.ListeAnnonceCovoitDTO;
 import dev.exception.AnnonceInvalidException;
@@ -31,9 +29,6 @@ public class AnnonceCovoitController {
 
 	@Autowired
 	AnnonceCovoitService annonceService;
-	
-	private static final int PLACE_MINIMUM_DISPONIBLE = 1;
-	private static final int PLACE_MAXIMUM_DISPONIBLE = 20; 
 
 	@RequestMapping(method = RequestMethod.POST, path = "/annonces/creer")
 	public void addAnnonceCovoit(@RequestBody InfoCovoit infoCo) throws AnnonceInvalidException {
@@ -43,26 +38,10 @@ public class AnnonceCovoitController {
 		LocalDate dateDeDepart = LocalDate.parse(infoCo.getDateDeDepart(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 		String infoHoraire = infoCo.getHeureDeDepart() + ":" + infoCo.getMinuteDeDepart();
 		LocalTime horaireDeDepart = LocalTime.parse(infoHoraire, DateTimeFormatter.ofPattern("HH:mm"));
+		LocalDateTime dateTime = LocalDateTime.of(dateDeDepart, horaireDeDepart);
 		
-		if (dateDeDepart !=null
-				&& dateDeDepart.isAfter(LocalDate.now())
-				&& horaireDeDepart !=null
-				&& horaireDeDepart.isAfter(LocalTime.now())
-				&& infoCo.getNbPlaceDispo() >= PLACE_MINIMUM_DISPONIBLE
-				&& infoCo.getNbPlaceDispo() <= PLACE_MAXIMUM_DISPONIBLE
-				&& infoCo.getMarque() !=null
-				&& infoCo.getModele() !=null
-				)
-		{
-			Itineraire itineraire = new Itineraire(infoCo.getAdresseDepart(), infoCo.getAdresseDestination(), infoCo.getDuree(), infoCo.getDistance());
-			Vehicule vehicule = new Vehicule(infoCo.getImmatriculation().toUpperCase(), infoCo.getMarque(), infoCo.getModele(), infoCo.getNbPlaceDispo());
-			LocalDateTime dateTime = LocalDateTime.of(dateDeDepart, horaireDeDepart);
-
-			annonceService.ajouterUneAnnonce(email, itineraire, vehicule, dateTime);
-		}
+		this.annonceService.verifierInfos(infoCo, dateTime, email);
 		
-		throw new AnnonceInvalidException("erreur de saisies");
-
 	}
 
 	@RequestMapping(method = RequestMethod.GET, path = "/annonces")

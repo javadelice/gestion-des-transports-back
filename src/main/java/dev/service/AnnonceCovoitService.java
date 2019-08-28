@@ -2,7 +2,9 @@ package dev.service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -11,9 +13,11 @@ import org.springframework.stereotype.Service;
 
 import dev.domain.AnnonceCovoit;
 import dev.domain.Collegue;
+import dev.domain.InfoCovoit;
 import dev.domain.Itineraire;
 import dev.domain.ReservationCovoit;
 import dev.domain.Vehicule;
+import dev.exception.AnnonceInvalidException;
 import dev.repository.AnnonceCovoitRepo;
 import dev.repository.AnnonceRepo;
 import dev.repository.CollegueRepo;
@@ -43,7 +47,39 @@ public class AnnonceCovoitService {
 	@Autowired
 	private ReservationCovoitRepo reservationRepo;
 	
+
+	private static final int PLACE_MINIMUM_DISPONIBLE = 1;
+	private static final int PLACE_MAXIMUM_DISPONIBLE = 20;
+
 	
+	public void verifierInfos(InfoCovoit infoCo, LocalDateTime dateTime, String email) {
+		Map<String, String> erreurs = new HashMap<>();
+
+		if (dateTime.isBefore(LocalDateTime.now())) {
+			erreurs.put("dateDebut", "La date ne peut être antérieur à aujourd hui");
+		}
+
+		if (infoCo.getNbPlaceDispo() > PLACE_MAXIMUM_DISPONIBLE || infoCo.getNbPlaceDispo() < PLACE_MINIMUM_DISPONIBLE) {
+			erreurs.put("nbPlaceDispo", "Le nombre de places doit être compris entre 1 et 20.");
+		}
+
+		if (!erreurs.isEmpty()) {
+			throw new AnnonceInvalidException(erreurs);
+		}
+		if (dateTime != null
+				&& dateTime.isAfter(LocalDateTime.now())
+		        && infoCo.getMarque() != null
+		        && infoCo.getImmatriculation() != null
+		        && infoCo.getModele() != null) {
+
+			Itineraire itineraire = new Itineraire(infoCo.getAdresseDepart(), infoCo.getAdresseDestination(), infoCo.getDuree(),
+			        infoCo.getDistance());
+			Vehicule vehicule = new Vehicule(infoCo.getImmatriculation().toUpperCase(), infoCo.getMarque(), infoCo.getModele(),
+			        infoCo.getNbPlaceDispo());
+			this.ajouterUneAnnonce(email, itineraire, vehicule, dateTime);
+		}
+		
+	}
 
 	public void ajouterUneAnnonce(String email, Itineraire itineraire, Vehicule vehicule, LocalDateTime dateTime) {
 

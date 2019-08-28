@@ -10,8 +10,8 @@ public class RestResponseEntityExceptionHandler {
 	
 	@ExceptionHandler(value = { AnnonceInvalidException.class })
 	protected ResponseEntity<Object> handleConflict(AnnonceInvalidException ex) {
-		String bodyOfResponse = "Impossible de créer l'annonce";
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(bodyOfResponse + ex.getMessage());
+		if (ex.getErreurs().isEmpty())
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getErreurs());	
 	}
-
 }

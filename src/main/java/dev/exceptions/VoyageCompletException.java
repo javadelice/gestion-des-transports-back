@@ -1,12 +1,12 @@
-package dev.service;
+package dev.exceptions;
 
 public class VoyageCompletException extends RuntimeException {
 
-	VoyageCompletException(){
+	public VoyageCompletException(){
         super();
     }
     
-	VoyageCompletException(String s){
+	public VoyageCompletException(String s){
         super(s);
     }
 	

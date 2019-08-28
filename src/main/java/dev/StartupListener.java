@@ -93,7 +93,8 @@ public class StartupListener {
         col5.setMotDePasse(passwordEncoder.encode("superpass"));
         col5.setRoles(Arrays.asList(new RoleCollegue(col5, Role.ROLE_CHAUFFEUR)));
         this.collegueRepo.save(col5);
-
+        
+        
         //Création d'un jeu de donnée pour une reservation
 
         Itineraire itineraire = new Itineraire("Montpellier","Nantes","7h",825);
@@ -125,6 +126,9 @@ public class StartupListener {
         
         AnnonceCovoit annonceCovoit3 = new AnnonceCovoit(col4,itineraire2,vehicule2,LocalDateTime.of(LocalDate.of(2019,9,3), LocalTime.of(10,30)));
         this.annonceCovoitRepo.save(annonceCovoit3);
+        
+        AnnonceCovoit annonceCovoit4 = new AnnonceCovoit(col2,itineraire1,vehicule,LocalDateTime.of(LocalDate.of(2019,9,14), LocalTime.of(14,30)));
+        this.annonceCovoitRepo.save(annonceCovoit4);
         
         
         //Reservations

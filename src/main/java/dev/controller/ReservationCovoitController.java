@@ -62,10 +62,14 @@ public class ReservationCovoitController {
     	LocalTime endTime = LocalTime.of(23, 59);
     	LocalDateTime start = LocalDateTime.of(selectedDate, startTime);
     	LocalDateTime end = LocalDateTime.of(selectedDate, endTime);
-        List<AnnonceCovoit> annonceCovoitList = this.covoitService.selectByDate(start, end);	
+        List<AnnonceCovoit> annonceCovoitList = this.covoitService.selectByDate(start, end);
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        List<AnnonceCovoit> annonceCovoitListReserved = this.covoitService.getLesAnnonceReservedBy(email);
+        
         return annonceCovoitList.stream()
         		.filter(annonce -> annonce.getItineraire().getAdresseDepart().equals(lieuDepart))
         		.filter(annonce -> annonce.getItineraire().getAdresseDest().equals(lieuArrivee))
+        		.filter(annonce -> !annonceCovoitListReserved.contains(annonce))
                 .map(annonce->{
                 	int nbPlaceSLibres = covoitService.getNbPlacesLibres(annonce);
                     AnnonceCovoitDTO annonceCovoitDTO = new AnnonceCovoitDTO();

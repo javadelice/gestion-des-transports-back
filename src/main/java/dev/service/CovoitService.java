@@ -6,6 +6,7 @@ import dev.domain.ReservationCovoit;
 import dev.dto.AnnonceCovoitDTO;
 import dev.dto.CollegueDTO;
 import dev.exceptions.AnnonceNonTrouveException;
+import dev.exceptions.VoyageCompletException;
 import dev.repository.AnnonceCovoitRepo;
 import dev.repository.CollegueRepo;
 import dev.repository.ReservationCovoitRepo;
@@ -58,7 +59,8 @@ public class CovoitService {
     }
     
     public AnnonceCovoit getResaCovoit (int id) {
-    	return annonceCovoitRepo.findById(id).orElseThrow(() -> new AnnonceNonTrouveException ());
+    	return annonceCovoitRepo.findById(id)
+    			.orElseThrow(() -> new AnnonceNonTrouveException ());
     }
     
     
@@ -81,13 +83,14 @@ public class CovoitService {
         List<AnnonceCovoit> annonceCovoitList = new ArrayList<>();
         if(reservationCovoitList.size() > 0){
             for(ReservationCovoit resa : reservationCovoitList){
-                Optional<AnnonceCovoit> annonceCovoitOpt = this.annonceCovoitRepo.findById(resa.getId()).filter(annonceCovoit -> annonceCovoit.getDateTime().isAfter(LocalDateTime.now()));
+                Optional<AnnonceCovoit> annonceCovoitOpt = this.annonceCovoitRepo.findById(resa.getAnnonceCovoit().getId()).filter(annonceCovoit -> annonceCovoit.getDateTime().isAfter(LocalDateTime.now()));
                 annonceCovoitOpt.ifPresent(annonceCovoit-> annonceCovoitList.add(annonceCovoit));
             }
-
         }
         return annonceCovoitList;
     }
+    
+    
     public List<AnnonceCovoit> getLesAnnonceOldReservedBy(String email){
         Optional<Collegue> colOpt = this.collegueRepo.findByEmail(email);
         List<ReservationCovoit> reservationCovoitList = new ArrayList<>();
@@ -102,7 +105,7 @@ public class CovoitService {
         List<AnnonceCovoit> annonceCovoitList = new ArrayList<>();
         if(reservationCovoitList.size() > 0){
             for(ReservationCovoit resa : reservationCovoitList){
-                Optional<AnnonceCovoit> annonceCovoitOpt = this.annonceCovoitRepo.findById(resa.getId()).filter(annonceCovoit -> annonceCovoit.getDateTime().isBefore(LocalDateTime.now()));
+                Optional<AnnonceCovoit> annonceCovoitOpt = this.annonceCovoitRepo.findById(resa.getAnnonceCovoit().getId()).filter(annonceCovoit -> annonceCovoit.getDateTime().isBefore(LocalDateTime.now()));
                 annonceCovoitOpt.ifPresent(annonceCovoit-> annonceCovoitList.add(annonceCovoit));
             }
 

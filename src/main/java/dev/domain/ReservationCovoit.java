@@ -4,13 +4,18 @@ import javax.persistence.*;
 
 @Entity
 public class ReservationCovoit {
+	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    
     @ManyToOne
     private AnnonceCovoit annonceCovoit;
     @ManyToOne
     private Collegue passagers;
+    
+    @Enumerated(EnumType.STRING)
+    private Statut statutResa;
 
 
     public ReservationCovoit() {
@@ -44,4 +49,16 @@ public class ReservationCovoit {
     public void setPassagers(Collegue passagers) {
         this.passagers = passagers;
     }
+
+	public Statut getStatutResa() {
+		return statutResa;
+	}
+
+	public void setStatutResa(Statut statutResa) {
+		this.statutResa = statutResa;
+	}
+    
+    
+    
+    
 }

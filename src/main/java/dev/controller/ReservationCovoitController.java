@@ -2,14 +2,17 @@ package dev.controller;
 
 import dev.domain.AnnonceCovoit;
 import dev.domain.Collegue;
+import dev.domain.ReservationCovoit;
 import dev.dto.AnnonceCovoitDTO;
 import dev.dto.CollegueDTO;
 import dev.dto.DateVoyage;
+import dev.dto.ReservationCovoitDTO;
 import dev.service.CollegueService;
 import dev.service.CovoitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,20 +39,18 @@ public class ReservationCovoitController {
     @Secured("ROLE_UTILISATEUR")
     @RequestMapping(method = RequestMethod.GET,
     path = "/collaborateur/reservations")
-    public List<AnnonceCovoitDTO> getListResa(){
+    public List<ReservationCovoitDTO> getListResa(){
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();   
+        return this.covoitService.getLesReservationsBy(email);
+    }
+    
+    @Secured("ROLE_UTILISATEUR")
+    @RequestMapping(method = RequestMethod.GET,
+            path = "/collaborateur/reservations_old")
+    public List<ReservationCovoitDTO> getListResaOld(){
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        List<AnnonceCovoit> annonceCovoitList = this.covoitService.getLesAnnonceReservedBy(email);
-        return annonceCovoitList.stream()
-                .map(annonce->{
-                    AnnonceCovoitDTO annonceCovoitDTO = new AnnonceCovoitDTO();
-                    annonceCovoitDTO.setId(annonce.getId());
-                    annonceCovoitDTO.setCollegue(new CollegueDTO(annonce.getConducteur()));
-                    annonceCovoitDTO.setItineraire(annonce.getItineraire());
-                    annonceCovoitDTO.setVehicule(annonce.getVehicule());
-                    annonceCovoitDTO.setDateTime(annonce.getDateTime());
-                    return annonceCovoitDTO;
-                })
-                .collect(Collectors.toList());
+                 return this.covoitService.getLesReservationsOldBy(email);
+
     }
     
     @Secured("ROLE_UTILISATEUR")
@@ -94,27 +95,18 @@ public class ReservationCovoitController {
     	Collegue passager = collegueService.chercherParEmail(email);
     	
     	AnnonceCovoit annonceChoisie = covoitService.getResaCovoit(annonce.getId());    	
-    	covoitService.addBooking(annonceChoisie, passager);
+    	covoitService.addBooking(annonceChoisie, passager);    	
+    }
+    
+    
+    
+    @Secured("ROLE_UTILISATEUR")
+    @RequestMapping (method = RequestMethod.PATCH,
+    		path = "/collaborateur/reservations")
+    public void deleteResa (@RequestBody AnnonceCovoit annonce) {
     	
     }
     
 
-    @Secured("ROLE_UTILISATEUR")
-    @RequestMapping(method = RequestMethod.GET,
-            path = "/collaborateur/reservations_old")
-    public List<AnnonceCovoitDTO> getListResaOld(){
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        List<AnnonceCovoit> annonceCovoitList = this.covoitService.getLesAnnonceOldReservedBy(email);
-        return annonceCovoitList.stream()
-                .map(annonce->{
-                    AnnonceCovoitDTO annonceCovoitDTO = new AnnonceCovoitDTO();
-                    annonceCovoitDTO.setId(annonce.getId());
-                    annonceCovoitDTO.setCollegue(new CollegueDTO(annonce.getConducteur()));
-                    annonceCovoitDTO.setItineraire(annonce.getItineraire());
-                    annonceCovoitDTO.setVehicule(annonce.getVehicule());
-                    annonceCovoitDTO.setDateTime(annonce.getDateTime());
-                    return annonceCovoitDTO;
-                })
-                .collect(Collectors.toList());
-    }
+   
 }

@@ -1,5 +1,6 @@
 package dev.dto;
 
+import dev.domain.AnnonceCovoit;
 import dev.domain.Itineraire;
 import dev.domain.Vehicule;
 
@@ -14,6 +15,14 @@ public class AnnonceCovoitDTO {
     private int nbPlacesLibres;
 
     public AnnonceCovoitDTO() {
+    }
+    
+    public AnnonceCovoitDTO(AnnonceCovoit annonce) {
+    	this.id = annonce.getId();
+    	this.collegue = new CollegueDTO(annonce.getConducteur());
+    	this.itineraire = annonce.getItineraire();
+    	this.vehicule = annonce.getVehicule();
+    	this.dateTime = annonce.getDateTime();
     }
 
     public int getId() {

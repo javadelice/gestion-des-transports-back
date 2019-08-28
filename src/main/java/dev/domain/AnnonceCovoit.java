@@ -3,6 +3,8 @@ package dev.domain;
 import java.time.LocalDateTime;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -21,9 +23,10 @@ public class AnnonceCovoit {
     private Itineraire itineraire;
     @ManyToOne
     private Vehicule vehicule;
-    
     private LocalDateTime dateTime;
-
+    
+    @Enumerated(EnumType.STRING)
+    private Statut statut; 
 
     public AnnonceCovoit() {
     }
@@ -33,6 +36,7 @@ public class AnnonceCovoit {
         this.itineraire = itineraire;
         this.vehicule = vehicule;
         this.dateTime = dateTime;
+        this.statut = statut.STATUT_ENCOURS;
     }
     
     
@@ -77,4 +81,14 @@ public class AnnonceCovoit {
     public void setDateTime(LocalDateTime dateTime) {
         this.dateTime = dateTime;
     }
+
+	public Statut getStatut() {
+		return statut;
+	}
+
+	public void setStatut(Statut statut) {
+		this.statut = statut;
+	}
+    
+    
 }

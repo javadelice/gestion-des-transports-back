@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import dev.domain.AnnonceCovoit;
-import dev.dto.InfoCovoit;
 import dev.dto.CollegueDTO;
+import dev.dto.InfoCovoit;
 import dev.dto.ListeAnnonceCovoitDTO;
 import dev.exception.AnnonceInvalidException;
 import dev.service.AnnonceCovoitService;
@@ -58,6 +58,7 @@ public class AnnonceCovoitController {
 			        annonceCovoitDTO.setVehicule(annonce.getVehicule());
 			        annonceCovoitDTO.setDateTime(annonce.getDateTime());
 			        annonceCovoitDTO.setNbVoyageurs(this.annonceService.getNbPassagers(annonce));
+			        annonceCovoitDTO.setStatut(annonce.getStatut());
 			        return annonceCovoitDTO;
 		        })
 		        .collect(Collectors.toList());
@@ -76,9 +77,19 @@ public class AnnonceCovoitController {
 			        annonceCovoitDTO.setItineraire(annonce.getItineraire());
 			        annonceCovoitDTO.setVehicule(annonce.getVehicule());
 			        annonceCovoitDTO.setDateTime(annonce.getDateTime());
+			        annonceCovoitDTO.setStatut(annonce.getStatut().STATUT_TERMINEE);
 			        annonceCovoitDTO.setNbVoyageurs(this.annonceService.getNbPassagers(annonce));
 			        return annonceCovoitDTO;
 		        })
 		        .collect(Collectors.toList());
+	}
+	
+	@RequestMapping(method = RequestMethod.PATCH, path = "/annonces_annulation")	
+	public void annulerAnnonce (@RequestBody AnnonceCovoit annonceCo) {
+		
+		String email = SecurityContextHolder.getContext().getAuthentication().getName();
+		
+		
+		
 	}
 }

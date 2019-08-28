@@ -3,6 +3,7 @@ package dev.dto;
 import java.time.LocalDateTime;
 
 import dev.domain.Itineraire;
+import dev.domain.Statut;
 import dev.domain.Vehicule;
 
 public class ListeAnnonceCovoitDTO {
@@ -13,6 +14,8 @@ public class ListeAnnonceCovoitDTO {
 	    private Vehicule vehicule;
 	    private LocalDateTime dateTime;
 	    private int nbVoyageurs; 
+	    private Statut statut;
+
 
 	    public ListeAnnonceCovoitDTO() {
 	    }
@@ -64,5 +67,13 @@ public class ListeAnnonceCovoitDTO {
 		public void setNbVoyageurs(int nbVoyageurs) {
 			this.nbVoyageurs = nbVoyageurs;
 		}
-	    
+
+		public Statut getStatut() {
+			return statut;
+		}
+
+		public void setStatut(Statut statut) {
+			this.statut = statut;
+		}
+		
 }

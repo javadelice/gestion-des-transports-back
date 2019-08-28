@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import dev.domain.AnnonceCovoit;
-import dev.domain.InfoCovoit;
+import dev.dto.InfoCovoit;
 import dev.dto.CollegueDTO;
 import dev.dto.ListeAnnonceCovoitDTO;
 import dev.exception.AnnonceInvalidException;

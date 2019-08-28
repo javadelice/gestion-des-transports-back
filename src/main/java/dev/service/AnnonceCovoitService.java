@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 import dev.domain.AnnonceCovoit;
 import dev.domain.Collegue;
-import dev.domain.InfoCovoit;
+import dev.dto.InfoCovoit;
 import dev.domain.Itineraire;
 import dev.domain.ReservationCovoit;
 import dev.domain.Vehicule;
@@ -56,7 +56,7 @@ public class AnnonceCovoitService {
 		Map<String, String> erreurs = new HashMap<>();
 
 		if (dateTime.isBefore(LocalDateTime.now())) {
-			erreurs.put("dateDebut", "La date ne peut être antérieur à aujourd hui");
+			erreurs.put("dateDebut", "La date ne peut être antérieure à aujourd'hui");
 		}
 
 		if (infoCo.getNbPlaceDispo() > PLACE_MAXIMUM_DISPONIBLE || infoCo.getNbPlaceDispo() < PLACE_MINIMUM_DISPONIBLE) {
@@ -70,7 +70,7 @@ public class AnnonceCovoitService {
 				&& dateTime.isAfter(LocalDateTime.now())
 		        && infoCo.getMarque() != null
 		        && infoCo.getImmatriculation() != null
-		        && infoCo.getModele() != null) {
+		        && infoCo.getModele() != 0) {
 
 			Itineraire itineraire = new Itineraire(infoCo.getAdresseDepart(), infoCo.getAdresseDestination(), infoCo.getDuree(),
 			        infoCo.getDistance());

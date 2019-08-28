@@ -1,4 +1,4 @@
-package dev.domain;
+package dev.dto;
 
 public class InfoCovoit {
 
@@ -8,7 +8,7 @@ public class InfoCovoit {
 	private float distance;
 	private String immatriculation;
 	private String marque;
-	private String modele;
+	private int modele;
 	private int nbPlaceDispo;
 	private String heureDeDepart;
 	private String minuteDeDepart;
@@ -18,7 +18,7 @@ public class InfoCovoit {
 	}
 
 	public InfoCovoit(String adresseDepart, String adresseDestination, String immatriculation, String marque,
-	        String modele, int nbPlaceDispo, String heureDeDepart, String minuteDeDepart, String dateDeDepart) {
+					  int modele, int nbPlaceDispo, String heureDeDepart, String minuteDeDepart, String dateDeDepart) {
 		super();
 		this.adresseDepart = adresseDepart;
 		this.adresseDestination = adresseDestination;
@@ -79,11 +79,11 @@ public class InfoCovoit {
 		this.marque = marque;
 	}
 
-	public String getModele() {
+	public int getModele() {
 		return modele;
 	}
 
-	public void setModele(String modele) {
+	public void setModele(int modele) {
 		this.modele = modele;
 	}
 

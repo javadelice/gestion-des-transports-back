@@ -1,6 +1,8 @@
 package dev.domain;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -18,25 +20,37 @@ public class Vehicule {
     private int modele;
     private int nbPlaceDispo;
     private boolean estSociete;
+    private String photoUrl;
+    @Enumerated(EnumType.STRING)
+    private Categorie categorie;
+    private boolean indisponible;
 
     public Vehicule() {
     }
 
-    public Vehicule(Long id, String immatriculation, String marque, int modele, int nbPlaceDispo, boolean estSociete) {
+    public Vehicule(Long id, String immatriculation, String marque, int modele, int nbPlaceDispo, boolean estSociete,
+            String photoUrl, Categorie categorie, boolean indisponible) {
         this.id = id;
         this.immatriculation = immatriculation;
         this.marque = marque;
         this.modele = modele;
         this.nbPlaceDispo = nbPlaceDispo;
         this.estSociete = estSociete;
+        this.photoUrl = photoUrl;
+        this.categorie = categorie;
+        this.indisponible = indisponible;
     }
 
-    public Vehicule(String immatriculation, String marque, int modele, int nbPlaceDispo, boolean estSociete) {
+    public Vehicule(String immatriculation, String marque, int modele, int nbPlaceDispo, boolean estSociete,
+            String photoUrl, Categorie categorie, boolean indisponible) {
         this.immatriculation = immatriculation;
         this.marque = marque;
         this.modele = modele;
         this.nbPlaceDispo = nbPlaceDispo;
         this.estSociete = estSociete;
+        this.photoUrl = photoUrl;
+        this.categorie = categorie;
+        this.indisponible = indisponible;
     }
 
     public Long getId() {
@@ -87,6 +101,30 @@ public class Vehicule {
         this.estSociete = estSociete;
     }
 
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
+    }
+
+    public Categorie getCategorie() {
+        return categorie;
+    }
+
+    public void setCategorie(Categorie categorie) {
+        this.categorie = categorie;
+    }
+
+    public boolean isIndisponible() {
+        return indisponible;
+    }
+
+    public void setIndisponible(boolean indisponible) {
+        this.indisponible = indisponible;
+    }
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -100,6 +138,14 @@ public class Vehicule {
         builder.append(modele);
         builder.append(", nbPlaceDispo=");
         builder.append(nbPlaceDispo);
+        builder.append(", estSociete=");
+        builder.append(estSociete);
+        builder.append(", photoUrl=");
+        builder.append(photoUrl);
+        builder.append(", categorie=");
+        builder.append(categorie);
+        builder.append(", indisponible=");
+        builder.append(indisponible);
         builder.append("]");
         return builder.toString();
     }
@@ -108,11 +154,15 @@ public class Vehicule {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
+        result = prime * result + ((categorie == null) ? 0 : categorie.hashCode());
+        result = prime * result + (estSociete ? 1231 : 1237);
         result = prime * result + ((id == null) ? 0 : id.hashCode());
         result = prime * result + ((immatriculation == null) ? 0 : immatriculation.hashCode());
+        result = prime * result + (indisponible ? 1231 : 1237);
         result = prime * result + ((marque == null) ? 0 : marque.hashCode());
         result = prime * result + modele;
         result = prime * result + nbPlaceDispo;
+        result = prime * result + ((photoUrl == null) ? 0 : photoUrl.hashCode());
         return result;
     }
 
@@ -125,6 +175,10 @@ public class Vehicule {
         if (getClass() != obj.getClass())
             return false;
         Vehicule other = (Vehicule) obj;
+        if (categorie != other.categorie)
+            return false;
+        if (estSociete != other.estSociete)
+            return false;
         if (id == null) {
             if (other.id != null)
                 return false;
@@ -135,6 +189,8 @@ public class Vehicule {
                 return false;
         } else if (!immatriculation.equals(other.immatriculation))
             return false;
+        if (indisponible != other.indisponible)
+            return false;
         if (marque == null) {
             if (other.marque != null)
                 return false;
@@ -143,6 +199,11 @@ public class Vehicule {
         if (modele != other.modele)
             return false;
         if (nbPlaceDispo != other.nbPlaceDispo)
+            return false;
+        if (photoUrl == null) {
+            if (other.photoUrl != null)
+                return false;
+        } else if (!photoUrl.equals(other.photoUrl))
             return false;
         return true;
     }

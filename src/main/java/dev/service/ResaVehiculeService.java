@@ -2,7 +2,9 @@ package dev.service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -11,6 +13,8 @@ import org.springframework.stereotype.Service;
 
 import dev.domain.Collegue;
 import dev.domain.ResaVehicule;
+import dev.domain.Vehicule;
+import dev.exception.DateReservationVehiculeInvalide;
 import dev.repository.CollegueRepo;
 import dev.repository.ResaVehiculeRepository;
 
@@ -39,9 +43,7 @@ public class ResaVehiculeService {
         return reservationVehicule.stream().filter(resa -> resa.getDateFinResV().isAfter(LocalDateTime.now()))
                 .collect(Collectors.toList());
     }
-    
-    
-    
+
     public List<ResaVehicule> getHistorique(String email) {
         Optional<Collegue> collegueOpt = this.collegueRepos.findByEmail(email);
 
@@ -58,6 +60,33 @@ public class ResaVehiculeService {
         return reservationVehicule.stream().filter(resa -> resa.getDateFinResV().isBefore(LocalDateTime.now()))
                 .collect(Collectors.toList());
     }
-    
-    
+
+    public void verifierDate(LocalDateTime dateTimeDepart, LocalDateTime dateTimeRetour, Vehicule vehiculeSociete,
+            String email) throws DateReservationVehiculeInvalide {
+        Map<String, String> erreurs = new HashMap<>();
+
+        if (dateTimeDepart != null && dateTimeDepart.isBefore(LocalDateTime.now())) {
+            erreurs.put("dateDebut", "La date de réservation ne peut être antérieure à aujourd'hui");
+        }
+        if (dateTimeRetour != null && dateTimeRetour.isBefore(LocalDateTime.now())) {
+            erreurs.put("dateDebut", "La date de retour ne peut être antérieure à aujourd'hui");
+        }
+        if (!erreurs.isEmpty()) {
+            throw new DateReservationVehiculeInvalide(erreurs);
+        }
+        this.ajouterReservation(dateTimeDepart, dateTimeRetour, vehiculeSociete, email);
+    }
+
+    public void ajouterReservation(LocalDateTime dateTimeDepart, LocalDateTime dateTimeRetour, Vehicule vehiculeSociete,
+            String email) {
+        Optional<Collegue> collegueOpt = this.collegueRepos.findByEmail(email);
+        collegueOpt.ifPresent(collegue -> {
+            ResaVehicule uneResa = new ResaVehicule();
+            uneResa.setDateDebutResaV(dateTimeDepart);
+            uneResa.setDateFinResV(dateTimeRetour);
+            uneResa.setVehicule(vehiculeSociete);
+            uneResa.setPassager(collegue);
+            resaVehiculeRepo.save(uneResa);
+        });
+    }
 }

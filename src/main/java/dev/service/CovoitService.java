@@ -14,6 +14,8 @@ import dev.repository.AnnonceCovoitRepo;
 import dev.repository.CollegueRepo;
 import dev.repository.ReservationCovoitRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -23,6 +25,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+
 @Service
 public class CovoitService {
     @Autowired
@@ -31,6 +36,8 @@ public class CovoitService {
     CollegueRepo collegueRepo;
     @Autowired
     ReservationCovoitRepo reservationCovoitRepo;
+    @Autowired
+    private JavaMailSender javaMailSender;
     
     
     public void addBooking (AnnonceCovoit annonce, Collegue passager) {    	
@@ -49,14 +56,10 @@ public class CovoitService {
     	}
     }
     
-    public void cancelBooking (ReservationCovoit resa) {
-    	ReservationCovoit resaAAnnuler = getResaCovoit(resa.getId());
-    	if (resa.getId() != resaAAnnuler.getId()){
-    		throw new ReservationNonTrouveException("Réservation déjà annulée");
-    	}
+    public void cancelBooking (String email, ReservationCovoit resa) {
+    	ReservationCovoit resaAAnnuler = this.reservationCovoitRepo.getReservationCovoitById(resa.getId());
     	resaAAnnuler.setStatutResa(Statut.STATUT_ANNULEE);
     	reservationCovoitRepo.save(resaAAnnuler);
-    	
     }
     
     public List<AnnonceCovoit> getLesAnnonceReservedBy(String email){
@@ -153,5 +156,14 @@ public class CovoitService {
         }
         return listResaCovoit;
     }
+    
+//    public void sendAnnulationReservation(String emailPassager, ReservationCovoit reservation) throws MessagingException {
+//        MimeMessage message = javaMailSender.createMimeMessage();
+//        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+//        helper.setTo(emailPassager);
+//        helper.setSubject("Confirmation annulation du covoiturage - " + annonceAnnulee.getItineraire().getAdresseDepart());
+//        helper.setText("<h1>Confirmation de création de votre covoiturage du " + annonceAnnulee.getDateTime() + "</h1>", true);
+//        javaMailSender.send(message);
+//    }
 
 }

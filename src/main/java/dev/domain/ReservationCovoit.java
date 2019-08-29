@@ -24,6 +24,7 @@ public class ReservationCovoit {
     public ReservationCovoit(AnnonceCovoit annonceCovoit, Collegue passagers) {
         this.annonceCovoit = annonceCovoit;
         this.passagers = passagers;
+        this.statutResa = statutResa.STATUT_ENCOURS;
     }
 
     public int getId() {

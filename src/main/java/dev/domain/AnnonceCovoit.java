@@ -20,6 +20,9 @@ public class AnnonceCovoit {
     private Vehicule vehicule;
     
     private LocalDateTime dateTime;
+    
+    @Enumerated(EnumType.STRING)
+    private Statut statut;
    
 
     public AnnonceCovoit() {
@@ -30,6 +33,7 @@ public class AnnonceCovoit {
         this.itineraire = itineraire;
         this.vehicule = vehicule;
         this.dateTime = dateTime;
+        this.statut = statut.STATUT_ENCOURS;
     }
     
 
@@ -73,5 +77,14 @@ public class AnnonceCovoit {
         this.dateTime = dateTime;
     }
 
+	public Statut getStatut() {
+		return statut;
+	}
+
+	public void setStatut(Statut statut) {
+		this.statut = statut;
+	}
+
+    
     
 }

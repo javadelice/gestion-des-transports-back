@@ -105,8 +105,9 @@ public class ReservationCovoitController {
     @RequestMapping (method = RequestMethod.PATCH,
     		path = "/collaborateur/reservations")
     public void annulerResaCovoit (@RequestBody ReservationCovoit resa) throws ReservationNonTrouveException {
-    	covoitService.cancelBooking(resa);
-    	
+    	String email = SecurityContextHolder.getContext().getAuthentication().getName();
+    	this.covoitService.cancelBooking(email, resa);
+
     	
     }
     

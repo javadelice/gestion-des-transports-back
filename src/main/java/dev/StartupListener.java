@@ -80,22 +80,22 @@ public class StartupListener {
         // Création véhicule de société
         Vehicule vehiculeSo = new Vehicule("AC-985-CA", "Peugeot", 2008, 3, true,
                 "https://images.caradisiac.com/images/6/8/4/3/176843/S1-nouvelle-peugeot-208-prix-a-partir-de-15-500-eur-593600.jpg",
-                Categorie.SUV, false);
+                Categorie.SUV, Dispo.Disponible);
         this.vehiculeRepo.save(vehiculeSo);
 
         Vehicule vehiculeSo2 = new Vehicule("VF-133-ZE", "Ford", 1999, 3, true,
                 "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/2018_Ford_Focus_ST-Line_EcoBoost_1.0.jpg/800px-2018_Ford_Focus_ST-Line_EcoBoost_1.0.jpg",
-                Categorie.SUV, false);
+                Categorie.SUV, Dispo.Disponible);
         this.vehiculeRepo.save(vehiculeSo2);
 
         Vehicule vehiculeSo3 = new Vehicule("XS-975-HT", "Renault", 2001, 3, true,
                 "https://img.autoplus.fr/picture/renault/clio/1535142/Renault_Clio_2019_17590-1600-1108.jpg?r",
-                Categorie.SUV, false);
+                Categorie.SUV, Dispo.Disponible);
         this.vehiculeRepo.save(vehiculeSo3);
 
         Vehicule vehiculeSo4 = new Vehicule("XS-975-HT", "Renault", 2001, 3, true,
                 "https://www.cdn.renault.com/content/dam/Renault/FR/webrender-fr/MEGANE/Life/FRAVP_XFB_1_BI_TEQNC_EA1%20A1M6R_RTOL16.jpg.ximg.m_12_m.smart.jpg",
-                Categorie.SUV, false);
+                Categorie.SUV, Dispo.Disponible);
         this.vehiculeRepo.save(vehiculeSo4);
 
         // Création des réservations
@@ -118,7 +118,7 @@ public class StartupListener {
 
         Vehicule vehicule = new Vehicule("AB-344-CA", "Renault", 2008, 3, false,
                 "https://www.cdn.renault.com/content/dam/Renault/FR/webrender-fr/MEGANE/Life/FRAVP_XFB_1_BI_TEQNC_EA1%20A1M6R_RTOL16.jpg.ximg.m_12_m.smart.jpg",
-                Categorie.SUV, false);
+                Categorie.SUV, Dispo.Disponible);
         this.vehiculeRepo.save(vehicule);
 
         // Annonces

@@ -1,4 +1,6 @@
-package dev.domain;
+package dev.dto;
+
+import dev.domain.Vehicule;
 
 public class InfosResa {
 

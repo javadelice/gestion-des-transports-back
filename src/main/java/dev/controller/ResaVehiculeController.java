@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import dev.domain.InfosResa;
+import dev.dto.InfosResa;
 import dev.dto.ResaVehiculeDTO;
 import dev.exception.DateReservationVehiculeInvalide;
 import dev.service.ResaVehiculeService;

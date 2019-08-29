@@ -23,13 +23,14 @@ public class Vehicule {
     private String photoUrl;
     @Enumerated(EnumType.STRING)
     private Categorie categorie;
-    private boolean indisponible;
+    @Enumerated(EnumType.STRING)
+    private Dispo indisponible;
 
     public Vehicule() {
     }
 
     public Vehicule(Long id, String immatriculation, String marque, int modele, int nbPlaceDispo, boolean estSociete,
-            String photoUrl, Categorie categorie, boolean indisponible) {
+            String photoUrl, Categorie categorie, Dispo indisponible) {
         this.id = id;
         this.immatriculation = immatriculation;
         this.marque = marque;
@@ -42,7 +43,7 @@ public class Vehicule {
     }
 
     public Vehicule(String immatriculation, String marque, int modele, int nbPlaceDispo, boolean estSociete,
-            String photoUrl, Categorie categorie, boolean indisponible) {
+            String photoUrl, Categorie categorie, Dispo indisponible) {
         this.immatriculation = immatriculation;
         this.marque = marque;
         this.modele = modele;
@@ -117,37 +118,12 @@ public class Vehicule {
         this.categorie = categorie;
     }
 
-    public boolean isIndisponible() {
+    public Dispo getIndisponible() {
         return indisponible;
     }
 
-    public void setIndisponible(boolean indisponible) {
+    public void setIndisponible(Dispo indisponible) {
         this.indisponible = indisponible;
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("Vehicule [id=");
-        builder.append(id);
-        builder.append(", immatriculation=");
-        builder.append(immatriculation);
-        builder.append(", marque=");
-        builder.append(marque);
-        builder.append(", modele=");
-        builder.append(modele);
-        builder.append(", nbPlaceDispo=");
-        builder.append(nbPlaceDispo);
-        builder.append(", estSociete=");
-        builder.append(estSociete);
-        builder.append(", photoUrl=");
-        builder.append(photoUrl);
-        builder.append(", categorie=");
-        builder.append(categorie);
-        builder.append(", indisponible=");
-        builder.append(indisponible);
-        builder.append("]");
-        return builder.toString();
     }
 
     @Override
@@ -158,7 +134,7 @@ public class Vehicule {
         result = prime * result + (estSociete ? 1231 : 1237);
         result = prime * result + ((id == null) ? 0 : id.hashCode());
         result = prime * result + ((immatriculation == null) ? 0 : immatriculation.hashCode());
-        result = prime * result + (indisponible ? 1231 : 1237);
+        result = prime * result + ((indisponible == null) ? 0 : indisponible.hashCode());
         result = prime * result + ((marque == null) ? 0 : marque.hashCode());
         result = prime * result + modele;
         result = prime * result + nbPlaceDispo;
@@ -206,6 +182,31 @@ public class Vehicule {
         } else if (!photoUrl.equals(other.photoUrl))
             return false;
         return true;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("Vehicule [id=");
+        builder.append(id);
+        builder.append(", immatriculation=");
+        builder.append(immatriculation);
+        builder.append(", marque=");
+        builder.append(marque);
+        builder.append(", modele=");
+        builder.append(modele);
+        builder.append(", nbPlaceDispo=");
+        builder.append(nbPlaceDispo);
+        builder.append(", estSociete=");
+        builder.append(estSociete);
+        builder.append(", photoUrl=");
+        builder.append(photoUrl);
+        builder.append(", categorie=");
+        builder.append(categorie);
+        builder.append(", indisponible=");
+        builder.append(indisponible);
+        builder.append("]");
+        return builder.toString();
     }
 
 }

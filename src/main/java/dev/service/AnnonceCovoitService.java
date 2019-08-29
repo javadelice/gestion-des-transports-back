@@ -8,13 +8,19 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import dev.domain.AnnonceCovoit;
 import dev.domain.Collegue;
 import dev.domain.Itineraire;
 import dev.domain.ReservationCovoit;
+import dev.domain.Statut;
 import dev.domain.Vehicule;
 import dev.dto.InfoCovoit;
 import dev.exception.AnnonceInvalidException;
@@ -35,7 +41,6 @@ public class AnnonceCovoitService {
 	private ItineraireRepo itiRepo;
 
 	@Autowired
-
 	private VehiculeRepo vehiRepo;
 
 	@Autowired
@@ -46,13 +51,14 @@ public class AnnonceCovoitService {
 
 	@Autowired
 	private ReservationCovoitRepo reservationRepo;
-	
+
+	@Autowired
+	private JavaMailSender javaMailSender;
 
 	private static final int PLACE_MINIMUM_DISPONIBLE = 1;
 	private static final int PLACE_MAXIMUM_DISPONIBLE = 20;
 
-	
-	public void verifierInfos(InfoCovoit infoCo, LocalDateTime dateTime, String email) {
+	public void verifierInfos(InfoCovoit infoCo, LocalDateTime dateTime, String email) throws MessagingException {
 		Map<String, String> erreurs = new HashMap<>();
 
 		if (dateTime.isBefore(LocalDateTime.now())) {
@@ -67,7 +73,7 @@ public class AnnonceCovoitService {
 			throw new AnnonceInvalidException(erreurs);
 		}
 		if (dateTime != null
-				&& dateTime.isAfter(LocalDateTime.now())
+		        && dateTime.isAfter(LocalDateTime.now())
 		        && infoCo.getMarque() != null
 		        && infoCo.getImmatriculation() != null
 		        && infoCo.getModele() != 0) {
@@ -76,19 +82,21 @@ public class AnnonceCovoitService {
 			        infoCo.getDistance());
 			Vehicule vehicule = new Vehicule(infoCo.getImmatriculation().toUpperCase(), infoCo.getMarque(), infoCo.getModele(),
 			        infoCo.getNbPlaceDispo());
+
 			this.ajouterUneAnnonce(email, itineraire, vehicule, dateTime);
+
 		}
-		
+
 	}
 
 	public void ajouterUneAnnonce(String email, Itineraire itineraire, Vehicule vehicule, LocalDateTime dateTime) {
 
 		Optional<Collegue> collegueConnecte = this.collegueRepo.findByEmail(email);
-		
+
 		collegueConnecte.ifPresent(conducteur -> {
 			itiRepo.save(itineraire);
 			vehiRepo.save(vehicule);
-			annonceRepo.save(new AnnonceCovoit(conducteur, itineraire, vehicule, dateTime));
+			annonceCoRepo.save(new AnnonceCovoit(conducteur, itineraire, vehicule, dateTime));
 		});
 	}
 
@@ -129,6 +137,53 @@ public class AnnonceCovoitService {
 		});
 		nbPassager = resaList.size();
 		return nbPassager;
+	}
+
+	public void annonceAnnulee(String email, AnnonceCovoit annonceCo) throws MessagingException {
+
+		AnnonceCovoit annonceAnnulee = this.annonceCoRepo.getAnnonceById(annonceCo.getId());
+		annonceAnnulee.setStatut(Statut.STATUT_ANNULEE);
+		annonceCoRepo.save(annonceAnnulee);
+
+		sendAnnulationConducteur(email, annonceCo);
+
+		Optional<List<ReservationCovoit>> listPassagersCovoit = this.reservationRepo.getReservationCovoitsByAnnonceCovoit(annonceCo);
+		listPassagersCovoit.ifPresent(covoitList -> {
+			for (ReservationCovoit resa : covoitList) {
+				sendAnnulationPassagers(resa.getPassagers().getEmail(), annonceCo);
+			}
+		});
+	}
+
+	public void sendAnnulationPassagers(String email, AnnonceCovoit annonceAnnulee) {
+
+		MimeMessage message = javaMailSender.createMimeMessage();
+		MimeMessageHelper helper;
+		try {
+			helper = new MimeMessageHelper(message, true);
+			helper.setTo(email);
+			helper.setSubject("Annulation de votre covoiturage - " + annonceAnnulee.getItineraire().getAdresseDepart());
+			helper.setText("<h1>Annulation de votre covoiturage du " + annonceAnnulee.getDateTime() + "</h1>", true);
+		} 
+			catch (MessagingException e) {
+			e.printStackTrace();
+		}
+
+		javaMailSender.send(message);
+
+	}
+
+	public void sendAnnulationConducteur(String emailDestinataire, AnnonceCovoit annonceAnnulee) throws MessagingException {
+
+		MimeMessage message = javaMailSender.createMimeMessage();
+		MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+		helper.setTo(emailDestinataire);
+		helper.setSubject("Confirmation annulation du covoiturage - " + annonceAnnulee.getItineraire().getAdresseDepart());
+		helper.setText("<h1>Confirmation de création de votre covoiturage du " + annonceAnnulee.getDateTime() + "</h1>", true);
+
+		javaMailSender.send(message);
+
 	}
 
 }

@@ -7,6 +7,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.mail.MessagingException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -31,7 +33,7 @@ public class AnnonceCovoitController {
 	AnnonceCovoitService annonceService;
 
 	@RequestMapping(method = RequestMethod.POST, path = "/annonces/creer")
-	public void addAnnonceCovoit(@RequestBody InfoCovoit infoCo) throws AnnonceInvalidException {
+	public void addAnnonceCovoit(@RequestBody InfoCovoit infoCo) throws AnnonceInvalidException, MessagingException {
 
 		String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
@@ -41,7 +43,6 @@ public class AnnonceCovoitController {
 		LocalDateTime dateTime = LocalDateTime.of(dateDeDepart, horaireDeDepart);
 		
 		this.annonceService.verifierInfos(infoCo, dateTime, email);
-		
 	}
 
 	@RequestMapping(method = RequestMethod.GET, path = "/annonces")
@@ -85,11 +86,11 @@ public class AnnonceCovoitController {
 	}
 	
 	@RequestMapping(method = RequestMethod.PATCH, path = "/annonces_annulation")	
-	public void annulerAnnonce (@RequestBody AnnonceCovoit annonceCo) {
+	public void annulerAnnonce (@RequestBody AnnonceCovoit annonceCo) throws MessagingException {
 		
 		String email = SecurityContextHolder.getContext().getAuthentication().getName();
 		
-		
+		this.annonceService.annonceAnnulee(email, annonceCo);
 		
 	}
 }

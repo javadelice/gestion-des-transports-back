@@ -1,13 +1,11 @@
 package dev;
 
-import dev.domain.*;
-import dev.repository.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Arrays;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
@@ -17,6 +15,7 @@ import org.springframework.stereotype.Component;
 import dev.domain.AnnonceCovoit;
 import dev.domain.Collegue;
 import dev.domain.Itineraire;
+import dev.domain.ResaVehicule;
 import dev.domain.ReservationCovoit;
 import dev.domain.Role;
 import dev.domain.RoleCollegue;
@@ -25,6 +24,7 @@ import dev.domain.Version;
 import dev.repository.AnnonceCovoitRepo;
 import dev.repository.CollegueRepo;
 import dev.repository.ItineraireRepo;
+import dev.repository.ResaVehiculeRepository;
 import dev.repository.ReservationCovoitRepo;
 import dev.repository.VehiculeRepo;
 import dev.repository.VersionRepo;
@@ -103,7 +103,7 @@ public class StartupListener {
         Collegue col4 = new Collegue();
         col4.setNom("Dupont");
         col4.setPrenom("Martine");
-        col4.setEmail("martine.dupont@dev.fr");
+        col4.setEmail("adchauvin44@gmail.com");
         col4.setMotDePasse(passwordEncoder.encode("superpass"));
         col4.setRoles(Arrays.asList(new RoleCollegue(col4, Role.ROLE_UTILISATEUR)));
         this.collegueRepo.save(col4);
@@ -111,11 +111,18 @@ public class StartupListener {
         Collegue col5 = new Collegue();
         col5.setNom("Bertrand");
         col5.setPrenom("Martine");
-        col5.setEmail("martine.bertrand@dev.fr");
+        col5.setEmail("adrienchauvin@hotmail.fr");
         col5.setMotDePasse(passwordEncoder.encode("superpass"));
-        col5.setRoles(Arrays.asList(new RoleCollegue(col5, Role.ROLE_CHAUFFEUR)));
+        col5.setRoles(Arrays.asList(new RoleCollegue(col5, Role.ROLE_UTILISATEUR)));
         this.collegueRepo.save(col5);
-
+        
+        Collegue col6 = new Collegue(); 
+        col6.setNom("Jean-Michel"); 
+        col6.setPrenom("FACILE");
+        col6.setEmail("adrienchauvin44@gmail.com");
+        col6.setMotDePasse(passwordEncoder.encode("superpass"));
+        col6.setRoles(Arrays.asList(new RoleCollegue(col6, Role.ROLE_UTILISATEUR)));
+        this.collegueRepo.save(col6);
 
 
         //Création véhicule de société

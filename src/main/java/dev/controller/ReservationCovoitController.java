@@ -3,16 +3,17 @@ package dev.controller;
 import dev.domain.AnnonceCovoit;
 import dev.domain.Collegue;
 import dev.domain.ReservationCovoit;
+import dev.domain.Statut;
 import dev.dto.AnnonceCovoitDTO;
 import dev.dto.CollegueDTO;
 import dev.dto.DateVoyage;
 import dev.dto.ReservationCovoitDTO;
+import dev.exceptions.ReservationNonTrouveException;
 import dev.service.CollegueService;
 import dev.service.CovoitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -94,7 +95,7 @@ public class ReservationCovoitController {
     	String email = SecurityContextHolder.getContext().getAuthentication().getName();
     	Collegue passager = collegueService.chercherParEmail(email);
     	
-    	AnnonceCovoit annonceChoisie = covoitService.getResaCovoit(annonce.getId());    	
+    	AnnonceCovoit annonceChoisie = covoitService.getAnnonceCovoit(annonce.getId());    	
     	covoitService.addBooking(annonceChoisie, passager);    	
     }
     
@@ -103,7 +104,9 @@ public class ReservationCovoitController {
     @Secured("ROLE_UTILISATEUR")
     @RequestMapping (method = RequestMethod.PATCH,
     		path = "/collaborateur/reservations")
-    public void deleteResa (@RequestBody AnnonceCovoit annonce) {
+    public void annulerResaCovoit (@RequestBody ReservationCovoit resa) throws ReservationNonTrouveException {
+    	covoitService.cancelBooking(resa);
+    	
     	
     }
     

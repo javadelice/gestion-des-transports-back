@@ -8,6 +8,7 @@ import dev.dto.AnnonceCovoitDTO;
 import dev.dto.CollegueDTO;
 import dev.dto.ReservationCovoitDTO;
 import dev.exceptions.AnnonceNonTrouveException;
+import dev.exceptions.ReservationNonTrouveException;
 import dev.exceptions.VoyageCompletException;
 import dev.repository.AnnonceCovoitRepo;
 import dev.repository.CollegueRepo;
@@ -48,6 +49,16 @@ public class CovoitService {
     	}
     }
     
+    public void cancelBooking (ReservationCovoit resa) {
+    	ReservationCovoit resaAAnnuler = getResaCovoit(resa.getId());
+    	if (resa.getId() != resaAAnnuler.getId()){
+    		throw new ReservationNonTrouveException("Réservation déjà annulée");
+    	}
+    	resaAAnnuler.setStatutResa(Statut.STATUT_ANNULEE);
+    	reservationCovoitRepo.save(resaAAnnuler);
+    	
+    }
+    
     public List<AnnonceCovoit> getLesAnnonceReservedBy(String email){
     	
     	Optional<Collegue> colOpt = this.collegueRepo.findByEmail(email);
@@ -79,8 +90,13 @@ public class CovoitService {
     	return nbPlaceLibre;
     }
     
-    public AnnonceCovoit getResaCovoit (int id) {
+    public AnnonceCovoit getAnnonceCovoit (int id) {
     	return annonceCovoitRepo.findById(id)
+    			.orElseThrow(() -> new AnnonceNonTrouveException ());
+    }
+    
+    public ReservationCovoit getResaCovoit (int id) {
+    	return reservationCovoitRepo.findById(id)
     			.orElseThrow(() -> new AnnonceNonTrouveException ());
     }
     
@@ -108,6 +124,7 @@ public class CovoitService {
         }
         return listResaCovoit.stream()
         		.filter(resa-> resa.getAnnonce().getDateTime().isAfter(LocalDateTime.now()))
+        		//.filter(resa -> resa.getStatutResa().equals(Statut.STATUT_ANNULEE))
         		.collect(Collectors.toList());
     }
     
@@ -128,9 +145,13 @@ public class CovoitService {
         	ReservationCovoitDTO resaCovoit = new ReservationCovoitDTO(new AnnonceCovoitDTO(resa.getAnnonceCovoit()), resa.getStatutResa());
         	listResaCovoit.add(resaCovoit);
         }
-        return listResaCovoit.stream()
-        		.filter(resa-> resa.getAnnonce().getDateTime().isBefore(LocalDateTime.now()))
+        listResaCovoit.stream()
+        		.filter(resa-> resa.getAnnonce().getDateTime().isBefore(LocalDateTime.now()) /*|| resa.getStatutResa().equals(Statut.STATUT_ANNULEE)*/)        		
         		.collect(Collectors.toList());
+        for (ReservationCovoitDTO resa: listResaCovoit) {
+        	resa.setStatutResa(Statut.STATUT_TERMINEE);
+        }
+        return listResaCovoit;
     }
 
 }

@@ -10,6 +10,7 @@ import org.springframework.web.context.request.WebRequest;
 
 import dev.exceptions.AnnonceNonTrouveException;
 import dev.exceptions.CollegueNonTrouveException;
+import dev.exceptions.ReservationNonTrouveException;
 import dev.exceptions.VoyageCompletException;
 
 @ControllerAdvice
@@ -29,6 +30,11 @@ public class RestResponseEntityExceptionHandler {
     @ExceptionHandler(value = VoyageCompletException.class)
     protected ResponseEntity<Object> handleConflict (VoyageCompletException e, WebRequest req){
     	return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    }
+    
+    @ExceptionHandler(value = ReservationNonTrouveException.class)
+    protected ResponseEntity<Object> handleConflict (ReservationNonTrouveException e, WebRequest req){
+    	return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 }
 

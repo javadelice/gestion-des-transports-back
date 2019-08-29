@@ -93,7 +93,7 @@ public class StartupListener {
                 Categorie.SUV, Dispo.Disponible);
         this.vehiculeRepo.save(vehiculeSo3);
 
-        Vehicule vehiculeSo4 = new Vehicule("XS-975-HT", "Renault", 2001, 3, true,
+        Vehicule vehiculeSo4 = new Vehicule("XS-478-ER", "Renault", 2001, 3, true,
                 "https://www.cdn.renault.com/content/dam/Renault/FR/webrender-fr/MEGANE/Life/FRAVP_XFB_1_BI_TEQNC_EA1%20A1M6R_RTOL16.jpg.ximg.m_12_m.smart.jpg",
                 Categorie.SUV, Dispo.Disponible);
         this.vehiculeRepo.save(vehiculeSo4);

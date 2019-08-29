@@ -1,6 +1,7 @@
 package dev.repository;
 
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,4 +13,6 @@ import dev.domain.ResaVehicule;
 public interface ResaVehiculeRepository extends JpaRepository<ResaVehicule, Long>{
 
     public Optional<List<ResaVehicule>> getAllByPassager(Collegue collegue);
+
+    public Optional<List<ResaVehicule>> getResaVehiculesByDateDebutResaVIsBeforeAndDateFinResVIsAfter(LocalDateTime dateTimeDateDebut,LocalDateTime DateTimeFin);
 }

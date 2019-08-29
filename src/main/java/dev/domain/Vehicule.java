@@ -1,12 +1,6 @@
 package dev.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table
@@ -23,7 +17,7 @@ public class Vehicule {
     private String photoUrl;
     @Enumerated(EnumType.STRING)
     private Categorie categorie;
-    @Enumerated(EnumType.STRING)
+    @Transient
     private Dispo indisponible;
 
     public Vehicule() {

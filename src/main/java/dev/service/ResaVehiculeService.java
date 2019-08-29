@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import dev.repository.VehiculeRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,9 @@ public class ResaVehiculeService {
 
     @Autowired
     private ResaVehiculeRepository resaVehiculeRepo;
+
+    @Autowired
+    private VehiculeRepo vehiculeRepo;
 
     public List<ResaVehicule> getReservertionEnCours(String email) {
         Optional<Collegue> collegueOpt = this.collegueRepos.findByEmail(email);
@@ -62,7 +66,7 @@ public class ResaVehiculeService {
     }
 
     public void verifierDate(LocalDateTime dateTimeDepart, LocalDateTime dateTimeRetour, Vehicule vehiculeSociete,
-            String email) throws DateReservationVehiculeInvalide {
+            String email) {
         Map<String, String> erreurs = new HashMap<>();
 
         if (dateTimeDepart != null && dateTimeDepart.isBefore(LocalDateTime.now())) {
@@ -89,4 +93,26 @@ public class ResaVehiculeService {
             resaVehiculeRepo.save(uneResa);
         });
     }
+
+    public List<Vehicule> getListVehiculeSociete(){
+        List<Vehicule> vehiculeList= this.vehiculeRepo.getVehiculesByEstSociete(true).get();
+        return vehiculeList;
+    }
+
+    public List<ResaVehicule> getResaVehiculeBetween(LocalDateTime dateDebut){
+        return resaVehiculeRepo.getResaVehiculesByDateDebutResaVIsBeforeAndDateFinResVIsAfter(dateDebut,dateDebut)
+                .orElse(new ArrayList<ResaVehicule>());
+    }
+
+    public List<Vehicule> getListVehiculeReserved(LocalDateTime dateDebut){
+        List<ResaVehicule> resaVehiculeList = getResaVehiculeBetween(dateDebut);
+        List<Vehicule> vehiculeList = new ArrayList<>();
+        if(resaVehiculeList.size() > 0){
+            for (ResaVehicule resa : resaVehiculeList){
+                vehiculeList.add(resa.getVehicule());
+            }
+        }
+        return vehiculeList;
+    }
+
 }

@@ -1,5 +1,6 @@
 package dev.dto;
 
+import dev.domain.Collegue;
 import dev.domain.Vehicule;
 
 public class InfosResa {
@@ -11,12 +12,13 @@ public class InfosResa {
     private String minuteRetour;
     private String dateRetour;
     private Vehicule vehiculeSociete;
+    private Collegue chauffeur;
 
     public InfosResa() {
     }
 
     public InfosResa(String heureDepart, String minuteDepart, String dateDepart, String heureRetour,
-            String minuteRetour, String dateRetour, Vehicule vehiculeSociete) {
+            String minuteRetour, String dateRetour, Vehicule vehiculeSociete, Collegue chauffeur) {
         this.heureDepart = heureDepart;
         this.minuteDepart = minuteDepart;
         this.dateDepart = dateDepart;
@@ -24,6 +26,7 @@ public class InfosResa {
         this.minuteRetour = minuteRetour;
         this.dateRetour = dateRetour;
         this.vehiculeSociete = vehiculeSociete;
+        this.chauffeur = chauffeur;
     }
 
     public String getHeureDepart() {
@@ -82,6 +85,14 @@ public class InfosResa {
         this.vehiculeSociete = vehiculeSociete;
     }
 
+    public Collegue getChauffeur() {
+        return chauffeur;
+    }
+
+    public void setChauffeur(Collegue chauffeur) {
+        this.chauffeur = chauffeur;
+    }
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -99,6 +110,8 @@ public class InfosResa {
         builder.append(dateRetour);
         builder.append(", vehiculeSociete=");
         builder.append(vehiculeSociete);
+        builder.append(", chauffeur=");
+        builder.append(chauffeur);
         builder.append("]");
         return builder.toString();
     }

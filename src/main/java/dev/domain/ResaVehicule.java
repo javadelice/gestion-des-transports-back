@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -25,6 +26,8 @@ public class ResaVehicule {
      */
     @ManyToOne
     private Collegue passager;
+    @OneToOne
+    private Collegue chauffeur;
     @ManyToOne
     private Vehicule vehicule;
 
@@ -32,16 +35,25 @@ public class ResaVehicule {
     }
 
     public ResaVehicule(Long idResV, LocalDateTime dateDebutResaV, LocalDateTime dateFinResV, Collegue passager,
-            Vehicule vehicule) {
+            Collegue chauffeur, Vehicule vehicule) {
         this.idResV = idResV;
         this.dateDebutResaV = dateDebutResaV;
         this.dateFinResV = dateFinResV;
         this.passager = passager;
+        this.chauffeur = chauffeur;
         this.vehicule = vehicule;
     }
 
-    public ResaVehicule(LocalDateTime dateDebutResaV, LocalDateTime dateFinResV, Collegue passager,
+    public ResaVehicule(LocalDateTime dateDebutResaV, LocalDateTime dateFinResV, Collegue passager, Collegue chauffeur,
             Vehicule vehicule) {
+        this.dateDebutResaV = dateDebutResaV;
+        this.dateFinResV = dateFinResV;
+        this.passager = passager;
+        this.chauffeur = chauffeur;
+        this.vehicule = vehicule;
+    }
+
+    public ResaVehicule(LocalDateTime dateDebutResaV, LocalDateTime dateFinResV, Collegue passager, Vehicule vehicule) {
         this.dateDebutResaV = dateDebutResaV;
         this.dateFinResV = dateFinResV;
         this.passager = passager;
@@ -88,6 +100,14 @@ public class ResaVehicule {
         this.vehicule = vehicule;
     }
 
+    public Collegue getChauffeur() {
+        return chauffeur;
+    }
+
+    public void setChauffeur(Collegue chauffeur) {
+        this.chauffeur = chauffeur;
+    }
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -99,6 +119,8 @@ public class ResaVehicule {
         builder.append(dateFinResV);
         builder.append(", passager=");
         builder.append(passager);
+        builder.append(", chauffeur=");
+        builder.append(chauffeur);
         builder.append(", vehicule=");
         builder.append(vehicule);
         builder.append("]");

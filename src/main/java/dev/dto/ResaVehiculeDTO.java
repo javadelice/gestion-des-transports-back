@@ -2,6 +2,7 @@ package dev.dto;
 
 import java.time.LocalDateTime;
 
+import dev.domain.Collegue;
 import dev.domain.Vehicule;
 
 public class ResaVehiculeDTO {
@@ -11,27 +12,31 @@ public class ResaVehiculeDTO {
     private LocalDateTime dateDeFin;
 
     private Vehicule vehiculeSociete;
+    private Collegue chauffeur;
 
     public ResaVehiculeDTO() {
 
     }
 
-    public ResaVehiculeDTO(Long idResaDto, LocalDateTime dateDeDebut, LocalDateTime dateDeFin,
-            Vehicule vehiculeSociete) {
+    public Long getIdResaDto() {
+        return idResaDto;
+    }
+
+    public ResaVehiculeDTO(Long idResaDto, LocalDateTime dateDeDebut, LocalDateTime dateDeFin, Vehicule vehiculeSociete,
+            Collegue chauffeur) {
         this.idResaDto = idResaDto;
         this.dateDeDebut = dateDeDebut;
         this.dateDeFin = dateDeFin;
         this.vehiculeSociete = vehiculeSociete;
+        this.chauffeur = chauffeur;
     }
 
-    public ResaVehiculeDTO(LocalDateTime dateDeDebut, LocalDateTime dateDeFin, Vehicule vehiculeSociete) {
+    public ResaVehiculeDTO(LocalDateTime dateDeDebut, LocalDateTime dateDeFin, Vehicule vehiculeSociete,
+            Collegue chauffeur) {
         this.dateDeDebut = dateDeDebut;
         this.dateDeFin = dateDeFin;
         this.vehiculeSociete = vehiculeSociete;
-    }
-
-    public Long getIdResaDto() {
-        return idResaDto;
+        this.chauffeur = chauffeur;
     }
 
     public void setIdResaDto(Long idResaDto) {
@@ -60,6 +65,14 @@ public class ResaVehiculeDTO {
 
     public void setVehiculeSociete(Vehicule vehiculeSociete) {
         this.vehiculeSociete = vehiculeSociete;
+    }
+
+    public Collegue getChauffeur() {
+        return chauffeur;
+    }
+
+    public void setChauffeur(Collegue chauffeur) {
+        this.chauffeur = chauffeur;
     }
 
 }

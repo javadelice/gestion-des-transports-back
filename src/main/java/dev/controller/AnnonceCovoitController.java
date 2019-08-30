@@ -7,6 +7,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.mail.MessagingException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -16,8 +18,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import dev.domain.AnnonceCovoit;
-import dev.dto.InfoCovoit;
+import dev.domain.Statut;
 import dev.dto.CollegueDTO;
+import dev.dto.InfoCovoit;
 import dev.dto.ListeAnnonceCovoitDTO;
 import dev.exception.AnnonceInvalidException;
 import dev.service.AnnonceCovoitService;
@@ -31,7 +34,7 @@ public class AnnonceCovoitController {
 	AnnonceCovoitService annonceService;
 
 	@RequestMapping(method = RequestMethod.POST, path = "/annonces/creer")
-	public void addAnnonceCovoit(@RequestBody InfoCovoit infoCo) throws AnnonceInvalidException {
+	public void addAnnonceCovoit(@RequestBody InfoCovoit infoCo) throws AnnonceInvalidException, MessagingException {
 
 		String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
@@ -41,7 +44,6 @@ public class AnnonceCovoitController {
 		LocalDateTime dateTime = LocalDateTime.of(dateDeDepart, horaireDeDepart);
 		
 		this.annonceService.verifierInfos(infoCo, dateTime, email);
-		
 	}
 
 	@RequestMapping(method = RequestMethod.GET, path = "/annonces")
@@ -58,6 +60,7 @@ public class AnnonceCovoitController {
 			        annonceCovoitDTO.setVehicule(annonce.getVehicule());
 			        annonceCovoitDTO.setDateTime(annonce.getDateTime());
 			        annonceCovoitDTO.setNbVoyageurs(this.annonceService.getNbPassagers(annonce));
+			        annonceCovoitDTO.setStatut(annonce.getStatut());
 			        return annonceCovoitDTO;
 		        })
 		        .collect(Collectors.toList());
@@ -76,9 +79,22 @@ public class AnnonceCovoitController {
 			        annonceCovoitDTO.setItineraire(annonce.getItineraire());
 			        annonceCovoitDTO.setVehicule(annonce.getVehicule());
 			        annonceCovoitDTO.setDateTime(annonce.getDateTime());
+			        if (annonce.getStatut().equals(Statut.STATUT_ENCOURS)) {
+			        annonceCovoitDTO.setStatut(annonce.getStatut().STATUT_TERMINEE);}
+			        else if (annonce.getStatut().equals(Statut.STATUT_ANNULEE)) {
+			        	annonceCovoitDTO.setStatut(annonce.getStatut().STATUT_ANNULEE);
+			        }
 			        annonceCovoitDTO.setNbVoyageurs(this.annonceService.getNbPassagers(annonce));
 			        return annonceCovoitDTO;
 		        })
 		        .collect(Collectors.toList());
+	}
+	
+	@RequestMapping(method = RequestMethod.PATCH, path = "/annonces_annulation")	
+	public void annulerAnnonce (@RequestBody AnnonceCovoit annonceCo) throws MessagingException {
+		
+		String email = SecurityContextHolder.getContext().getAuthentication().getName();
+		this.annonceService.annonceAnnulee(email, annonceCo);
+		
 	}
 }

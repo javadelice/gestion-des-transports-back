@@ -1,11 +1,7 @@
 package dev.service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import dev.repository.VehiculeRepo;
@@ -69,11 +65,14 @@ public class ResaVehiculeService {
             String email) {
         Map<String, String> erreurs = new HashMap<>();
 
-        if (dateTimeDepart != null && dateTimeDepart.isBefore(LocalDateTime.now())) {
+        if (dateTimeDepart != null && dateTimeDepart.isBefore(LocalDateTime.now())){
             erreurs.put("dateDebut", "La date de réservation ne peut être antérieure à aujourd'hui");
         }
-        if (dateTimeRetour != null && dateTimeRetour.isBefore(LocalDateTime.now())) {
-            erreurs.put("dateDebut", "La date de retour ne peut être antérieure à aujourd'hui");
+        if (dateTimeRetour != null && dateTimeRetour.isBefore(LocalDateTime.now())){
+            erreurs.put("dateRetour", "La date de retour ne peut être antérieure à aujourd'hui");
+        }
+        if (dateTimeRetour != null && dateTimeRetour.isBefore(dateTimeDepart)){
+            erreurs.put("dateRetour", "La date de retour ne peut être antérieure à la date de réservation");
         }
         if (!erreurs.isEmpty()) {
             throw new DateReservationVehiculeInvalide(erreurs);
@@ -103,6 +102,10 @@ public class ResaVehiculeService {
         return resaVehiculeRepo.getResaVehiculesByDateDebutResaVIsBeforeAndDateFinResVIsAfter(dateDebut,dateDebut)
                 .orElse(new ArrayList<ResaVehicule>());
     }
+    public List<ResaVehicule> getResaVehiculeBetween(LocalDateTime dateDebut,LocalDateTime dateFin){
+        return resaVehiculeRepo.getResaVehiculesByDateDebutResaVIsAfterAndAndDateFinResVIsBefore(dateDebut,dateFin)
+                .orElse(new ArrayList<ResaVehicule>());
+    }
 
     public List<Vehicule> getListVehiculeReserved(LocalDateTime dateDebut){
         List<ResaVehicule> resaVehiculeList = getResaVehiculeBetween(dateDebut);
@@ -113,6 +116,24 @@ public class ResaVehiculeService {
             }
         }
         return vehiculeList;
+    }
+    public List<Vehicule> getListVehiculeReserved(LocalDateTime dateDebut,LocalDateTime dateFin){
+
+        Set<Vehicule> vehiculeList = new HashSet<>();
+        List<ResaVehicule> resaVehiculeList1 = getResaVehiculeBetween(dateDebut);
+        List<ResaVehicule> resaVehiculeList2 = getResaVehiculeBetween(dateDebut,dateFin);
+
+        if(resaVehiculeList1.size() > 0){
+            for (ResaVehicule resa : resaVehiculeList1){
+                vehiculeList.add(resa.getVehicule());
+            }
+        }
+        if(resaVehiculeList2.size() > 0){
+            for (ResaVehicule resa : resaVehiculeList2){
+                vehiculeList.add(resa.getVehicule());
+            }
+        }
+        return vehiculeList.stream().collect(Collectors.toList());
     }
 
 }

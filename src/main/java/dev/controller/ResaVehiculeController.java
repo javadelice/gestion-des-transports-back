@@ -59,14 +59,31 @@ public class ResaVehiculeController {
     @RequestMapping(method = RequestMethod.GET, path = "collaborateur/reservations/vehicule/creer")
     public List<Vehicule> getVehiculeSociete(@RequestParam String dateDepart,
                                              @RequestParam String heureDepart,
-                                             @RequestParam String minuteDepart){
+                                             @RequestParam String minuteDepart,
+                                             @RequestParam(required = false) String dateRetour,
+                                             @RequestParam(required = false) String heureRetour,
+                                             @RequestParam(required = false) String minuteRetour){
         LocalDate dateDeDepart = LocalDate.parse(dateDepart, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         String infoHoraireDepart = heureDepart + ":" + minuteDepart;
         LocalTime horaireDeDepart = LocalTime.parse(infoHoraireDepart, DateTimeFormatter.ofPattern("HH:mm"));
         LocalDateTime dateTimeDepart = LocalDateTime.of(dateDeDepart, horaireDeDepart);
 
-        List<Vehicule> vehiculeReservedList = resaVehiculeService.getListVehiculeReserved(dateTimeDepart);
+
+        List<Vehicule> vehiculeReservedList = new ArrayList<>();
         List<Vehicule> vehiculeList = resaVehiculeService.getListVehiculeSociete();
+
+        if(dateRetour.equals("undefined") && heureRetour.equals("undefined") && minuteRetour.equals("undefined")){
+            vehiculeReservedList.addAll(resaVehiculeService.getListVehiculeReserved(dateTimeDepart));
+        }
+        else{
+            LocalDate dateDeRetour = LocalDate.parse(dateRetour, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            String infoHoraireRetour = heureRetour + ":" + minuteRetour;
+            LocalTime horaireDeRetour = LocalTime.parse(infoHoraireRetour, DateTimeFormatter.ofPattern("HH:mm"));
+            LocalDateTime dateTimeRetour = LocalDateTime.of(dateDeRetour, horaireDeRetour);
+
+            vehiculeReservedList.addAll(resaVehiculeService.getListVehiculeReserved(dateTimeDepart,dateTimeRetour));
+        }
+
         return vehiculeList.stream()
                 .map(vehicule -> {
                     if(vehiculeReservedList.contains(vehicule)){

@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -56,10 +57,13 @@ public class CovoitService {
     	}
     }
     
-    public void cancelBooking (String email, ReservationCovoit resa) {
+    public void cancelBooking (String email, ReservationCovoit resa) throws MessagingException {
     	ReservationCovoit resaAAnnuler = this.reservationCovoitRepo.getReservationCovoitById(resa.getId());
     	resaAAnnuler.setStatutResa(Statut.STATUT_ANNULEE);
+    	String emailConducteur = resaAAnnuler.getAnnonceCovoit().getConducteur().getEmail();
     	reservationCovoitRepo.save(resaAAnnuler);
+    	sendAnnulationReservation(email, resaAAnnuler);
+    	sendAnnulationResaConducteur(emailConducteur, resaAAnnuler);
     }
     
     public List<AnnonceCovoit> getLesAnnonceReservedBy(String email){
@@ -158,12 +162,23 @@ public class CovoitService {
         
     }
     
+    public void sendAnnulationResaConducteur(String emailConducteur, ReservationCovoit reservation) throws MessagingException {
+    	MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd MMMM yyyy");
+        helper.setTo(emailConducteur);
+        helper.setSubject("Annulation d'un passager - " + reservation.getAnnonceCovoit().getItineraire().getAdresseDepart() + " --> " + reservation.getAnnonceCovoit().getItineraire().getAdresseDest());
+        helper.setText("<h1>"+ reservation.getPassagers().getPrenom() + " a annulé sa réservation pour votre trajet du " + reservation.getAnnonceCovoit().getDateTime().format(dateTimeFormatter) + "</h1>", true);
+        javaMailSender.send(message);
+    }
+    
     public void sendAnnulationReservation(String emailPassager, ReservationCovoit reservation) throws MessagingException {
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd MMMM yyyy");
         helper.setTo(emailPassager);
-        helper.setSubject("Confirmation annulation du covoiturage - " + reservation.getAnnonceCovoit().getItineraire().getAdresseDepart() + "-->" + reservation.getAnnonceCovoit().getItineraire().getAdresseDest());
-        helper.setText("<h1>Confirmation de création de votre covoiturage du " + reservation.getAnnonceCovoit().getDateTime() + "</h1>", true);
+        helper.setSubject("Confirmation d'annulation de votre voyage - " + reservation.getAnnonceCovoit().getItineraire().getAdresseDepart() + " --> " + reservation.getAnnonceCovoit().getItineraire().getAdresseDest());
+        helper.setText("<h1>Confirmation d'annulation de votre voyage du " + reservation.getAnnonceCovoit().getDateTime().format(dateTimeFormatter) + "</h1>", true);
         javaMailSender.send(message);
     }
 

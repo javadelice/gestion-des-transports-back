@@ -9,6 +9,7 @@ import dev.dto.CollegueDTO;
 import dev.dto.DateVoyage;
 import dev.dto.ReservationCovoitDTO;
 import dev.exceptions.ReservationNonTrouveException;
+import dev.repository.AnnonceCovoitRepo;
 import dev.service.CollegueService;
 import dev.service.CovoitService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,8 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import javax.mail.MessagingException;
 
 @RestController
 public class ReservationCovoitController {
@@ -58,7 +61,7 @@ public class ReservationCovoitController {
     @RequestMapping(method = RequestMethod.GET,
     path = "/collaborateur/reservations/covoit/creer")
     
-    public List<AnnonceCovoitDTO> getListResaCovoit(@RequestParam DateVoyage date, @RequestParam String lieuDepart, @RequestParam String lieuArrivee ){
+    public List<AnnonceCovoitDTO> getListResaCovoit(@RequestParam ("lieuDepart") String lieuDepart, @RequestParam (value = "lieuArrivee", required = false) String lieuArrivee, @RequestParam (value = "date", required = false) DateVoyage date ){
     	LocalDate selectedDate = LocalDate.parse(date.getDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     	LocalTime startTime = LocalTime.of(0, 0);
     	LocalTime endTime = LocalTime.of(23, 59);
@@ -67,6 +70,7 @@ public class ReservationCovoitController {
         List<AnnonceCovoit> annonceCovoitList = this.covoitService.selectByDate(start, end);
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         List<AnnonceCovoit> annonceCovoitListReserved = this.covoitService.getLesAnnonceReservedBy(email);
+        
         
         return annonceCovoitList.stream()
         		.filter(annonce -> annonce.getItineraire().getAdresseDepart().equals(lieuDepart))
@@ -104,7 +108,7 @@ public class ReservationCovoitController {
     @Secured("ROLE_UTILISATEUR")
     @RequestMapping (method = RequestMethod.PATCH,
     		path = "/collaborateur/reservations")
-    public void annulerResaCovoit (@RequestBody ReservationCovoit resa) throws ReservationNonTrouveException {
+    public void annulerResaCovoit (@RequestBody ReservationCovoit resa) throws ReservationNonTrouveException, MessagingException {
     	String email = SecurityContextHolder.getContext().getAuthentication().getName();
     	this.covoitService.cancelBooking(email, resa);
 

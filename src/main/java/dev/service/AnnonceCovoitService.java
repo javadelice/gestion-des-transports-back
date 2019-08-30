@@ -1,6 +1,7 @@
 package dev.service;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -159,28 +160,31 @@ public class AnnonceCovoitService {
 
 		MimeMessage message = javaMailSender.createMimeMessage();
 		MimeMessageHelper helper;
+		DateTimeFormatter formatDate = DateTimeFormatter.ofPattern("dd MMMM yyyy");
+
 		try {
 			helper = new MimeMessageHelper(message, true);
 			helper.setTo(email);
-			helper.setSubject("Annulation de votre covoiturage - " + annonceAnnulee.getItineraire().getAdresseDepart());
-			helper.setText("<h1>Annulation de votre covoiturage du " + annonceAnnulee.getDateTime() + "</h1>", true);
+			helper.setSubject("Annulation de votre covoiturage - " + annonceAnnulee.getItineraire().getAdresseDepart() + " --> " + annonceAnnulee.getItineraire().getAdresseDest());
+			helper.setText("<h1>Annulation de votre covoiturage du " + annonceAnnulee.getDateTime().format(formatDate) + "</h1>", true);
 		} 
 			catch (MessagingException e) {
 			e.printStackTrace();
 		}
-
+		
 		javaMailSender.send(message);
-
 	}
 
 	public void sendAnnulationConducteur(String emailDestinataire, AnnonceCovoit annonceAnnulee) throws MessagingException {
 
 		MimeMessage message = javaMailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message, true);
+		
+		DateTimeFormatter formatDate = DateTimeFormatter.ofPattern("dd MMMM yyyy");
 
 		helper.setTo(emailDestinataire);
-		helper.setSubject("Confirmation annulation du covoiturage - " + annonceAnnulee.getItineraire().getAdresseDepart());
-		helper.setText("<h1>Confirmation de création de votre covoiturage du " + annonceAnnulee.getDateTime() + "</h1>", true);
+		helper.setSubject("Confirmation annulation du covoiturage - " + annonceAnnulee.getItineraire().getAdresseDepart() + " --> " + annonceAnnulee.getItineraire().getAdresseDest());
+		helper.setText("<h1>Confirmation de création de votre covoiturage du " + annonceAnnulee.getDateTime().format(formatDate) + "</h1>", true);
 
 		javaMailSender.send(message);
 

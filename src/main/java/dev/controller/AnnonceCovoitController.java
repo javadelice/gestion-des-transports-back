@@ -94,7 +94,6 @@ public class AnnonceCovoitController {
 	public void annulerAnnonce (@RequestBody AnnonceCovoit annonceCo) throws MessagingException {
 		
 		String email = SecurityContextHolder.getContext().getAuthentication().getName();
-		
 		this.annonceService.annonceAnnulee(email, annonceCo);
 		
 	}

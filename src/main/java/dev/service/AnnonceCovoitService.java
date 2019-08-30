@@ -152,8 +152,7 @@ public class AnnonceCovoitService {
 				resa.setStatut(Statut.STATUT_ANNULEE);
 				this.reservationRepo.save(resa);
 			}
-		});
-		
+		});	
 	}
 
 	public void sendAnnulationPassagers(String email, AnnonceCovoit annonceAnnulee) {

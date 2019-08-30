@@ -61,7 +61,7 @@ public class ReservationCovoitController {
     @RequestMapping(method = RequestMethod.GET,
     path = "/collaborateur/reservations/covoit/creer")
     
-    public List<AnnonceCovoitDTO> getListResaCovoit(@RequestParam ("lieuDepart") String lieuDepart, @RequestParam (value = "lieuArrivee", required = false) String lieuArrivee, @RequestParam (value = "date", required = false) DateVoyage date ){
+    public List<AnnonceCovoitDTO> getListResaCovoit(@RequestParam String lieuDepart, @RequestParam String lieuArrivee, @RequestParam DateVoyage date ){
     	LocalDate selectedDate = LocalDate.parse(date.getDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     	LocalTime startTime = LocalTime.of(0, 0);
     	LocalTime endTime = LocalTime.of(23, 59);

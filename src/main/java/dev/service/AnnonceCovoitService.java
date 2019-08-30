@@ -103,25 +103,22 @@ public class AnnonceCovoitService {
 	public List<AnnonceCovoit> getAnnoncesEnCours(String email) {
 
 		Optional<Collegue> collegueConnecte = this.collegueRepo.findByEmail(email);
-		List<AnnonceCovoit> optionalCovoitList = new ArrayList<>();
 
 		Collegue col = collegueConnecte.get();
-		optionalCovoitList = this.annonceCoRepo.findAll().stream().filter(annonce -> annonce.getConducteur().equals(col))
-		        .filter(annonce -> annonce.getDateTime().isAfter(LocalDateTime.now()))
+		return this.annonceCoRepo.findAll().stream().filter(annonce -> annonce.getConducteur().equals(col))
+		        .filter(annonce -> annonce.getDateTime().isAfter(LocalDateTime.now()) && annonce.getStatut().equals(Statut.STATUT_ENCOURS))
 		        .collect(Collectors.toList());
-		return optionalCovoitList;
 	}
 
 	public List<AnnonceCovoit> getAnciennesAnnonces(String email) {
 
 		Optional<Collegue> collegueConnecte = this.collegueRepo.findByEmail(email);
-		List<AnnonceCovoit> optionalCovoitList = new ArrayList<>();
 
 		Collegue col = collegueConnecte.get();
-		optionalCovoitList = this.annonceCoRepo.findAll().stream().filter(annonce -> annonce.getConducteur().equals(col))
-		        .filter(annonce -> annonce.getDateTime().isBefore(LocalDateTime.now()))
+		return this.annonceCoRepo.findAll().stream().filter(annonce -> annonce.getConducteur().equals(col))
+		        .filter(annonce -> annonce.getDateTime().isBefore(LocalDateTime.now()) || annonce.getStatut().equals(Statut.STATUT_ANNULEE))
 		        .collect(Collectors.toList());
-		return optionalCovoitList;
+		
 	}
 
 	public int getNbPassagers(AnnonceCovoit annonceCovoit) {
@@ -151,8 +148,11 @@ public class AnnonceCovoitService {
 		listPassagersCovoit.ifPresent(covoitList -> {
 			for (ReservationCovoit resa : covoitList) {
 				sendAnnulationPassagers(resa.getPassagers().getEmail(), annonceCo);
+				resa.setStatut(Statut.STATUT_ANNULEE);
+				this.reservationRepo.save(resa);
 			}
 		});
+		
 	}
 
 	public void sendAnnulationPassagers(String email, AnnonceCovoit annonceAnnulee) {

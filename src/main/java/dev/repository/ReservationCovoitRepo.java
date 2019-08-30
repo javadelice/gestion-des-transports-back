@@ -16,5 +16,4 @@ public interface ReservationCovoitRepo extends JpaRepository<ReservationCovoit, 
     Optional<List<ReservationCovoit>> getReservationCovoitsByAnnonceCovoit(AnnonceCovoit annonceCovoit);
 
 
-
 }

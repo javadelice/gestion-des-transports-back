@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import dev.domain.AnnonceCovoit;
+import dev.domain.Statut;
 import dev.dto.CollegueDTO;
 import dev.dto.InfoCovoit;
 import dev.dto.ListeAnnonceCovoitDTO;
@@ -78,7 +79,11 @@ public class AnnonceCovoitController {
 			        annonceCovoitDTO.setItineraire(annonce.getItineraire());
 			        annonceCovoitDTO.setVehicule(annonce.getVehicule());
 			        annonceCovoitDTO.setDateTime(annonce.getDateTime());
-			        annonceCovoitDTO.setStatut(annonce.getStatut().STATUT_TERMINEE);
+			        if (annonce.getStatut().equals(Statut.STATUT_ENCOURS)) {
+			        annonceCovoitDTO.setStatut(annonce.getStatut().STATUT_TERMINEE);}
+			        else if (annonce.getStatut().equals(Statut.STATUT_ANNULEE)) {
+			        	annonceCovoitDTO.setStatut(annonce.getStatut().STATUT_ANNULEE);
+			        }
 			        annonceCovoitDTO.setNbVoyageurs(this.annonceService.getNbPassagers(annonce));
 			        return annonceCovoitDTO;
 		        })

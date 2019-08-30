@@ -5,11 +5,9 @@ import dev.domain.Collegue;
 import dev.domain.ReservationCovoit;
 import dev.domain.Statut;
 import dev.dto.AnnonceCovoitDTO;
-import dev.dto.CollegueDTO;
 import dev.dto.ReservationCovoitDTO;
-import dev.exceptions.AnnonceNonTrouveException;
-import dev.exceptions.ReservationNonTrouveException;
-import dev.exceptions.VoyageCompletException;
+import dev.exception.AnnonceNonTrouveException;
+import dev.exception.VoyageCompletException;
 import dev.repository.AnnonceCovoitRepo;
 import dev.repository.CollegueRepo;
 import dev.repository.ReservationCovoitRepo;
@@ -18,16 +16,14 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
 
 @Service
 public class CovoitService {
@@ -44,7 +40,7 @@ public class CovoitService {
     public void addBooking (AnnonceCovoit annonce, Collegue passager) {    	
     	int nbPlaceLibre = this.getNbPlacesLibres(annonce);    	
     	ReservationCovoit resa = new ReservationCovoit(annonce, passager);
-    	resa.setStatutResa(Statut.STATUT_ENCOURS);
+    	resa.setStatut(Statut.STATUT_ENCOURS);
     	
     	if(nbPlaceLibre > 0) {  		
     		annonceCovoitRepo.save(annonce);
@@ -59,7 +55,7 @@ public class CovoitService {
     
     public void cancelBooking (String email, ReservationCovoit resa) throws MessagingException {
     	ReservationCovoit resaAAnnuler = this.reservationCovoitRepo.getReservationCovoitById(resa.getId());
-    	resaAAnnuler.setStatutResa(Statut.STATUT_ANNULEE);
+    	resaAAnnuler.setStatut(Statut.STATUT_ANNULEE);
     	String emailConducteur = resaAAnnuler.getAnnonceCovoit().getConducteur().getEmail();
     	reservationCovoitRepo.save(resaAAnnuler);
     	sendAnnulationReservation(email, resaAAnnuler);
@@ -89,7 +85,7 @@ public class CovoitService {
     	List<ReservationCovoit> resaCovoit = new ArrayList<>();
     	optionalReservationCovoitList.ifPresent(listResa -> {
     		for(ReservationCovoit resa : listResa) {
-    			if(resa.getStatutResa().equals(Statut.STATUT_ENCOURS))
+    			if(resa.getStatut().equals(Statut.STATUT_ENCOURS))
     			resaCovoit.add(resa);
     		}
     	});
@@ -100,7 +96,7 @@ public class CovoitService {
     
     public AnnonceCovoit getAnnonceCovoit (int id) {
     	return annonceCovoitRepo.findById(id)
-    			.orElseThrow(() -> new AnnonceNonTrouveException ());
+    			.orElseThrow(() -> new AnnonceNonTrouveException());
     }
     
     public ReservationCovoit getResaCovoit (int id) {
@@ -127,7 +123,7 @@ public class CovoitService {
         });
         List<ReservationCovoitDTO> listResaCovoit = new ArrayList<>();
         for(ReservationCovoit resa : reservationCovoitList) {
-        	ReservationCovoitDTO resaCovoit = new ReservationCovoitDTO(new AnnonceCovoitDTO(resa.getAnnonceCovoit()), resa.getStatutResa(),resa.getId());
+        	ReservationCovoitDTO resaCovoit = new ReservationCovoitDTO(new AnnonceCovoitDTO(resa.getAnnonceCovoit()), resa.getStatut(),resa.getId());
         	listResaCovoit.add(resaCovoit);
         }
         return listResaCovoit.stream()
@@ -150,7 +146,7 @@ public class CovoitService {
         });
         List<ReservationCovoitDTO> listResaCovoit = new ArrayList<>();
         for(ReservationCovoit resa : reservationCovoitList) {
-        	ReservationCovoitDTO resaCovoit = new ReservationCovoitDTO(new AnnonceCovoitDTO(resa.getAnnonceCovoit()), resa.getStatutResa());
+        	ReservationCovoitDTO resaCovoit = new ReservationCovoitDTO(new AnnonceCovoitDTO(resa.getAnnonceCovoit()), resa.getStatut());
         	listResaCovoit.add(resaCovoit);
         }
         return listResaCovoit.stream()

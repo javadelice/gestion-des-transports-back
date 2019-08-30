@@ -13,7 +13,7 @@ public class ReservationCovoitDTO {
 	public ReservationCovoitDTO(ReservationCovoit resa) {
 		this.idResa = resa.getId();
 		this.annonce = new AnnonceCovoitDTO();
-		this.statutResa = resa.getStatutResa();		
+		this.statutResa = resa.getStatut();
 	}
 	
 	

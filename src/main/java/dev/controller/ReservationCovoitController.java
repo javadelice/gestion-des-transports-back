@@ -8,28 +8,21 @@ import dev.dto.AnnonceCovoitDTO;
 import dev.dto.CollegueDTO;
 import dev.dto.DateVoyage;
 import dev.dto.ReservationCovoitDTO;
-import dev.exceptions.ReservationNonTrouveException;
-import dev.repository.AnnonceCovoitRepo;
+import dev.exception.ReservationNonTrouveException;
 import dev.service.CollegueService;
 import dev.service.CovoitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import javax.mail.MessagingException;
 
 @RestController
 public class ReservationCovoitController {

@@ -42,17 +42,17 @@ public class CollegueController {
     }
 	
 	
-	@Secured("ROLE_ADMINISTRATEUR")
-	@RequestMapping(
-            method = RequestMethod.PATCH, 
-            path = "/chauffeurs")
-
-    public void updateRole(@PathVariable String matricule) {
-
-		Collegue collegue = collegueService.chercherParMatricule(matricule);
-        if (!collegue.getRoles().contains(Role.ROLE_CHAUFFEUR)) {
-        	collegueService.modifierRoles(matricule, Role.ROLE_CHAUFFEUR);
-        } 
-
-  }
+//	@Secured("ROLE_ADMINISTRATEUR")
+//	@RequestMapping(
+//            method = RequestMethod.PATCH, 
+//            path = "/chauffeurs")
+//
+//    public void updateRole(@PathVariable Long id) {
+//
+//		Collegue collegue = collegueService.chercherParId(id);
+//        if (!collegue.getRoles().contains(Role.ROLE_CHAUFFEUR)) {
+//        	collegueService.modifierRoles(id, Role.ROLE_CHAUFFEUR);
+//        } 
+//
+//  }
 }

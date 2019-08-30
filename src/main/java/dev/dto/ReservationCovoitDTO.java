@@ -6,12 +6,12 @@ import dev.domain.Statut;
 
 public class ReservationCovoitDTO {
 	
-	private int id;
+	private int idResa;
 	private AnnonceCovoitDTO annonce;
 	private Statut statutResa;
 	
 	public ReservationCovoitDTO(ReservationCovoit resa) {
-		this.id = resa.getId();
+		this.idResa = resa.getId();
 		this.annonce = new AnnonceCovoitDTO();
 		this.statutResa = resa.getStatutResa();		
 	}
@@ -21,6 +21,12 @@ public class ReservationCovoitDTO {
 		super();
 		this.annonce = annonce;
 		this.statutResa = statutResa;
+	}
+	
+	public ReservationCovoitDTO(AnnonceCovoitDTO annonce, Statut statutResa,int id) {
+		this.annonce = annonce;
+		this.statutResa = statutResa;
+		this.idResa = id;
 	}
 
 	public AnnonceCovoitDTO getAnnonce() {
@@ -41,12 +47,12 @@ public class ReservationCovoitDTO {
 
 
 	public int getId() {
-		return id;
+		return idResa;
 	}
 
 
 	public void setId(int id) {
-		this.id = id;
+		this.idResa = id;
 	}
 	
 	

@@ -85,6 +85,7 @@ public class CovoitService {
     	List<ReservationCovoit> resaCovoit = new ArrayList<>();
     	optionalReservationCovoitList.ifPresent(listResa -> {
     		for(ReservationCovoit resa : listResa) {
+    			if(resa.getStatutResa().equals(Statut.STATUT_ENCOURS))
     			resaCovoit.add(resa);
     		}
     	});
@@ -122,12 +123,12 @@ public class CovoitService {
         });
         List<ReservationCovoitDTO> listResaCovoit = new ArrayList<>();
         for(ReservationCovoit resa : reservationCovoitList) {
-        	ReservationCovoitDTO resaCovoit = new ReservationCovoitDTO(new AnnonceCovoitDTO(resa.getAnnonceCovoit()), resa.getStatutResa());
+        	ReservationCovoitDTO resaCovoit = new ReservationCovoitDTO(new AnnonceCovoitDTO(resa.getAnnonceCovoit()), resa.getStatutResa(),resa.getId());
         	listResaCovoit.add(resaCovoit);
         }
         return listResaCovoit.stream()
         		.filter(resa-> resa.getAnnonce().getDateTime().isAfter(LocalDateTime.now()))
-        		//.filter(resa -> resa.getStatutResa().equals(Statut.STATUT_ANNULEE))
+        		.filter(resa -> resa.getStatutResa().equals(Statut.STATUT_ENCOURS))
         		.collect(Collectors.toList());
     }
     
@@ -148,22 +149,22 @@ public class CovoitService {
         	ReservationCovoitDTO resaCovoit = new ReservationCovoitDTO(new AnnonceCovoitDTO(resa.getAnnonceCovoit()), resa.getStatutResa());
         	listResaCovoit.add(resaCovoit);
         }
-        listResaCovoit.stream()
-        		.filter(resa-> resa.getAnnonce().getDateTime().isBefore(LocalDateTime.now()) /*|| resa.getStatutResa().equals(Statut.STATUT_ANNULEE)*/)        		
+        return listResaCovoit.stream()
+        		.filter(resa-> (resa.getAnnonce().getDateTime().isBefore(LocalDateTime.now())||(resa.getStatutResa().equals(Statut.STATUT_ANNULEE))) /*|| resa.getStatutResa().equals(Statut.STATUT_)*/)        		
         		.collect(Collectors.toList());
-        for (ReservationCovoitDTO resa: listResaCovoit) {
-        	resa.setStatutResa(Statut.STATUT_TERMINEE);
-        }
-        return listResaCovoit;
+//        for (ReservationCovoitDTO resa: listResaCovoit) {
+//        	resa.setStatutResa(Statut.STATUT_TERMINEE);
+//        }
+        
     }
     
-//    public void sendAnnulationReservation(String emailPassager, ReservationCovoit reservation) throws MessagingException {
-//        MimeMessage message = javaMailSender.createMimeMessage();
-//        MimeMessageHelper helper = new MimeMessageHelper(message, true);
-//        helper.setTo(emailPassager);
-//        helper.setSubject("Confirmation annulation du covoiturage - " + annonceAnnulee.getItineraire().getAdresseDepart());
-//        helper.setText("<h1>Confirmation de création de votre covoiturage du " + annonceAnnulee.getDateTime() + "</h1>", true);
-//        javaMailSender.send(message);
-//    }
+    public void sendAnnulationReservation(String emailPassager, ReservationCovoit reservation) throws MessagingException {
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+        helper.setTo(emailPassager);
+        helper.setSubject("Confirmation annulation du covoiturage - " + reservation.getAnnonceCovoit().getItineraire().getAdresseDepart() + "-->" + reservation.getAnnonceCovoit().getItineraire().getAdresseDest());
+        helper.setText("<h1>Confirmation de création de votre covoiturage du " + reservation.getAnnonceCovoit().getDateTime() + "</h1>", true);
+        javaMailSender.send(message);
+    }
 
 }

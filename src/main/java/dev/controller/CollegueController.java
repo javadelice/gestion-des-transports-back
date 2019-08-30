@@ -41,7 +41,7 @@ public class CollegueController {
         return collegues;
     }
 	
-	@SuppressWarnings("unlikely-arg-type")
+	
 	@Secured("ROLE_ADMINISTRATEUR")
 	@RequestMapping(
             method = RequestMethod.PATCH, 

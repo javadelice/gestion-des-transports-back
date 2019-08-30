@@ -55,7 +55,7 @@ public class StartupListener {
         col1.setPrenom("DEV");
         col1.setEmail("admin@dev.fr");
         col1.setMotDePasse(passwordEncoder.encode("superpass"));
-        col1.setRoles(Arrays.asList(new RoleCollegue(col1, Role.ROLE_ADMINISTRATEUR), new RoleCollegue(col1, Role.ROLE_COLLABORATEUR)));
+        col1.setRoles(Arrays.asList(new RoleCollegue(col1, Role.ROLE_ADMINISTRATEUR), new RoleCollegue(col1, Role.ROLE_UTILISATEUR)));
         this.collegueRepo.save(col1);
 
         Collegue col2 = new Collegue();
@@ -64,7 +64,7 @@ public class StartupListener {
         col2.setPrenom("DEV");
         col2.setEmail("user@dev.fr");
         col2.setMotDePasse(passwordEncoder.encode("superpass"));
-        col2.setRoles(Arrays.asList(new RoleCollegue(col2, Role.ROLE_COLLABORATEUR)));
+        col2.setRoles(Arrays.asList(new RoleCollegue(col2, Role.ROLE_UTILISATEUR)));
         this.collegueRepo.save(col2);
         
         Collegue col3 = new Collegue();
@@ -73,7 +73,7 @@ public class StartupListener {
         col3.setPrenom("Robert");
         col3.setEmail("robert.dupont@dev.fr");
         col3.setMotDePasse(passwordEncoder.encode("superpass"));
-        col3.setRoles(Arrays.asList(new RoleCollegue(col3, Role.ROLE_CHAUFFEUR)));
+        col3.setRoles(Arrays.asList(new RoleCollegue(col3, Role.ROLE_CHAUFFEUR), new RoleCollegue(col3, Role.ROLE_UTILISATEUR)));
         this.collegueRepo.save(col3);
         
         Collegue col4 = new Collegue();
@@ -82,7 +82,7 @@ public class StartupListener {
         col4.setPrenom("Martine");
         col4.setEmail("martine.dupont@dev.fr");
         col4.setMotDePasse(passwordEncoder.encode("superpass"));
-        col4.setRoles(Arrays.asList(new RoleCollegue(col4, Role.ROLE_COLLABORATEUR)));
+        col4.setRoles(Arrays.asList(new RoleCollegue(col4, Role.ROLE_CHAUFFEUR)));
         this.collegueRepo.save(col4);
         
         Collegue col5 = new Collegue();
@@ -91,7 +91,7 @@ public class StartupListener {
         col5.setPrenom("Martine");
         col5.setEmail("martine.bertrand@dev.fr");
         col5.setMotDePasse(passwordEncoder.encode("superpass"));
-        col5.setRoles(Arrays.asList(new RoleCollegue(col5, Role.ROLE_CHAUFFEUR)));
+        col5.setRoles(Arrays.asList(new RoleCollegue(col5, Role.ROLE_CHAUFFEUR), new RoleCollegue(col5, Role.ROLE_UTILISATEUR)));
         this.collegueRepo.save(col5);
 
         //Création d'un jeu de donnée pour une reservation

@@ -1,11 +1,7 @@
 package dev;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.Arrays;
-
 import dev.domain.*;
+import dev.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -13,13 +9,10 @@ import org.springframework.context.event.EventListener;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import dev.repository.AnnonceCovoitRepo;
-import dev.repository.CollegueRepo;
-import dev.repository.ItineraireRepo;
-import dev.repository.ResaVehiculeRepository;
-import dev.repository.ReservationCovoitRepo;
-import dev.repository.VehiculeRepo;
-import dev.repository.VersionRepo;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Arrays;
 
 /**
  * Code de démarrage de l'application.
@@ -39,7 +32,7 @@ public class StartupListener {
 
     @Autowired
     private ResaVehiculeRepository resaVehiculeRepo;
-    
+
     public StartupListener(@Value("${app.version}") String appVersion, VersionRepo versionRepo, PasswordEncoder passwordEncoder,
                            CollegueRepo collegueRepo, AnnonceCovoitRepo annonceCovoitRepo,
                            ItineraireRepo itineraireRepo, VehiculeRepo vehiculeRepo,
@@ -62,16 +55,16 @@ public class StartupListener {
 
         Collegue col1 = new Collegue();
         col1.setNom("Admin");
-        col1.setPrenom("DEV");
-        col1.setEmail("admin@dev.fr");
+        col1.setPrenom("Tintin");
+        col1.setEmail("tintin@yopmail.com");
         col1.setMotDePasse(passwordEncoder.encode("superpass"));
         col1.setRoles(Arrays.asList(new RoleCollegue(col1, Role.ROLE_ADMINISTRATEUR), new RoleCollegue(col1, Role.ROLE_UTILISATEUR)));
         this.collegueRepo.save(col1);
 
         Collegue col2 = new Collegue();
         col2.setNom("User");
-        col2.setPrenom("DEV");
-        col2.setEmail("user@dev.fr");
+        col2.setPrenom("Milou");
+        col2.setEmail("milou@yopmail.com");
         col2.setMotDePasse(passwordEncoder.encode("superpass"));
         col2.setRoles(Arrays.asList(new RoleCollegue(col2, Role.ROLE_UTILISATEUR)));
         this.collegueRepo.save(col2);
@@ -89,7 +82,7 @@ public class StartupListener {
         col3.setPrenom("Robert");
         col3.setEmail("robert.dupont@dev.fr");
         col3.setMotDePasse(passwordEncoder.encode("superpass"));
-        col3.setRoles(Arrays.asList(new RoleCollegue(col3, Role.ROLE_CHAUFFEUR)));
+        col3.setRoles(Arrays.asList(new RoleCollegue(col3, Role.ROLE_CHAUFFEUR), new RoleCollegue(col3, Role.ROLE_UTILISATEUR)));
         this.collegueRepo.save(col3);
 
         Collegue col4 = new Collegue();

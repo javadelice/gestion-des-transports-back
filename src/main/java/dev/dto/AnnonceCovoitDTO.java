@@ -1,13 +1,17 @@
 package dev.dto;
 
+import dev.domain.AnnonceCovoit;
 import java.time.LocalDateTime;
 
 import dev.domain.Itineraire;
 import dev.domain.Statut;
 import dev.domain.Vehicule;
 
+import java.time.LocalDateTime;
+
 public class AnnonceCovoitDTO {
-    private int id;
+
+	private int id;
     private CollegueDTO collegue;
     private Itineraire itineraire;
     private Vehicule vehicule;
@@ -16,6 +20,14 @@ public class AnnonceCovoitDTO {
     private Statut statut;
 
     public AnnonceCovoitDTO() {
+    }
+
+    public AnnonceCovoitDTO(AnnonceCovoit annonce) {
+    	this.id = annonce.getId();
+    	this.collegue = new CollegueDTO(annonce.getConducteur());
+    	this.itineraire = annonce.getItineraire();
+    	this.vehicule = annonce.getVehicule();
+    	this.dateTime = annonce.getDateTime();
     }
 
     public int getId() {
@@ -75,6 +87,6 @@ public class AnnonceCovoitDTO {
 		this.statut = statut;
 	}
 
-	
+
 
 }

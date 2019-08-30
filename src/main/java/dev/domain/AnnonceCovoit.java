@@ -1,32 +1,29 @@
 package dev.domain;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
-
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 
 @Entity
 public class AnnonceCovoit {
+	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    
     @ManyToOne
-    @JoinColumn(name="conducteur_id")
     private Collegue conducteur;
-    @ManyToOne 
+    
+    @ManyToOne
     private Itineraire itineraire;
+    
     @ManyToOne
     private Vehicule vehicule;
+    
     private LocalDateTime dateTime;
     
     @Enumerated(EnumType.STRING)
-    private Statut statut; 
+    private Statut statut;
+   
 
     public AnnonceCovoit() {
     }
@@ -38,8 +35,6 @@ public class AnnonceCovoit {
         this.dateTime = dateTime;
         this.statut = statut.STATUT_ENCOURS;
     }
-    
-    
     
 
 	public int getId() {
@@ -89,6 +84,7 @@ public class AnnonceCovoit {
 	public void setStatut(Statut statut) {
 		this.statut = statut;
 	}
+
     
     
 }

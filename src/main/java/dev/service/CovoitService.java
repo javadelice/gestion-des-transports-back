@@ -3,18 +3,27 @@ package dev.service;
 import dev.domain.AnnonceCovoit;
 import dev.domain.Collegue;
 import dev.domain.ReservationCovoit;
+import dev.domain.Statut;
+import dev.dto.AnnonceCovoitDTO;
+import dev.dto.ReservationCovoitDTO;
 import dev.exception.AnnonceNonTrouveException;
 import dev.exception.VoyageCompletException;
 import dev.repository.AnnonceCovoitRepo;
 import dev.repository.CollegueRepo;
 import dev.repository.ReservationCovoitRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CovoitService {
@@ -24,28 +33,59 @@ public class CovoitService {
     CollegueRepo collegueRepo;
     @Autowired
     ReservationCovoitRepo reservationCovoitRepo;
-
-
-    public void addBooking (AnnonceCovoit annonce, Collegue passager) {
-    	int nbPlaceLibre = this.getNbPlacesLibres(annonce);
+    @Autowired
+    private JavaMailSender javaMailSender;
+    
+    
+    public void addBooking (AnnonceCovoit annonce, Collegue passager) {    	
+    	int nbPlaceLibre = this.getNbPlacesLibres(annonce);    	
     	ReservationCovoit resa = new ReservationCovoit(annonce, passager);
-
-    	if(nbPlaceLibre > 0) {
+    	resa.setStatut(Statut.STATUT_ENCOURS);
+    	
+    	if(nbPlaceLibre > 0) {  		
     		annonceCovoitRepo.save(annonce);
     		collegueRepo.save(passager);
     		reservationCovoitRepo.save(resa);
     	}
-
+ 
     	else {
     		throw new VoyageCompletException("Plus de disponibilités pour ce trajet");
     	}
     }
-
+    
+    public void cancelBooking (String email, ReservationCovoit resa) throws MessagingException {
+    	ReservationCovoit resaAAnnuler = this.reservationCovoitRepo.getReservationCovoitById(resa.getId());
+    	resaAAnnuler.setStatut(Statut.STATUT_ANNULEE);
+    	String emailConducteur = resaAAnnuler.getAnnonceCovoit().getConducteur().getEmail();
+    	reservationCovoitRepo.save(resaAAnnuler);
+    	sendAnnulationReservation(email, resaAAnnuler);
+    	sendAnnulationResaConducteur(emailConducteur, resaAAnnuler);
+    }
+    
+    public List<AnnonceCovoit> getLesAnnonceReservedBy(String email){
+    	
+    	Optional<Collegue> colOpt = this.collegueRepo.findByEmail(email);
+        List<ReservationCovoit> reservationCovoitList = new ArrayList<>();
+        colOpt.ifPresent(col->{
+            Optional<List<ReservationCovoit>> optionalReservationCovoitList = this.reservationCovoitRepo.getAllByPassagers(col);
+            optionalReservationCovoitList.ifPresent(mesResa->{
+                for(ReservationCovoit resa : mesResa){
+                    reservationCovoitList.add(resa);
+                }
+            });
+        });
+        return reservationCovoitList.stream()
+        		.map(resa -> resa.getAnnonceCovoit())
+        		.collect(Collectors.toList());
+    }
+    
+    
     public int getNbPlacesLibres (AnnonceCovoit annonce) {
     	Optional<List<ReservationCovoit>> optionalReservationCovoitList = this.reservationCovoitRepo.getAllByAnnonceCovoit(annonce);
     	List<ReservationCovoit> resaCovoit = new ArrayList<>();
     	optionalReservationCovoitList.ifPresent(listResa -> {
     		for(ReservationCovoit resa : listResa) {
+    			if(resa.getStatut().equals(Statut.STATUT_ENCOURS))
     			resaCovoit.add(resa);
     		}
     	});
@@ -53,19 +93,24 @@ public class CovoitService {
     	int nbPlaceLibre = annonce.getVehicule().getNbPlaceDispo()-nbResa;
     	return nbPlaceLibre;
     }
-
-    public AnnonceCovoit getResaCovoit (int id) {
+    
+    public AnnonceCovoit getAnnonceCovoit (int id) {
     	return annonceCovoitRepo.findById(id)
+    			.orElseThrow(() -> new AnnonceNonTrouveException());
+    }
+    
+    public ReservationCovoit getResaCovoit (int id) {
+    	return reservationCovoitRepo.findById(id)
     			.orElseThrow(() -> new AnnonceNonTrouveException ());
     }
-
-
+    
+    
     public List<AnnonceCovoit> selectByDate (LocalDateTime start, LocalDateTime end) {
     	return annonceCovoitRepo.getAllByDateTimeBetween(start, end);
     }
+    
 
-
-    public List<AnnonceCovoit> getLesAnnonceReservedBy(String email){
+    public List<ReservationCovoitDTO> getLesReservationsBy(String email){
         Optional<Collegue> colOpt = this.collegueRepo.findByEmail(email);
         List<ReservationCovoit> reservationCovoitList = new ArrayList<>();
         colOpt.ifPresent(col->{
@@ -76,18 +121,19 @@ public class CovoitService {
                 }
             });
         });
-        List<AnnonceCovoit> annonceCovoitList = new ArrayList<>();
-        if(reservationCovoitList.size() > 0){
-            for(ReservationCovoit resa : reservationCovoitList){
-                Optional<AnnonceCovoit> annonceCovoitOpt = this.annonceCovoitRepo.findById(resa.getAnnonceCovoit().getId())
-                        .filter(annonceCovoit -> annonceCovoit.getDateTime().isAfter(LocalDateTime.now()));
-                annonceCovoitOpt.ifPresent(annonceCovoit-> annonceCovoitList.add(annonceCovoit));
-            }
-
+        List<ReservationCovoitDTO> listResaCovoit = new ArrayList<>();
+        for(ReservationCovoit resa : reservationCovoitList) {
+        	ReservationCovoitDTO resaCovoit = new ReservationCovoitDTO(new AnnonceCovoitDTO(resa.getAnnonceCovoit()), resa.getStatut(),resa.getId());
+        	listResaCovoit.add(resaCovoit);
         }
-        return annonceCovoitList;
+        return listResaCovoit.stream()
+        		.filter(resa-> resa.getAnnonce().getDateTime().isAfter(LocalDateTime.now()))
+        		.filter(resa -> resa.getStatutResa().equals(Statut.STATUT_ENCOURS))
+        		.collect(Collectors.toList());
     }
-    public List<AnnonceCovoit> getLesAnnonceOldReservedBy(String email){
+    
+    
+    public List<ReservationCovoitDTO> getLesReservationsOldBy(String email){
         Optional<Collegue> colOpt = this.collegueRepo.findByEmail(email);
         List<ReservationCovoit> reservationCovoitList = new ArrayList<>();
         colOpt.ifPresent(col->{
@@ -98,15 +144,36 @@ public class CovoitService {
                 }
             });
         });
-        List<AnnonceCovoit> annonceCovoitList = new ArrayList<>();
-        if(reservationCovoitList.size() > 0){
-            for(ReservationCovoit resa : reservationCovoitList){
-                Optional<AnnonceCovoit> annonceCovoitOpt = this.annonceCovoitRepo.findById(resa.getAnnonceCovoit().getId()).filter(annonceCovoit -> annonceCovoit.getDateTime().isBefore(LocalDateTime.now()));
-                annonceCovoitOpt.ifPresent(annonceCovoit-> annonceCovoitList.add(annonceCovoit));
-            }
-
+        List<ReservationCovoitDTO> listResaCovoit = new ArrayList<>();
+        for(ReservationCovoit resa : reservationCovoitList) {
+        	ReservationCovoitDTO resaCovoit = new ReservationCovoitDTO(new AnnonceCovoitDTO(resa.getAnnonceCovoit()), resa.getStatut());
+        	listResaCovoit.add(resaCovoit);
         }
-        return annonceCovoitList;
+        return listResaCovoit.stream()
+        		.filter(resa-> (resa.getAnnonce().getDateTime().isBefore(LocalDateTime.now())||(resa.getStatutResa().equals(Statut.STATUT_ANNULEE))) /*|| resa.getStatutResa().equals(Statut.STATUT_)*/)        		
+        		.collect(Collectors.toList());
+//        for (ReservationCovoitDTO resa: listResaCovoit) {
+//        	resa.setStatutResa(Statut.STATUT_TERMINEE);
+//        }
+        
+    }
+    
+    public void sendAnnulationResaConducteur(String emailConducteur, ReservationCovoit reservation) throws MessagingException {
+    	MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+        helper.setTo(emailConducteur);
+        helper.setSubject("Annulation d'un passager - " + reservation.getAnnonceCovoit().getItineraire().getAdresseDepart() + " --> " + reservation.getAnnonceCovoit().getItineraire().getAdresseDest());
+        helper.setText("<h1>"+ reservation.getPassagers().getPrenom() + " a annulé sa réservation pour votre trajet du " + reservation.getAnnonceCovoit().getDateTime().format(DateTimeFormatter.ofPattern("dd MMMM yyyy")) + "</h1>", true);
+        javaMailSender.send(message);
+    }
+    
+    public void sendAnnulationReservation(String emailPassager, ReservationCovoit reservation) throws MessagingException {
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+        helper.setTo(emailPassager);
+        helper.setSubject("Confirmation d'annulation de votre voyage - " + reservation.getAnnonceCovoit().getItineraire().getAdresseDepart() + " --> " + reservation.getAnnonceCovoit().getItineraire().getAdresseDest());
+        helper.setText("<h1>Confirmation d'annulation de votre voyage du " + reservation.getAnnonceCovoit().getDateTime().format(DateTimeFormatter.ofPattern("dd MMMM yyyy")) + "</h1>", true);
+        javaMailSender.send(message);
     }
 
 }

@@ -55,16 +55,16 @@ public class StartupListener {
 
         Collegue col1 = new Collegue();
         col1.setNom("Admin");
-        col1.setPrenom("DEV");
-        col1.setEmail("adrienchauvin44@gmail.com");
+        col1.setPrenom("Tintin");
+        col1.setEmail("tintin@yopmail.com");
         col1.setMotDePasse(passwordEncoder.encode("superpass"));
         col1.setRoles(Arrays.asList(new RoleCollegue(col1, Role.ROLE_ADMINISTRATEUR), new RoleCollegue(col1, Role.ROLE_UTILISATEUR)));
         this.collegueRepo.save(col1);
 
         Collegue col2 = new Collegue();
         col2.setNom("User");
-        col2.setPrenom("DEV");
-        col2.setEmail("adrienchauvin@hotmail.fr");
+        col2.setPrenom("Milou");
+        col2.setEmail("milou@yopmail.com");
         col2.setMotDePasse(passwordEncoder.encode("superpass"));
         col2.setRoles(Arrays.asList(new RoleCollegue(col2, Role.ROLE_UTILISATEUR)));
         this.collegueRepo.save(col2);

@@ -3,6 +3,7 @@ package dev.security;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -21,6 +22,7 @@ import javax.sql.DataSource;
  */
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(securedEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Value("${jwt.cookie}")
@@ -74,10 +76,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                  // en cas d'erreur, un code 403 est envoyé
                 .exceptionHandling().authenticationEntryPoint((request, response, authException) -> response.setStatus(HttpServletResponse.SC_FORBIDDEN))
+                
                 .and()
-                // toutes les requêtes doivent être authentifiées
                 .authorizeRequests()
                 .antMatchers("/h2-console/**").permitAll()
+                
+                // toutes les requêtes doivent être authentifiées
+
                 .anyRequest().authenticated()
                 .and().headers().frameOptions().disable()
                 .and()

@@ -11,6 +11,9 @@ import java.util.Optional;
 public interface ReservationCovoitRepo extends JpaRepository<ReservationCovoit, Integer> {
 
     Optional<List<ReservationCovoit>> getAllByPassagers(Collegue collegue);
+    Optional<List<ReservationCovoit>> getAllByAnnonceCovoit (AnnonceCovoit annonceCovoit);
+    Optional<List<ReservationCovoit>> getReservationCovoitsByAnnonceCovoit(AnnonceCovoit annonceCovoit);
+    ReservationCovoit getReservationCovoitById (int id);
 
 
 }

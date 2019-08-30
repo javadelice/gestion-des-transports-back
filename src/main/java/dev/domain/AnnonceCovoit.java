@@ -5,17 +5,25 @@ import java.time.LocalDateTime;
 
 @Entity
 public class AnnonceCovoit {
+	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    
     @ManyToOne
     private Collegue conducteur;
+    
     @ManyToOne
     private Itineraire itineraire;
+    
     @ManyToOne
     private Vehicule vehicule;
+    
     private LocalDateTime dateTime;
-
+    
+    @Enumerated(EnumType.STRING)
+    private Statut statut;
+   
 
     public AnnonceCovoit() {
     }
@@ -25,9 +33,11 @@ public class AnnonceCovoit {
         this.itineraire = itineraire;
         this.vehicule = vehicule;
         this.dateTime = dateTime;
+        this.statut = statut.STATUT_ENCOURS;
     }
+    
 
-    public int getId() {
+	public int getId() {
         return id;
     }
 
@@ -66,4 +76,15 @@ public class AnnonceCovoit {
     public void setDateTime(LocalDateTime dateTime) {
         this.dateTime = dateTime;
     }
+
+	public Statut getStatut() {
+		return statut;
+	}
+
+	public void setStatut(Statut statut) {
+		this.statut = statut;
+	}
+
+    
+    
 }

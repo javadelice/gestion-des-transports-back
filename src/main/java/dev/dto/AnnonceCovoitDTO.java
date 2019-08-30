@@ -1,9 +1,10 @@
 package dev.dto;
 
-import dev.domain.Itineraire;
-import dev.domain.Vehicule;
-
 import java.time.LocalDateTime;
+
+import dev.domain.Itineraire;
+import dev.domain.Statut;
+import dev.domain.Vehicule;
 
 public class AnnonceCovoitDTO {
     private int id;
@@ -11,6 +12,8 @@ public class AnnonceCovoitDTO {
     private Itineraire itineraire;
     private Vehicule vehicule;
     private LocalDateTime dateTime;
+    private int nbPlacesLibres;
+    private Statut statut;
 
     public AnnonceCovoitDTO() {
     }
@@ -54,4 +57,24 @@ public class AnnonceCovoitDTO {
     public void setDateTime(LocalDateTime dateTime) {
         this.dateTime = dateTime;
     }
+
+
+	public int getNbPlacesLibres() {
+		return nbPlacesLibres;
+	}
+
+	public void setNbPlacesLibres(int nbPlacesLibres) {
+		this.nbPlacesLibres = nbPlacesLibres;
+	}
+
+	public Statut getStatut() {
+		return statut;
+	}
+
+	public void setStatut(Statut statut) {
+		this.statut = statut;
+	}
+
+	
+
 }

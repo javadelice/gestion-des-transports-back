@@ -48,6 +48,17 @@ public class Vehicule {
         this.indisponible = indisponible;
     }
 
+    public Vehicule(String immatriculation, String marque, int modele, int nbPlaceDispo){
+        this.immatriculation = immatriculation;
+        this.marque = marque;
+        this.modele = modele;
+        this.nbPlaceDispo = nbPlaceDispo;
+        this.estSociete = false;
+        this.photoUrl = "";
+        this.categorie = Categorie.Citadines_polyvalentes;
+        this.indisponible = null;
+    }
+
     public Long getId() {
         return id;
     }

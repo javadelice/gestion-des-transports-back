@@ -10,12 +10,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import dev.domain.Collegue;
+import dev.controller.vm.ChauffeurVM;
 import dev.controller.vm.CollegueVM;
 import dev.domain.Role;
+import dev.dto.ChauffeurIdDTO;
 import dev.service.CollegueService;
 
 @CrossOrigin (allowCredentials = "true")
@@ -33,26 +35,18 @@ public class CollegueController {
            path = "/chauffeurs"
             )
     
-    public List<CollegueVM> getAllCollegues (){
-        List<CollegueVM> collegues = collegueService.lister()
-        		.stream()
-        		.filter(c -> c.getRoles().contains(Role.ROLE_CHAUFFEUR))
-        		.collect(Collectors.toList());
+    public List<ChauffeurVM> getAllCollegues (){
+        List<ChauffeurVM> collegues = collegueService.lister();
         return collegues;
     }
 	
 	
-//	@Secured("ROLE_ADMINISTRATEUR")
-//	@RequestMapping(
-//            method = RequestMethod.PATCH, 
-//            path = "/chauffeurs")
-//
-//    public void updateRole(@PathVariable Long id) {
-//
-//		Collegue collegue = collegueService.chercherParId(id);
-//        if (!collegue.getRoles().contains(Role.ROLE_CHAUFFEUR)) {
-//        	collegueService.modifierRoles(id, Role.ROLE_CHAUFFEUR);
-//        } 
-//
-//  }
+	@Secured("ROLE_ADMINISTRATEUR")
+	@RequestMapping(
+            method = RequestMethod.POST, 
+            path = "/chauffeurs")
+
+    public void updateRole(@RequestBody ChauffeurIdDTO id) {
+        	collegueService.modifierRole(id.getId());
+    }
 }

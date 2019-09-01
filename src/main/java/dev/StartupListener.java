@@ -69,18 +69,12 @@ public class StartupListener {
         col2.setRoles(Arrays.asList(new RoleCollegue(col2, Role.ROLE_UTILISATEUR)));
         this.collegueRepo.save(col2);
 
-        Collegue col9 = new Collegue();
-        col9.setNom("TestAnnonce");
-        col9.setPrenom("VED");
-        col9.setEmail("usertest@dev.fr");
-        col9.setMotDePasse(passwordEncoder.encode("superpass"));
-        col9.setRoles(Arrays.asList(new RoleCollegue(col9, Role.ROLE_UTILISATEUR)));
-        this.collegueRepo.save(col9);
-
         Collegue col3 = new Collegue();
         col3.setNom("Dupont");
         col3.setPrenom("Robert");
         col3.setEmail("robert.dupont@dev.fr");
+        col3.setPermis("6849-8934-1098");
+        col3.setTelephone("06.89.67.99.01");
         col3.setMotDePasse(passwordEncoder.encode("superpass"));
         col3.setRoles(Arrays.asList(new RoleCollegue(col3, Role.ROLE_CHAUFFEUR), new RoleCollegue(col3, Role.ROLE_UTILISATEUR)));
         this.collegueRepo.save(col3);
@@ -89,8 +83,10 @@ public class StartupListener {
         col4.setNom("Dupont");
         col4.setPrenom("Martine");
         col4.setEmail("adchauvin44@gmail.com");
+        col4.setPermis("4580-9344-0986");
+        col4.setTelephone("06.70.05.98.00");
         col4.setMotDePasse(passwordEncoder.encode("superpass"));
-        col4.setRoles(Arrays.asList(new RoleCollegue(col4, Role.ROLE_UTILISATEUR)));
+        col4.setRoles(Arrays.asList(new RoleCollegue(col4, Role.ROLE_UTILISATEUR), new RoleCollegue(col4, Role.ROLE_CHAUFFEUR)));
         this.collegueRepo.save(col4);
 
         Collegue col5 = new Collegue();
@@ -108,6 +104,14 @@ public class StartupListener {
         col6.setMotDePasse(passwordEncoder.encode("superpass"));
         col6.setRoles(Arrays.asList(new RoleCollegue(col6, Role.ROLE_UTILISATEUR)));
         this.collegueRepo.save(col6);
+        
+        Collegue col9 = new Collegue();
+        col9.setNom("TestAnnonce");
+        col9.setPrenom("VED");
+        col9.setEmail("usertest@dev.fr");
+        col9.setMotDePasse(passwordEncoder.encode("superpass"));
+        col9.setRoles(Arrays.asList(new RoleCollegue(col9, Role.ROLE_UTILISATEUR)));
+        this.collegueRepo.save(col9);
 
 
         // Création véhicule de société

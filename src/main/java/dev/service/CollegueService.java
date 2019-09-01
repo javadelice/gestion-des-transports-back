@@ -1,10 +1,13 @@
 package dev.service;
 
+import dev.controller.vm.ChauffeurVM;
 import dev.controller.vm.CollegueVM;
 import dev.domain.Collegue;
 import dev.domain.Role;
+import dev.domain.RoleCollegue;
 import dev.exception.CollegueNonTrouveException;
 import dev.repository.CollegueRepo;
+import dev.repository.RoleCollegueRepo;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,6 +22,9 @@ public class CollegueService {
 	
 	@Autowired
     private CollegueRepo collegueRepo;
+	
+	@Autowired
+	private RoleCollegueRepo roleCollegueRepo;
 
 	public CollegueService() {
 
@@ -29,38 +35,37 @@ public class CollegueService {
 				.orElseThrow(() -> new CollegueNonTrouveException());
 	}
 
-	public List<CollegueVM> lister() {
+	public List<ChauffeurVM> lister() {
         return collegueRepo.findAll()
                 .stream()
-                .filter(collegue -> collegue.getRoles().contains(Role.ROLE_CHAUFFEUR))
                 .map(c -> {
-                	CollegueVM col = new CollegueVM(c);
+                	ChauffeurVM col = new ChauffeurVM(c);
                 	return col;
                 	}
                 )
+                .filter(collegue -> collegue.getRoles().contains(Role.ROLE_CHAUFFEUR))
                 .collect(Collectors.toList());
     }
 	
-	public List<Collegue> chercherParNom(String nom) {
-        return collegueRepo.findByNom(nom);
-    }
+	
 
     public Collegue chercherParId(Long id) {
         return collegueRepo.findById(id).orElseThrow(() -> new CollegueNonTrouveException());
     }
     
-//    public void modifierRoles (Long id, Role roleChauffeur) {
-//    	
-//    	Collegue collegue = chercherParId(id);
-//    	
-//    	if (!collegue.getId().equals(id)) {
-//            throw new CollegueNonTrouveException();
-//        }
-//    	
-//    	collegue.setRoles(roleChauffeur);
-//    	collegueRepo.save(collegue);
-//    	
-//    }
+    public void modifierRole (Long id) {
+    	Collegue collegue = chercherParId(id);
+    	
+    	if(!collegue.containsRole(Role.ROLE_CHAUFFEUR)) {
+    		List<RoleCollegue> roles = collegue.getRoles();
+    		RoleCollegue roleCollegue = new RoleCollegue(collegue,Role.ROLE_CHAUFFEUR);
+    		roleCollegueRepo.save(roleCollegue);
+    		roles.add(roleCollegue);
+    		collegue.setRoles(roles);
+    		collegueRepo.save(collegue);	
+    	}
+    	   	
+    }
 
 
 }

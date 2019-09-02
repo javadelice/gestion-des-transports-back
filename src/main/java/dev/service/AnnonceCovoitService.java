@@ -58,7 +58,7 @@ public class AnnonceCovoitService {
 
 	private static final int PLACE_MINIMUM_DISPONIBLE = 1;
 	private static final int PLACE_MAXIMUM_DISPONIBLE = 20;
-	private static final double VITESSE_MOYENNE_TRAJET = 70.0; 
+	private static final double VITESSE_MOYENNE_TRAJET = 70.0;
 
 	public void verifierInfos(InfoCovoit infoCo, LocalDateTime dateTime, String email) throws MessagingException {
 		Map<String, String> erreurs = new HashMap<>();
@@ -120,7 +120,7 @@ public class AnnonceCovoitService {
 		return this.annonceCoRepo.findAll().stream().filter(annonce -> annonce.getConducteur().equals(col))
 		        .filter(annonce -> annonce.getDateTime().isBefore(LocalDateTime.now()) || annonce.getStatut().equals(Statut.STATUT_ANNULEE))
 		        .collect(Collectors.toList());
-		
+
 	}
 
 	public int getNbPassagers(AnnonceCovoit annonceCovoit) {
@@ -131,9 +131,13 @@ public class AnnonceCovoitService {
 		List<ReservationCovoit> resaList = new ArrayList<>();
 		optCovoitList.ifPresent(covoitList -> {
 			for (ReservationCovoit resa : covoitList) {
-				resaList.add(resa);
+
+				if (resa.getStatut().equals(Statut.STATUT_ENCOURS) || resa.getStatut().equals(Statut.STATUT_TERMINEE)) {
+					resaList.add(resa);
+				}
 			}
 		});
+		
 		nbPassager = resaList.size();
 		return nbPassager;
 	}
@@ -153,7 +157,7 @@ public class AnnonceCovoitService {
 				resa.setStatut(Statut.STATUT_ANNULEE);
 				this.reservationRepo.save(resa);
 			}
-		});	
+		});
 	}
 
 	public void sendAnnulationPassagers(String email, AnnonceCovoit annonceAnnulee) {
@@ -165,13 +169,13 @@ public class AnnonceCovoitService {
 		try {
 			helper = new MimeMessageHelper(message, true);
 			helper.setTo(email);
-			helper.setSubject("Annulation de votre covoiturage - " + annonceAnnulee.getItineraire().getAdresseDepart() + " --> " + annonceAnnulee.getItineraire().getAdresseDest());
+			helper.setSubject("Annulation de votre covoiturage - " + annonceAnnulee.getItineraire().getAdresseDepart() + " --> "
+			        + annonceAnnulee.getItineraire().getAdresseDest());
 			helper.setText("<h1>Annulation de votre covoiturage du " + annonceAnnulee.getDateTime().format(formatDate) + "</h1>", true);
-		} 
-			catch (MessagingException e) {
+		} catch (MessagingException e) {
 			e.printStackTrace();
 		}
-		
+
 		javaMailSender.send(message);
 	}
 
@@ -179,25 +183,26 @@ public class AnnonceCovoitService {
 
 		MimeMessage message = javaMailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message, true);
-		
+
 		DateTimeFormatter formatDate = DateTimeFormatter.ofPattern("dd MMMM yyyy");
 
 		helper.setTo(emailDestinataire);
-		helper.setSubject("Confirmation annulation du covoiturage - " + annonceAnnulee.getItineraire().getAdresseDepart() + " --> " + annonceAnnulee.getItineraire().getAdresseDest());
+		helper.setSubject("Confirmation annulation du covoiturage - " + annonceAnnulee.getItineraire().getAdresseDepart() + " --> "
+		        + annonceAnnulee.getItineraire().getAdresseDest());
 		helper.setText("<h1>Confirmation de création de votre covoiturage du " + annonceAnnulee.getDateTime().format(formatDate) + "</h1>", true);
 
 		javaMailSender.send(message);
 
 	}
-	
+
 	private static double calculDistanceTrajet(double lat1, double lon1, double lat2, double lon2, String unit) {
-		
+
 		if ((lat1 == lat2) && (lon1 == lon2)) {
 			return 0;
-		}
-		else {
+		} else {
 			double theta = lon1 - lon2;
-			double dist = Math.sin(Math.toRadians(lat1)) * Math.sin(Math.toRadians(lat2)) + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) * Math.cos(Math.toRadians(theta));
+			double dist = Math.sin(Math.toRadians(lat1)) * Math.sin(Math.toRadians(lat2))
+			        + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) * Math.cos(Math.toRadians(theta));
 			dist = Math.acos(dist);
 			dist = Math.toDegrees(dist);
 			dist = dist * 60 * 1.1515;
@@ -209,11 +214,11 @@ public class AnnonceCovoitService {
 			return (dist);
 		}
 	}
-	
-	private static double calculDureeTrajet (double distanceTrajet) {
+
+	private static double calculDureeTrajet(double distanceTrajet) {
 		double dureeTrajet = distanceTrajet / VITESSE_MOYENNE_TRAJET;
 		long v1 = Math.round(dureeTrajet);
-		String date = v1 / 60 + "h" + v1%60;
+		String date = v1 / 60 + "h" + v1 % 60;
 		return (dureeTrajet);
 	}
 

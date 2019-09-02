@@ -15,8 +15,7 @@ import java.time.LocalTime;
 import java.util.Arrays;
 
 /**
- * Code de démarrage de l'application.
- * Insertion de jeux de données.
+ * Code de démarrage de l'application. Insertion de jeux de données.
  */
 @Component
 public class StartupListener {
@@ -33,10 +32,9 @@ public class StartupListener {
     @Autowired
     private ResaVehiculeRepository resaVehiculeRepo;
 
-    public StartupListener(@Value("${app.version}") String appVersion, VersionRepo versionRepo, PasswordEncoder passwordEncoder,
-                           CollegueRepo collegueRepo, AnnonceCovoitRepo annonceCovoitRepo,
-                           ItineraireRepo itineraireRepo, VehiculeRepo vehiculeRepo,
-                           ReservationCovoitRepo reservationCovoitRepo) {
+    public StartupListener(@Value("${app.version}") String appVersion, VersionRepo versionRepo,
+            PasswordEncoder passwordEncoder, CollegueRepo collegueRepo, AnnonceCovoitRepo annonceCovoitRepo,
+            ItineraireRepo itineraireRepo, VehiculeRepo vehiculeRepo, ReservationCovoitRepo reservationCovoitRepo) {
         this.appVersion = appVersion;
         this.versionRepo = versionRepo;
         this.passwordEncoder = passwordEncoder;
@@ -58,7 +56,8 @@ public class StartupListener {
         col1.setPrenom("Tintin");
         col1.setEmail("tintin@yopmail.com");
         col1.setMotDePasse(passwordEncoder.encode("superpass"));
-        col1.setRoles(Arrays.asList(new RoleCollegue(col1, Role.ROLE_ADMINISTRATEUR), new RoleCollegue(col1, Role.ROLE_UTILISATEUR)));
+        col1.setRoles(Arrays.asList(new RoleCollegue(col1, Role.ROLE_ADMINISTRATEUR),
+                new RoleCollegue(col1, Role.ROLE_UTILISATEUR)));
         this.collegueRepo.save(col1);
 
         Collegue col2 = new Collegue();
@@ -82,7 +81,8 @@ public class StartupListener {
         col3.setPrenom("Robert");
         col3.setEmail("robert.dupont@dev.fr");
         col3.setMotDePasse(passwordEncoder.encode("superpass"));
-        col3.setRoles(Arrays.asList(new RoleCollegue(col3, Role.ROLE_CHAUFFEUR), new RoleCollegue(col3, Role.ROLE_UTILISATEUR)));
+        col3.setRoles(Arrays.asList(new RoleCollegue(col3, Role.ROLE_CHAUFFEUR),
+                new RoleCollegue(col3, Role.ROLE_UTILISATEUR)));
         this.collegueRepo.save(col3);
 
         Collegue col4 = new Collegue();
@@ -109,6 +109,15 @@ public class StartupListener {
         col6.setRoles(Arrays.asList(new RoleCollegue(col6, Role.ROLE_UTILISATEUR)));
         this.collegueRepo.save(col6);
 
+        // Création d'un jeu de donnée pour une reservation
+        Collegue col7 = new Collegue();
+        col7.setNom("Chauffeur");
+        col7.setPrenom("Michel");
+        col7.setEmail("michou@dev.fr");
+        col7.setMotDePasse(passwordEncoder.encode("s"));
+        col7.setRoles(Arrays.asList(new RoleCollegue(col7, Role.ROLE_UTILISATEUR),
+                new RoleCollegue(col7, Role.ROLE_CHAUFFEUR)));
+        this.collegueRepo.save(col7);
 
         // Création véhicule de société
         Vehicule vehiculeSo = new Vehicule("AC-985-CA", "Peugeot", 2008, 3, true,
@@ -133,7 +142,7 @@ public class StartupListener {
 
         // Création véhicule particuluer
 
-        Vehicule vehicule2 = new Vehicule("AC-359-FD","Peugeot",2014,3);
+        Vehicule vehicule2 = new Vehicule("AC-359-FD", "Peugeot", 2014, 3);
         this.vehiculeRepo.save(vehicule2);
 
         // Création des réservations
@@ -146,16 +155,13 @@ public class StartupListener {
         resaVehiculeRepo.save(new ResaVehicule(LocalDateTime.of(2017, 01, 01, 11, 00),
                 LocalDateTime.of(2017, 01, 11, 15, 00), col1, vehiculeSo3));
 
-        // Création d'un jeu de donnée pour une reservation
-        Collegue col7 = new Collegue();
-        col7.setNom("Chauffeur");
-        col7.setPrenom("Michel");
-        col7.setEmail("michou@dev.fr");
-        col7.setMotDePasse(passwordEncoder.encode("s"));
-        col7.setRoles(Arrays.asList(new RoleCollegue(col7, Role.ROLE_UTILISATEUR), new RoleCollegue(col7, Role.ROLE_CHAUFFEUR)));
-        this.collegueRepo.save(col7);
+        // Création d'un historique
+        resaVehiculeRepo.save(new ResaVehicule(LocalDateTime.of(2019, 8, 26, 17, 30),
+                LocalDateTime.of(2019, 8, 30, 12, 30), col3, vehiculeSo, col7, StatutResaChauffeur.ACCEPTEE));
+        resaVehiculeRepo.save(new ResaVehicule(LocalDateTime.of(2019, 8, 28, 11, 00),
+                LocalDateTime.of(2019, 8, 31, 12, 30), col3, vehiculeSo2));
 
-        //Création d'un jeu de donnée pour une reservation
+        // Création d'un jeu de donnée pour une reservation
 
         Itineraire itineraire = new Itineraire("Montpellier", "Nantes", "7h", 825);
         this.itineraireRepo.save(itineraire);
@@ -165,10 +171,8 @@ public class StartupListener {
 
         Vehicule vehicule = new Vehicule("AB-344-CA", "Renault", 2008, 3);
         this.vehiculeRepo.save(vehicule);
-        Itineraire itineraire2 = new Itineraire("Paris","Nantes","3h45",385);
+        Itineraire itineraire2 = new Itineraire("Paris", "Nantes", "3h45", 385);
         this.itineraireRepo.save(itineraire2);
-
-
 
         // Annonces
         AnnonceCovoit annonceCovoit = new AnnonceCovoit(col2, itineraire, vehicule,
@@ -183,15 +187,16 @@ public class StartupListener {
                 LocalDateTime.of(LocalDate.of(2019, 8, 3), LocalTime.of(8, 30)));
         this.annonceCovoitRepo.save(annonceCovoit2);
 
-        AnnonceCovoit annonceCovoit3 = new AnnonceCovoit(col4,itineraire2,vehicule2,LocalDateTime.of(LocalDate.of(2019,9,3), LocalTime.of(10,30)));
+        AnnonceCovoit annonceCovoit3 = new AnnonceCovoit(col4, itineraire2, vehicule2,
+                LocalDateTime.of(LocalDate.of(2019, 9, 3), LocalTime.of(10, 30)));
         this.annonceCovoitRepo.save(annonceCovoit3);
 
-        AnnonceCovoit annonceCovoit4 = new AnnonceCovoit(col2,itineraire1,vehicule,LocalDateTime.of(LocalDate.of(2019,9,14), LocalTime.of(14,30)));
+        AnnonceCovoit annonceCovoit4 = new AnnonceCovoit(col2, itineraire1, vehicule,
+                LocalDateTime.of(LocalDate.of(2019, 9, 14), LocalTime.of(14, 30)));
         this.annonceCovoitRepo.save(annonceCovoit4);
 
-
-        //Reservations
-        ReservationCovoit reservationCovoit1 = new ReservationCovoit(annonceCovoit,col1);
+        // Reservations
+        ReservationCovoit reservationCovoit1 = new ReservationCovoit(annonceCovoit, col1);
         this.reservationCovoitRepo.save(reservationCovoit1);
 
         ReservationCovoit reservationCovoit2 = new ReservationCovoit(annonceCovoit1, col1);
@@ -203,19 +208,11 @@ public class StartupListener {
         ReservationCovoit reservationCovoit4 = new ReservationCovoit(annonceCovoit2, col3);
         this.reservationCovoitRepo.save(reservationCovoit4);
 
-        for(int i = 0;i<15;i++){
-            this.reservationCovoitRepo.save(
-                    new ReservationCovoit(
-                            this.annonceCovoitRepo.save(
-                                    new AnnonceCovoit(col2,
-                                            itineraire1,
-                                            vehicule,
-                                            LocalDateTime.of(LocalDate.of(2019,7,i+1),
-                                                    LocalTime.of(8,30)))),
-                            col1));
+        for (int i = 0; i < 15; i++) {
+            this.reservationCovoitRepo
+                    .save(new ReservationCovoit(this.annonceCovoitRepo.save(new AnnonceCovoit(col2, itineraire1,
+                            vehicule, LocalDateTime.of(LocalDate.of(2019, 7, i + 1), LocalTime.of(8, 30)))), col1));
         }
-
-
 
     }
 

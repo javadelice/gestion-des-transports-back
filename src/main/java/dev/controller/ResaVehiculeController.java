@@ -19,7 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dev.domain.Dispo;
 import dev.domain.Vehicule;
-import dev.dto.InfosResa;
+import dev.dto.CollegueDTO;
+import dev.dto.InfoResaCreation;
 import dev.dto.ResaVehiculeDTO;
 import dev.service.ResaVehiculeService;
 
@@ -39,6 +40,9 @@ public class ResaVehiculeController {
             resaVehiculeDto.setDateDeDebut(reservation.getDateDebutResaV());
             resaVehiculeDto.setDateDeFin(reservation.getDateFinResV());
             resaVehiculeDto.setVehiculeSociete(reservation.getVehicule());
+            if(reservation.getChauffeur() != null)
+            resaVehiculeDto.setChauffeur(new CollegueDTO(reservation.getChauffeur()));
+            resaVehiculeDto.setStatut(reservation.getStatus());
             return resaVehiculeDto;
         }).collect(Collectors.toList());
     }
@@ -53,64 +57,62 @@ public class ResaVehiculeController {
             resaVehiculeDto.setDateDeDebut(reservation.getDateDebutResaV());
             resaVehiculeDto.setDateDeFin(reservation.getDateFinResV());
             resaVehiculeDto.setVehiculeSociete(reservation.getVehicule());
+            if(reservation.getChauffeur() != null)
+            resaVehiculeDto.setChauffeur(new CollegueDTO(reservation.getChauffeur()));
+            resaVehiculeDto.setStatut(reservation.getStatus());
             return resaVehiculeDto;
         }).collect(Collectors.toList());
     }
 
     @Secured("ROLE_UTILISATEUR")
     @RequestMapping(method = RequestMethod.GET, path = "collaborateur/reservations/vehicule/creer")
-    public List<Vehicule> getVehiculeSociete(@RequestParam String dateDepart,
-                                             @RequestParam String heureDepart,
-                                             @RequestParam String minuteDepart,
-                                             @RequestParam(required = false) String dateRetour,
-                                             @RequestParam(required = false) String heureRetour,
-                                             @RequestParam(required = false) String minuteRetour){
+    public List<Vehicule> getVehiculeSociete(@RequestParam String dateDepart, @RequestParam String heureDepart,
+            @RequestParam String minuteDepart, @RequestParam(required = false) String dateRetour,
+            @RequestParam(required = false) String heureRetour, @RequestParam(required = false) String minuteRetour) {
         LocalDate dateDeDepart = LocalDate.parse(dateDepart, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         String infoHoraireDepart = heureDepart + ":" + minuteDepart;
         LocalTime horaireDeDepart = LocalTime.parse(infoHoraireDepart, DateTimeFormatter.ofPattern("HH:mm"));
         LocalDateTime dateTimeDepart = LocalDateTime.of(dateDeDepart, horaireDeDepart);
 
-
         List<Vehicule> vehiculeReservedList = new ArrayList<>();
         List<Vehicule> vehiculeList = resaVehiculeService.getListVehiculeSociete();
 
-        if(dateRetour.equals("undefined") && heureRetour.equals("undefined") && minuteRetour.equals("undefined")){
+        if (dateRetour.equals("undefined") && heureRetour.equals("undefined") && minuteRetour.equals("undefined")) {
             vehiculeReservedList.addAll(resaVehiculeService.getListVehiculeReserved(dateTimeDepart));
-        }
-        else{
+        } else {
             LocalDate dateDeRetour = LocalDate.parse(dateRetour, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             String infoHoraireRetour = heureRetour + ":" + minuteRetour;
             LocalTime horaireDeRetour = LocalTime.parse(infoHoraireRetour, DateTimeFormatter.ofPattern("HH:mm"));
             LocalDateTime dateTimeRetour = LocalDateTime.of(dateDeRetour, horaireDeRetour);
 
-            vehiculeReservedList.addAll(resaVehiculeService.getListVehiculeReserved(dateTimeDepart,dateTimeRetour));
+            vehiculeReservedList.addAll(resaVehiculeService.getListVehiculeReserved(dateTimeDepart, dateTimeRetour));
         }
 
-        return vehiculeList.stream()
-                .map(vehicule -> {
-                    if(vehiculeReservedList.contains(vehicule)){
-                        vehicule.setIndisponible(Dispo.Indisponible);
-                    }
-                    else vehicule.setIndisponible(Dispo.Disponible);
-                    return vehicule;
-                }).collect(Collectors.toList());
+        return vehiculeList.stream().map(vehicule -> {
+            if (vehiculeReservedList.contains(vehicule)) {
+                vehicule.setIndisponible(Dispo.Indisponible);
+            } else
+                vehicule.setIndisponible(Dispo.Disponible);
+            return vehicule;
+        }).collect(Collectors.toList());
     }
 
     @Secured("ROLE_UTILISATEUR")
     @RequestMapping(method = RequestMethod.POST, path = "collaborateur/reservations/vehicule/creer")
-    public void ajouterReservation(@RequestBody InfosResa infoResa) {
+    public void ajouterReservation(@RequestBody InfoResaCreation infoResa) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        
+
         LocalDate dateDeDepart = LocalDate.parse(infoResa.getDateDepart(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         String infoHoraireDepart = infoResa.getHeureDepart() + ":" + infoResa.getMinuteDepart();
         LocalTime horaireDeDepart = LocalTime.parse(infoHoraireDepart, DateTimeFormatter.ofPattern("HH:mm"));
         LocalDateTime dateTimeDepart = LocalDateTime.of(dateDeDepart, horaireDeDepart);
-        
+
         LocalDate dateDeRetour = LocalDate.parse(infoResa.getDateRetour(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         String infoHoraireRetour = infoResa.getHeureRetour() + ":" + infoResa.getMinuteRetour();
         LocalTime horaireDeRetour = LocalTime.parse(infoHoraireRetour, DateTimeFormatter.ofPattern("HH:mm"));
         LocalDateTime dateTimeRetour = LocalDateTime.of(dateDeRetour, horaireDeRetour);
-        
-        resaVehiculeService.verifierDate(dateTimeDepart, dateTimeRetour, infoResa.getVehiculeSociete(), email);
+
+        resaVehiculeService.verifierDate(dateTimeDepart, dateTimeRetour, infoResa.getVehiculeSociete(), email, infoResa.isAvecChauffeur());
     }
+
 }

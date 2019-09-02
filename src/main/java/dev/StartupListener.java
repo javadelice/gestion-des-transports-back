@@ -54,48 +54,47 @@ public class StartupListener {
         Collegue col1 = new Collegue();
         col1.setNom("Admin");
         col1.setPrenom("Tintin");
+        col1.setMatricule("C011000a");
         col1.setEmail("tintin@yopmail.com");
         col1.setMotDePasse(passwordEncoder.encode("superpass"));
-        col1.setRoles(Arrays.asList(new RoleCollegue(col1, Role.ROLE_ADMINISTRATEUR),
-                new RoleCollegue(col1, Role.ROLE_UTILISATEUR)));
+        col1.setRoles(Arrays.asList(new RoleCollegue(col1, Role.ROLE_ADMINISTRATEUR), new RoleCollegue(col1, Role.ROLE_UTILISATEUR)));
         this.collegueRepo.save(col1);
 
         Collegue col2 = new Collegue();
         col2.setNom("User");
         col2.setPrenom("Milou");
+        col2.setMatricule("C022000b");
         col2.setEmail("milou@yopmail.com");
         col2.setMotDePasse(passwordEncoder.encode("superpass"));
         col2.setRoles(Arrays.asList(new RoleCollegue(col2, Role.ROLE_UTILISATEUR)));
         this.collegueRepo.save(col2);
 
-        Collegue col9 = new Collegue();
-        col9.setNom("TestAnnonce");
-        col9.setPrenom("VED");
-        col9.setEmail("usertest@dev.fr");
-        col9.setMotDePasse(passwordEncoder.encode("superpass"));
-        col9.setRoles(Arrays.asList(new RoleCollegue(col9, Role.ROLE_UTILISATEUR)));
-        this.collegueRepo.save(col9);
-
         Collegue col3 = new Collegue();
         col3.setNom("Dupont");
         col3.setPrenom("Robert");
+        col3.setMatricule("C033000c");
         col3.setEmail("robert.dupont@dev.fr");
+        col3.setPermis("6849-8934-1098");
+        col3.setTelephone("06.89.67.99.01");
         col3.setMotDePasse(passwordEncoder.encode("superpass"));
-        col3.setRoles(Arrays.asList(new RoleCollegue(col3, Role.ROLE_CHAUFFEUR),
-                new RoleCollegue(col3, Role.ROLE_UTILISATEUR)));
+        col3.setRoles(Arrays.asList(new RoleCollegue(col3, Role.ROLE_CHAUFFEUR), new RoleCollegue(col3, Role.ROLE_UTILISATEUR)));
         this.collegueRepo.save(col3);
 
         Collegue col4 = new Collegue();
         col4.setNom("Dupont");
         col4.setPrenom("Martine");
+        col4.setMatricule("C044000d");
         col4.setEmail("adchauvin44@gmail.com");
+        col4.setPermis("4580-9344-0986");
+        col4.setTelephone("06.70.05.98.00");
         col4.setMotDePasse(passwordEncoder.encode("superpass"));
-        col4.setRoles(Arrays.asList(new RoleCollegue(col4, Role.ROLE_UTILISATEUR)));
+        col4.setRoles(Arrays.asList(new RoleCollegue(col4, Role.ROLE_UTILISATEUR), new RoleCollegue(col4, Role.ROLE_CHAUFFEUR)));
         this.collegueRepo.save(col4);
 
         Collegue col5 = new Collegue();
         col5.setNom("Bertrand");
         col5.setPrenom("Martine");
+        col5.setMatricule("C055000e");
         col5.setEmail("adrienchauvin@hotmail.fr");
         col5.setMotDePasse(passwordEncoder.encode("superpass"));
         col5.setRoles(Arrays.asList(new RoleCollegue(col5, Role.ROLE_UTILISATEUR)));
@@ -104,20 +103,40 @@ public class StartupListener {
         Collegue col6 = new Collegue();
         col6.setNom("Jean-Michel");
         col6.setPrenom("FACILE");
+        col6.setMatricule("C066000f");
         col6.setEmail("adrienchauvin44@gmail.com");
         col6.setMotDePasse(passwordEncoder.encode("superpass"));
         col6.setRoles(Arrays.asList(new RoleCollegue(col6, Role.ROLE_UTILISATEUR)));
         this.collegueRepo.save(col6);
 
-        // Création d'un jeu de donnée pour une reservation
         Collegue col7 = new Collegue();
         col7.setNom("Chauffeur");
         col7.setPrenom("Michel");
+        col7.setMatricule("C077000g");
         col7.setEmail("michou@dev.fr");
         col7.setMotDePasse(passwordEncoder.encode("s"));
-        col7.setRoles(Arrays.asList(new RoleCollegue(col7, Role.ROLE_UTILISATEUR),
-                new RoleCollegue(col7, Role.ROLE_CHAUFFEUR)));
+        col7.setRoles(Arrays.asList(new RoleCollegue(col7, Role.ROLE_UTILISATEUR), new RoleCollegue(col7, Role.ROLE_CHAUFFEUR)));
         this.collegueRepo.save(col7);
+
+        Collegue col8 = new Collegue();
+        col8.setNom("Ratmayana");
+        col8.setPrenom("Widya");
+        col8.setMatricule("C088000h");
+        col8.setEmail("widya.ratmayana@gmail.id");
+        col8.setTelephone("06.47.55.66.99");
+        col8.setPermis("7894-5679-5657");
+        col8.setMotDePasse(passwordEncoder.encode("superpass"));
+        col8.setRoles(Arrays.asList(new RoleCollegue(col8, Role.ROLE_UTILISATEUR), new RoleCollegue(col8, Role.ROLE_CHAUFFEUR)));
+
+        Collegue col9 = new Collegue();
+        col9.setNom("TestAnnonce");
+        col9.setPrenom("VED");
+        col9.setMatricule("C099000i");
+        col9.setEmail("usertest@dev.fr");
+        col9.setMotDePasse(passwordEncoder.encode("superpass"));
+        col9.setRoles(Arrays.asList(new RoleCollegue(col9, Role.ROLE_UTILISATEUR)));
+        this.collegueRepo.save(col9);
+
 
         // Création véhicule de société
         Vehicule vehiculeSo = new Vehicule("AC-985-CA", "Peugeot", 2008, 3, true,
@@ -155,6 +174,7 @@ public class StartupListener {
         resaVehiculeRepo.save(new ResaVehicule(LocalDateTime.of(2017, 01, 01, 11, 00),
                 LocalDateTime.of(2017, 01, 11, 15, 00), col1, vehiculeSo3));
 
+
         // Création d'un historique
         resaVehiculeRepo.save(new ResaVehicule(LocalDateTime.of(2019, 8, 26, 17, 30),
                 LocalDateTime.of(2019, 8, 30, 12, 30), col3, vehiculeSo, col7, StatutResaChauffeur.ACCEPTEE));
@@ -173,6 +193,8 @@ public class StartupListener {
         this.vehiculeRepo.save(vehicule);
         Itineraire itineraire2 = new Itineraire("Paris", "Nantes", "3h45", 385);
         this.itineraireRepo.save(itineraire2);
+
+
 
         // Annonces
         AnnonceCovoit annonceCovoit = new AnnonceCovoit(col2, itineraire, vehicule,

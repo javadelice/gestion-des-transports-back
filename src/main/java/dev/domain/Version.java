@@ -1,10 +1,17 @@
 package dev.domain;
 
-import javax.persistence.*;
 import java.time.ZonedDateTime;
 import java.util.Objects;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.PrePersist;
+import javax.persistence.Table;
+
 @Entity
+@Table(name="Version")
 public class Version {
 
     @Id

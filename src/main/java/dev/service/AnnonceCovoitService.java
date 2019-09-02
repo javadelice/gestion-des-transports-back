@@ -19,15 +19,18 @@ import org.springframework.stereotype.Service;
 
 import dev.domain.AnnonceCovoit;
 import dev.domain.Collegue;
+import dev.domain.InfosVille;
 import dev.domain.Itineraire;
 import dev.domain.ReservationCovoit;
 import dev.domain.Statut;
 import dev.domain.Vehicule;
 import dev.dto.InfoCovoit;
+import dev.exception.AdresseNonTrouveeException;
 import dev.exception.AnnonceInvalidException;
 import dev.repository.AnnonceCovoitRepo;
 import dev.repository.AnnonceRepo;
 import dev.repository.CollegueRepo;
+import dev.repository.InfosVilleRepo;
 import dev.repository.ItineraireRepo;
 import dev.repository.ReservationCovoitRepo;
 import dev.repository.VehiculeRepo;
@@ -52,6 +55,9 @@ public class AnnonceCovoitService {
 
 	@Autowired
 	private ReservationCovoitRepo reservationRepo;
+
+	@Autowired
+	private InfosVilleRepo infosVilleRepo;
 
 	@Autowired
 	private JavaMailSender javaMailSender;
@@ -80,8 +86,7 @@ public class AnnonceCovoitService {
 		        && infoCo.getImmatriculation() != null
 		        && infoCo.getModele() != 0) {
 
-			Itineraire itineraire = new Itineraire(infoCo.getAdresseDepart(), infoCo.getAdresseDestination(), infoCo.getDuree(),
-			        infoCo.getDistance());
+			Itineraire itineraire = calculItineraire(infoCo.getAdresseDepart(), infoCo.getAdresseDestination());
 			Vehicule vehicule = new Vehicule(infoCo.getImmatriculation().toUpperCase(), infoCo.getMarque(), infoCo.getModele(),
 			        infoCo.getNbPlaceDispo());
 
@@ -137,7 +142,7 @@ public class AnnonceCovoitService {
 				}
 			}
 		});
-		
+
 		nbPassager = resaList.size();
 		return nbPassager;
 	}
@@ -189,11 +194,30 @@ public class AnnonceCovoitService {
 		helper.setTo(emailDestinataire);
 		helper.setSubject("Confirmation annulation du covoiturage - " + annonceAnnulee.getItineraire().getAdresseDepart() + " --> "
 		        + annonceAnnulee.getItineraire().getAdresseDest());
-		helper.setText("<h1> Bonjour " + annonceAnnulee.getConducteur().getNom() + " " + annonceAnnulee.getConducteur().getPrenom() + ", </h1>" +  
-				"<p> Suite à votre demande, nous vous confirmons l'annulation de votre covoiturage du " + " <strong>" + annonceAnnulee.getDateTime().format(formatDate) + " </br> " 
-		        + annonceAnnulee.getItineraire().getAdresseDepart() + " --> " + annonceAnnulee.getItineraire().getAdresseDest() + "</strong> " + "<p>", true);
+		helper.setText("<h1> Bonjour " + annonceAnnulee.getConducteur().getNom() + " " + annonceAnnulee.getConducteur().getPrenom() + ", </h1>" +
+		        "<p> Suite à votre demande, nous vous confirmons l'annulation de votre covoiturage du " + " <strong>"
+		        + annonceAnnulee.getDateTime().format(formatDate) + " </br> "
+		        + annonceAnnulee.getItineraire().getAdresseDepart() + " --> " + annonceAnnulee.getItineraire().getAdresseDest() + "</strong> "
+		        + "<p>", true);
 
 		javaMailSender.send(message);
+
+	}
+
+	public Itineraire calculItineraire(String adresseDepart, String adresseDest) {
+
+		InfosVille villeDep = this.infosVilleRepo.getInfosVilleByVille(adresseDepart.toUpperCase()).orElseThrow(() -> new AdresseNonTrouveeException("L'adresse de départ est une adresse inconnue."));
+		InfosVille villeDest = this.infosVilleRepo.getInfosVilleByVille(adresseDest.toUpperCase()).orElseThrow(() -> new AdresseNonTrouveeException("L'adresse de destination est une adresse inconnue."));
+
+		double calculDistance = calculDistanceTrajet(villeDep.getLatitude(), villeDep.getLongitude(), villeDest.getLatitude(),
+		        villeDest.getLongitude(), "K");
+
+		int distance = (int) calculDistance;
+		String trajet = calculDureeTrajet(calculDistance);
+
+		Itineraire infosVille = new Itineraire(adresseDepart, adresseDest, trajet, distance);
+
+		return infosVille;
 
 	}
 
@@ -217,11 +241,11 @@ public class AnnonceCovoitService {
 		}
 	}
 
-	private static double calculDureeTrajet(double distanceTrajet) {
-		double dureeTrajet = distanceTrajet / VITESSE_MOYENNE_TRAJET;
-		long v1 = Math.round(dureeTrajet);
+	private static String calculDureeTrajet(double distanceTrajet) {
+		double dureeTrajet = (distanceTrajet / VITESSE_MOYENNE_TRAJET) * 60;
+		long v1 = (long) dureeTrajet;
 		String date = v1 / 60 + "h" + v1 % 60;
-		return (dureeTrajet);
+		return (date);
 	}
 
 }

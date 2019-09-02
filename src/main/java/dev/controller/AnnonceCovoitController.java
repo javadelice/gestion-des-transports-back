@@ -10,14 +10,17 @@ import java.util.stream.Collectors;
 import javax.mail.MessagingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import dev.domain.AnnonceCovoit;
+import dev.domain.Itineraire;
 import dev.domain.Statut;
 import dev.dto.CollegueDTO;
 import dev.dto.InfoCovoit;
@@ -33,6 +36,7 @@ public class AnnonceCovoitController {
 	@Autowired
 	AnnonceCovoitService annonceService;
 
+	@Secured("ROLE_UTILISATEUR")
 	@RequestMapping(method = RequestMethod.POST, path = "/annonces/creer")
 	public void addAnnonceCovoit(@RequestBody InfoCovoit infoCo) throws AnnonceInvalidException, MessagingException {
 
@@ -46,6 +50,7 @@ public class AnnonceCovoitController {
 		this.annonceService.verifierInfos(infoCo, dateTime, email);
 	}
 
+	@Secured("ROLE_UTILISATEUR")
 	@RequestMapping(method = RequestMethod.GET, path = "/annonces")
 	public List<ListeAnnonceCovoitDTO> getListAnnonces() {
 		String email = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -66,6 +71,7 @@ public class AnnonceCovoitController {
 		        .collect(Collectors.toList());
 	}
 
+	@Secured("ROLE_UTILISATEUR")
 	@RequestMapping(method = RequestMethod.GET, path = "/annonces_old")
 	public List<ListeAnnonceCovoitDTO> getOldListAnnonces() {
 		String email = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -90,6 +96,7 @@ public class AnnonceCovoitController {
 		        .collect(Collectors.toList());
 	}
 	
+	@Secured("ROLE_UTILISATEUR")
 	@RequestMapping(method = RequestMethod.PATCH, path = "/annonces_annulation")	
 	public void annulerAnnonce (@RequestBody AnnonceCovoit annonceCo) throws MessagingException {
 		
@@ -97,4 +104,11 @@ public class AnnonceCovoitController {
 		this.annonceService.annonceAnnulee(email, annonceCo);
 		
 	}
+	
+	@Secured("ROLE_UTILISATEUR")
+	@RequestMapping(method= RequestMethod.GET, path = "/annonces/creer_itineraire")
+	public Itineraire getItineraire (@RequestParam String adresseDepart, @RequestParam String adresseDest) {
+		return this.annonceService.calculItineraire(adresseDepart, adresseDest);
+	}
+	
 }

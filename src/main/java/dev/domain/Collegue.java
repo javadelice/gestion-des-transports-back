@@ -9,13 +9,13 @@ public class Collegue {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
+	
+	private String matricule;
 	private String nom;
-
 	private String prenom;
-
-	private String email;
-
+	private String email;	
+	private String telephone;
+	private String permis;
 	private String motDePasse;
 
 	@OneToMany(mappedBy = "collegue", cascade = CascadeType.PERSIST)
@@ -23,26 +23,51 @@ public class Collegue {
 
 
     public Collegue() {
-
+    	
 	}
 
-
-    public Collegue(String nom, String prenom) {
+	public Collegue(String nom, String prenom) {
 		this.nom = nom;
 		this.prenom = prenom;
 	}
 
 
-    public Collegue(Long id, String nom, String prenom, String email, String motDePasse, List<RoleCollegue> roles) {
-        this.id = id;
-        this.nom = nom;
-        this.prenom = prenom;
-        this.email = email;
-        this.motDePasse = motDePasse;
-        this.roles = roles;
+    public Collegue(Long id, String matricule, String nom, String prenom, String email, String telephone, String permis,
+			String motDePasse, List<RoleCollegue> roles) {
+		super();
+		this.id = id;
+		this.matricule = matricule;
+		this.nom = nom;
+		this.prenom = prenom;
+		this.email = email;
+		this.telephone = telephone;
+		this.permis = permis;
+		this.motDePasse = motDePasse;
+		this.roles = roles;
+	}
+    
+    public Collegue(String nom, String prenom, String email, String telephone, String permis,
+			String motDePasse, List<RoleCollegue> roles) {
+		super();
+		this.nom = nom;
+		this.prenom = prenom;
+		this.email = email;
+		this.telephone = telephone;
+		this.permis = permis;
+		this.motDePasse = motDePasse;
+		this.roles = roles;
+	}
+    
+    public boolean containsRole(Role role) {
+    	boolean exist = false;
+    	for(RoleCollegue roleC : this.roles) {
+    		if(roleC.getRole().equals(role))
+    			exist = true;
+    	}
+    	return exist;
     }
-
-    public Long getId() {
+    
+	public Long getId() {
         return id;
     }
 
@@ -50,6 +75,15 @@ public class Collegue {
 		this.id = id;
 	}
 
+	public String getMatricule() {
+		return matricule;
+	}
+
+
+	public void setMatricule(String matricule) {
+		this.matricule = matricule;
+	}
+	
 	public String getEmail() {
 		return email;
 	}
@@ -89,9 +123,31 @@ public class Collegue {
 	public void setPrenom(String prenom) {
 		this.prenom = prenom;
 	}
+	
+	
 
 
-    @Override
+    public String getTelephone() {
+		return telephone;
+	}
+
+
+	public void setTelephone(String telephone) {
+		this.telephone = telephone;
+	}
+
+
+	public String getPermis() {
+		return permis;
+	}
+
+
+	public void setPermis(String permis) {
+		this.permis = permis;
+	}
+
+
+	@Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;

@@ -34,6 +34,11 @@ public class RestResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleConflict (ReservationNonTrouveException e, WebRequest req){
     	return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
+    
+    @ExceptionHandler(value = VehiculeNonTrouveException.class)
+    protected ResponseEntity<Object> handleConflict (VehiculeNonTrouveException e, WebRequest req){
+    	return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
 
     @ExceptionHandler(value = { AnnonceInvalidException.class })
     protected ResponseEntity<Object> handleConflict(AnnonceInvalidException ex) {

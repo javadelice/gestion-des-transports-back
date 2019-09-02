@@ -3,6 +3,7 @@ package dev.service;
 import dev.domain.Categorie;
 import dev.domain.Vehicule;
 import dev.exception.VehiculeInvalideException;
+import dev.exception.VehiculeNonTrouveException;
 import dev.repository.VehiculeRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -81,5 +82,9 @@ public class AdminVehiculeService {
 
     private void addVehiculeSociete(Vehicule vehicule) {
         this.vehiculeRepo.save(vehicule);
+    }
+    
+    public Vehicule chercherParImmatriculation (String immatriculation) {
+    	return vehiculeRepo.findByImmatriculation(immatriculation).orElseThrow(()-> new VehiculeNonTrouveException());
     }
 }

@@ -18,7 +18,10 @@ import org.springframework.web.bind.annotation.*;
 
 import dev.dto.InfosResa;
 import dev.dto.ResaVehiculeDTO;
+import dev.dto.ResaVehiculeLightDTO;
+import dev.dto.VehiculeDetailsDTO;
 import dev.exception.DateReservationVehiculeInvalide;
+import dev.service.AdminVehiculeService;
 import dev.service.ResaVehiculeService;
 
 @RestController
@@ -26,6 +29,10 @@ public class ResaVehiculeController {
 
     @Autowired
     private ResaVehiculeService resaVehiculeService;
+    
+    @Autowired
+    private AdminVehiculeService adminVehiculeService;
+    
 
     @Secured("ROLE_UTILISATEUR")
     @RequestMapping(method = RequestMethod.GET, path = "collaborateur/reservations/vehicule")
@@ -111,4 +118,26 @@ public class ResaVehiculeController {
         
         resaVehiculeService.verifierDate(dateTimeDepart, dateTimeRetour, infoResa.getVehiculeSociete(), email);
     }
+    
+    @Secured("ROLE_ADMINISTRATEUR")
+	@RequestMapping(
+            method = RequestMethod.GET,
+           path = "vehicules/{immatriculation}"
+            )
+    
+    public VehiculeDetailsDTO recupVehiculeFromImmatriculation (@PathVariable String immatriculation) {
+    	VehiculeDetailsDTO vehiculeDetailsDTO = new VehiculeDetailsDTO();
+    	Vehicule vehicule = adminVehiculeService.chercherParImmatriculation(immatriculation);
+    	vehiculeDetailsDTO.setVehicule(vehicule);
+    	List<ResaVehiculeLightDTO> resaVehiculesEnCours = resaVehiculeService.getVehiculeReservationsEnCours(vehicule);
+    	vehiculeDetailsDTO.setListResasEnCours(resaVehiculesEnCours);
+    	List<ResaVehiculeLightDTO> resaVehiculesPassees = resaVehiculeService.getVehiculeReservationsPassees(vehicule);
+    	vehiculeDetailsDTO.setListResasPassees(resaVehiculesPassees);
+    	
+    	return vehiculeDetailsDTO;
+    }
+    
+    
+    
+    
 }

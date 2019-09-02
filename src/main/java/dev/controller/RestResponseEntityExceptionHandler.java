@@ -49,6 +49,13 @@ public class RestResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getErreurs());
     }
 
+    @ExceptionHandler(value = { VehiculeInvalideException.class })
+    protected ResponseEntity<Object> handleConflict(VehiculeInvalideException ex) {
+        if (ex.getErreurs().isEmpty())
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getErreurs());
+    }
+
 }
 
 

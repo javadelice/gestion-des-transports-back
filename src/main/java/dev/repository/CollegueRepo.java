@@ -10,9 +10,9 @@ public interface CollegueRepo extends JpaRepository<Collegue, Long> {
 
 	Optional<Collegue> findByEmail(String email);
 	Optional<Collegue> findById(Long id);
-    
+
     List<Collegue> findByNom(String nom);
-    
+
     List<Collegue> findByPrenom(String prenom);
 
 }

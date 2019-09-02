@@ -189,4 +189,12 @@ public class AnnonceCovoitService {
 
 	}
 
+	public List<AnnonceCovoit> getAnnoncesCovoitParLieuDepart(String lieuDepart){
+		return this.annonceCoRepo.getAnnonceCovoitsByItineraire_AdresseDepart(lieuDepart);
+	}
+
+	public List<AnnonceCovoit> getAnnoncesCovoitParLieuDepartAndLieuArrive(String lieuDepart,String lieuArrive){
+		return this.annonceCoRepo.getAnnonceCovoitsByItineraire_AdresseDepartAndItineraire_AdresseDest(lieuDepart,lieuArrive);
+	}
+
 }

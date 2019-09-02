@@ -9,6 +9,7 @@ import dev.dto.CollegueDTO;
 import dev.dto.DateVoyage;
 import dev.dto.ReservationCovoitDTO;
 import dev.exception.ReservationNonTrouveException;
+import dev.service.AnnonceCovoitService;
 import dev.service.CollegueService;
 import dev.service.CovoitService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,6 +33,8 @@ public class ReservationCovoitController {
     CovoitService covoitService;
     @Autowired
     CollegueService collegueService;
+    @Autowired
+    AnnonceCovoitService annonceCovoitService;
    
 
     @Secured("ROLE_UTILISATEUR")
@@ -54,19 +58,36 @@ public class ReservationCovoitController {
     @RequestMapping(method = RequestMethod.GET,
     path = "/collaborateur/reservations/covoit/creer")
     
-    public List<AnnonceCovoitDTO> getListResaCovoit(@RequestParam String lieuDepart, @RequestParam String lieuArrivee, @RequestParam DateVoyage date ){
-    	LocalDate selectedDate = LocalDate.parse(date.getDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-    	LocalTime startTime = LocalTime.of(0, 0);
-    	LocalTime endTime = LocalTime.of(23, 59);
-    	LocalDateTime start = LocalDateTime.of(selectedDate, startTime);
-    	LocalDateTime end = LocalDateTime.of(selectedDate, endTime);
-        List<AnnonceCovoit> annonceCovoitList = this.covoitService.selectByDate(start, end);
+    public List<AnnonceCovoitDTO> getListResaCovoit(@RequestParam(required = false) String lieuDepart,
+                                                    @RequestParam(required = false) String lieuArrivee,
+                                                    @RequestParam(required = false) DateVoyage date ){
+        List<AnnonceCovoit> annonceCovoitList = new ArrayList<>();
+        if(lieuDepart != null && lieuArrivee == null && date == null){
+            annonceCovoitList = this.annonceCovoitService.getAnnoncesCovoitParLieuDepart(lieuDepart);
+        }
+
+        if(lieuDepart != null && lieuArrivee != null && date == null){
+            annonceCovoitList = this.annonceCovoitService.getAnnoncesCovoitParLieuDepartAndLieuArrive(lieuDepart,lieuArrivee);
+        }
+
+        if(lieuDepart != null && lieuArrivee != null && date != null){
+            annonceCovoitList = this.annonceCovoitService.getAnnoncesCovoitParLieuDepartAndLieuArrive(lieuDepart,lieuArrivee);
+            LocalDate selectedDate = LocalDate.parse(date.getDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            LocalTime startTime = LocalTime.of(0, 0);
+            LocalTime endTime = LocalTime.of(23, 59);
+            LocalDateTime start = LocalDateTime.of(selectedDate, startTime);
+            LocalDateTime end = LocalDateTime.of(selectedDate, endTime);
+            annonceCovoitList = annonceCovoitList.stream()
+                    .filter(annonceCovoit -> annonceCovoit.getDateTime().isAfter(start))
+                    .filter(annonceCovoit -> annonceCovoit.getDateTime().isBefore(end))
+                    .collect(Collectors.toList());
+                    this.covoitService.selectByDate(start, end);
+        }
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         List<AnnonceCovoit> annonceCovoitListReserved = this.covoitService.getLesAnnonceReservedBy(email);
+
                 
         return annonceCovoitList.stream()
-        		.filter(annonce -> annonce.getItineraire().getAdresseDepart().equals(lieuDepart))
-        		.filter(annonce -> annonce.getItineraire().getAdresseDest().equals(lieuArrivee))
         		.filter(annonce -> !annonceCovoitListReserved.contains(annonce))
         		.filter(annonce -> annonce.getStatut().equals(Statut.STATUT_ENCOURS))
                 .map(annonce->{

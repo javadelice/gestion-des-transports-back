@@ -14,6 +14,7 @@ import dev.domain.Role;
 public class ChauffeurVM {
 	
 		private Long id;
+		private String matricule;
 	    private String email;
 	    private String nom;
 	    private String prenom;
@@ -26,6 +27,7 @@ public class ChauffeurVM {
 	    public ChauffeurVM(Collegue col) {
 			
 			this.id = col.getId();
+			this.matricule = col.getMatricule();
 			this.email = col.getEmail();
 			this.nom = col.getNom();
 			this.prenom = col.getPrenom();
@@ -90,5 +92,14 @@ public class ChauffeurVM {
 			this.id = id;
 		}
 
+		public String getMatricule() {
+			return matricule;
+		}
+
+		public void setMatricule(String matricule) {
+			this.matricule = matricule;
+		}
+
+		
 		
 	}

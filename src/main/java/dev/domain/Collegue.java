@@ -9,6 +9,8 @@ public class Collegue {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
+	private String matricule;
 	private String nom;
 	private String prenom;
 	private String email;	
@@ -21,22 +23,32 @@ public class Collegue {
 
 
     public Collegue() {
-
+    	
 	}
 
-
-    public Collegue(String nom, String prenom) {
+	public Collegue(String nom, String prenom) {
 		this.nom = nom;
 		this.prenom = prenom;
 	}
 
 
-    
-
-    public Collegue(Long id, String nom, String prenom, String email, String telephone, String permis,
+    public Collegue(Long id, String matricule, String nom, String prenom, String email, String telephone, String permis,
 			String motDePasse, List<RoleCollegue> roles) {
 		super();
 		this.id = id;
+		this.matricule = matricule;
+		this.nom = nom;
+		this.prenom = prenom;
+		this.email = email;
+		this.telephone = telephone;
+		this.permis = permis;
+		this.motDePasse = motDePasse;
+		this.roles = roles;
+	}
+    
+    public Collegue(String nom, String prenom, String email, String telephone, String permis,
+			String motDePasse, List<RoleCollegue> roles) {
+		super();
 		this.nom = nom;
 		this.prenom = prenom;
 		this.email = email;
@@ -63,6 +75,15 @@ public class Collegue {
 		this.id = id;
 	}
 
+	public String getMatricule() {
+		return matricule;
+	}
+
+
+	public void setMatricule(String matricule) {
+		this.matricule = matricule;
+	}
+	
 	public String getEmail() {
 		return email;
 	}

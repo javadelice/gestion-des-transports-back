@@ -1,7 +1,6 @@
 package dev.service;
 
 import dev.controller.vm.ChauffeurVM;
-import dev.controller.vm.CollegueVM;
 import dev.domain.Collegue;
 import dev.domain.Role;
 import dev.domain.RoleCollegue;

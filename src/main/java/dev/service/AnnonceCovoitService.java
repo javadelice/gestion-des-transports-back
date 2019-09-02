@@ -148,7 +148,7 @@ public class AnnonceCovoitService {
 		annonceAnnulee.setStatut(Statut.STATUT_ANNULEE);
 		annonceCoRepo.save(annonceAnnulee);
 
-		sendAnnulationConducteur(email, annonceCo);
+		sendAnnulationConducteur(email, annonceAnnulee);
 
 		Optional<List<ReservationCovoit>> listPassagersCovoit = this.reservationRepo.getReservationCovoitsByAnnonceCovoit(annonceCo);
 		listPassagersCovoit.ifPresent(covoitList -> {
@@ -189,7 +189,9 @@ public class AnnonceCovoitService {
 		helper.setTo(emailDestinataire);
 		helper.setSubject("Confirmation annulation du covoiturage - " + annonceAnnulee.getItineraire().getAdresseDepart() + " --> "
 		        + annonceAnnulee.getItineraire().getAdresseDest());
-		helper.setText("<h1>Confirmation de création de votre covoiturage du " + annonceAnnulee.getDateTime().format(formatDate) + "</h1>", true);
+		helper.setText("<h1> Bonjour " + annonceAnnulee.getConducteur().getNom() + " " + annonceAnnulee.getConducteur().getPrenom() + ", </h1>" +  
+				"<p> Suite à votre demande, nous vous confirmons l'annulation de votre covoiturage du " + " <strong>" + annonceAnnulee.getDateTime().format(formatDate) + " </br> " 
+		        + annonceAnnulee.getItineraire().getAdresseDepart() + " --> " + annonceAnnulee.getItineraire().getAdresseDest() + "</strong> " + "<p>", true);
 
 		javaMailSender.send(message);
 

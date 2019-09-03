@@ -3,6 +3,8 @@ package dev.domain;
 import java.time.LocalDateTime;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -10,7 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table
+@Table(name="ResaVehicule")
 public class ResaVehicule {
 
     @Id
@@ -27,6 +29,10 @@ public class ResaVehicule {
     private Collegue passager;
     @ManyToOne
     private Vehicule vehicule;
+    @ManyToOne
+    private Collegue chauffeur;
+    @Enumerated(EnumType.STRING)
+    private StatutResaChauffeur status;
 
     public ResaVehicule() {
     }
@@ -40,12 +46,31 @@ public class ResaVehicule {
         this.vehicule = vehicule;
     }
 
-    public ResaVehicule(LocalDateTime dateDebutResaV, LocalDateTime dateFinResV, Collegue passager,
-            Vehicule vehicule) {
+    public ResaVehicule(LocalDateTime dateDebutResaV, LocalDateTime dateFinResV, Collegue passager, Vehicule vehicule) {
         this.dateDebutResaV = dateDebutResaV;
         this.dateFinResV = dateFinResV;
         this.passager = passager;
         this.vehicule = vehicule;
+    }
+
+    public ResaVehicule(LocalDateTime dateDebutResaV, LocalDateTime dateFinResV, Collegue passager, Vehicule vehicule,
+            Collegue chauffeur, StatutResaChauffeur status) {
+        super();
+        this.dateDebutResaV = dateDebutResaV;
+        this.dateFinResV = dateFinResV;
+        this.passager = passager;
+        this.vehicule = vehicule;
+        this.chauffeur = chauffeur;
+        this.status = status;
+    }
+
+    public ResaVehicule(LocalDateTime dateDebutResaV, LocalDateTime dateFinResV, Collegue passager, Vehicule vehicule,
+            StatutResaChauffeur status) {
+        this.dateDebutResaV = dateDebutResaV;
+        this.dateFinResV = dateFinResV;
+        this.passager = passager;
+        this.vehicule = vehicule;
+        this.status = status;
     }
 
     public Long getIdResV() {
@@ -88,6 +113,22 @@ public class ResaVehicule {
         this.vehicule = vehicule;
     }
 
+    public Collegue getChauffeur() {
+        return chauffeur;
+    }
+
+    public void setChauffeur(Collegue chauffeur) {
+        this.chauffeur = chauffeur;
+    }
+
+    public StatutResaChauffeur getStatus() {
+        return status;
+    }
+
+    public void setStatus(StatutResaChauffeur status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -101,6 +142,10 @@ public class ResaVehicule {
         builder.append(passager);
         builder.append(", vehicule=");
         builder.append(vehicule);
+        builder.append(", chauffeur=");
+        builder.append(chauffeur);
+        builder.append(", status=");
+        builder.append(status);
         builder.append("]");
         return builder.toString();
     }

@@ -1,9 +1,18 @@
 package dev.domain;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 @Entity
+@Table (name="AnnonceCovoit")
 public class AnnonceCovoit {
 	
     @Id

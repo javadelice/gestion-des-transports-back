@@ -5,7 +5,7 @@ public class InfoCovoit {
 	private String adresseDepart;
 	private String adresseDestination;
 	private String duree;
-	private float distance;
+	private int distance;
 	private String immatriculation;
 	private String marque;
 	private int modele;
@@ -55,11 +55,11 @@ public class InfoCovoit {
 		this.duree = duree;
 	}
 
-	public float getDistance() {
+	public int getDistance() {
 		return distance;
 	}
 
-	public void setDistance(float distance) {
+	public void setDistance(int distance) {
 		this.distance = distance;
 	}
 

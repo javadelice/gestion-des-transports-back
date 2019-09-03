@@ -2,9 +2,6 @@ package dev.controller;
 
 
 import dev.exception.*;
-import dev.exception.AnnonceInvalidException;
-import dev.exception.DateReservationVehiculeInvalide;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -47,6 +44,11 @@ public class RestResponseEntityExceptionHandler {
         if (ex.getErreurs().isEmpty())
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getErreurs());
+    }
+
+    @ExceptionHandler(value = { AdresseNonTrouveeException.class })
+    protected ResponseEntity<Object> handleConflict(AdresseNonTrouveeException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 
     @ExceptionHandler(value = { VehiculeInvalideException.class })

@@ -4,8 +4,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
+@Table (name="Itineraire")
 public class Itineraire {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -14,16 +16,16 @@ public class Itineraire {
 	private String adresseDepart;
 	private String adresseDest;
 	private String duree;
-	private float distance;
+	private int distance;
 
 	public Itineraire() {
 	}
 
-	public Itineraire(String adresseDepart, String adresseDest, String duree, float distance) {
+	public Itineraire(String adresseDepart, String adresseDest, String duree, int distance) {
 		this.adresseDepart = adresseDepart;
 		this.adresseDest = adresseDest;
-		this.duree = "2H25"; 
-		this.distance = 250f; 
+		this.duree = duree; 
+		this.distance = distance; 
 	}
 
 	public String getAdresseDepart() {
@@ -50,11 +52,11 @@ public class Itineraire {
 		this.duree = duree;
 	}
 
-	public float getDistance() {
+	public int getDistance() {
 		return distance;
 	}
 
-	public void setDistance(float distance) {
+	public void setDistance(int distance) {
 		this.distance = distance;
 	}
 

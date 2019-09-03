@@ -12,6 +12,7 @@ import dev.domain.Collegue;
 import dev.domain.ResaVehicule;
 import dev.domain.StatutResaChauffeur;
 import dev.domain.Vehicule;
+import dev.dto.ResaVehiculeLightDTO;
 import dev.exception.DateReservationVehiculeInvalide;
 import dev.repository.CollegueRepo;
 import dev.repository.ResaVehiculeRepository;
@@ -142,5 +143,47 @@ public class ResaVehiculeService {
         return vehiculeList.stream().collect(Collectors.toList());
 
     }
+    
+    public List<ResaVehiculeLightDTO> getVehiculeReservationsEnCours(Vehicule vehicule) {
+        List<ResaVehicule> reservationVehicule = new ArrayList<>();
+        Optional<List<ResaVehicule>> reservationOpt = this.resaVehiculeRepo.getAllByVehicule(vehicule);
+            reservationOpt.ifPresent(reservations -> {
+                for (ResaVehicule resa : reservations) {
+                    reservationVehicule.add(resa);
+                }
+            });
+      
+
+        return reservationVehicule.stream().filter(resa -> resa.getDateFinResV().isAfter(LocalDateTime.now()))
+        		.map(resaVehicule -> {
+        			ResaVehiculeLightDTO resaVehiculeLightDTO = new ResaVehiculeLightDTO();
+        			resaVehiculeLightDTO.setDateDeDebut(resaVehicule.getDateDebutResaV());
+        			resaVehiculeLightDTO.setDateDeFin(resaVehicule.getDateFinResV());
+        			return resaVehiculeLightDTO;
+        		})
+                .collect(Collectors.toList());
+    }
+    
+    public List<ResaVehiculeLightDTO> getVehiculeReservationsPassees(Vehicule vehicule) {
+        List<ResaVehicule> reservationVehicule = new ArrayList<>();
+        Optional<List<ResaVehicule>> reservationOpt = this.resaVehiculeRepo.getAllByVehicule(vehicule);
+            reservationOpt.ifPresent(reservations -> {
+                for (ResaVehicule resa : reservations) {
+                    reservationVehicule.add(resa);
+                }
+            });
+      
+
+        return reservationVehicule.stream().filter(resa -> resa.getDateFinResV().isBefore(LocalDateTime.now()))
+        		.map(resaVehicule -> {
+        			ResaVehiculeLightDTO resaVehiculeLightDTO = new ResaVehiculeLightDTO();
+        			resaVehiculeLightDTO.setDateDeDebut(resaVehicule.getDateDebutResaV());
+        			resaVehiculeLightDTO.setDateDeFin(resaVehicule.getDateFinResV());
+        			return resaVehiculeLightDTO;
+        		})
+                .collect(Collectors.toList());
+    }
+    
+    
 
 }

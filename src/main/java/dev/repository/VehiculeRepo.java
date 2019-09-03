@@ -11,4 +11,5 @@ public interface VehiculeRepo extends JpaRepository<Vehicule, Integer> {
 
     public Optional<List<Vehicule>> getVehiculesByEstSociete(boolean estSociete);
     public Optional<Vehicule> getVehiculeByImmatriculation (String immatriculation);
+	Optional <Vehicule> findByImmatriculation(String immatriculation);
 }

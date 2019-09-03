@@ -68,6 +68,7 @@ public class StartupListener {
         col1.setPrenom("Tintin");
         col1.setMatricule("C011000a");
         col1.setEmail("tintin@yopmail.com");
+        col1.setUrlPhoto("https://www.twisto.fr/fileadmin/user_upload/Page_titres_et_abonnements/26-64_ans-150px.jpg");
         col1.setMotDePasse(passwordEncoder.encode("superpass"));
         col1.setRoles(Arrays.asList(new RoleCollegue(col1, Role.ROLE_ADMINISTRATEUR), new RoleCollegue(col1, Role.ROLE_UTILISATEUR)));
         this.collegueRepo.save(col1);
@@ -86,6 +87,7 @@ public class StartupListener {
         col3.setPrenom("Robert");
         col3.setMatricule("C033000c");
         col3.setEmail("robert.dupont@dev.fr");
+        col3.setUrlPhoto("https://www.twisto.fr/fileadmin/user_upload/Page_titres_et_abonnements/65_ans_et_plus-150px-01.jpg");
         col3.setPermis("6849-8934-1098");
         col3.setTelephone("06.89.67.99.01");
         col3.setMotDePasse(passwordEncoder.encode("superpass"));
@@ -96,7 +98,8 @@ public class StartupListener {
         col4.setNom("Dupont");
         col4.setPrenom("Martine");
         col4.setMatricule("C044000d");
-        col4.setEmail("adchauvin44@gmail.com");
+        col4.setUrlPhoto("https://mdbootstrap.com/img/Others/documentation/img%20(20)-mini.jpg");
+        col4.setEmail("martine.dupont@gmail.com");
         col4.setPermis("4580-9344-0986");
         col4.setTelephone("06.70.05.98.00");
         col4.setMotDePasse(passwordEncoder.encode("superpass"));
@@ -108,6 +111,7 @@ public class StartupListener {
         col5.setPrenom("Martine");
         col5.setMatricule("C055000e");
         col5.setEmail("adrienchauvin@hotmail.fr");
+        col5.setUrlPhoto("https://mdbootstrap.com/img/Photos/Avatars/img%20(20).jpg");
         col5.setMotDePasse(passwordEncoder.encode("superpass"));
         col5.setRoles(Arrays.asList(new RoleCollegue(col5, Role.ROLE_UTILISATEUR)));
         this.collegueRepo.save(col5);
@@ -120,29 +124,21 @@ public class StartupListener {
         col6.setMotDePasse(passwordEncoder.encode("superpass"));
         col6.setRoles(Arrays.asList(new RoleCollegue(col6, Role.ROLE_UTILISATEUR)));
         this.collegueRepo.save(col6);
-
+        
         Collegue col7 = new Collegue();
         col7.setNom("Chauffeur");
         col7.setPrenom("Michel");
         col7.setMatricule("C077000g");
         col7.setEmail("michou@dev.fr");
+        col7.setUrlPhoto("https://mdbootstrap.com/img/Others/documentation/img%20(27)-mini.jpg");
         col7.setMotDePasse(passwordEncoder.encode("s"));
         col7.setRoles(Arrays.asList(new RoleCollegue(col7, Role.ROLE_UTILISATEUR), new RoleCollegue(col7, Role.ROLE_CHAUFFEUR)));
         this.collegueRepo.save(col7);
-
-        Collegue col8 = new Collegue();
-        col8.setNom("Ratmayana");
-        col8.setPrenom("Widya");
-        col8.setMatricule("C088000h");
-        col8.setEmail("widya.ratmayana@gmail.id");
-        col8.setTelephone("06.47.55.66.99");
-        col8.setPermis("7894-5679-5657");
-        col8.setMotDePasse(passwordEncoder.encode("superpass"));
-        col8.setRoles(Arrays.asList(new RoleCollegue(col8, Role.ROLE_UTILISATEUR), new RoleCollegue(col8, Role.ROLE_CHAUFFEUR)));
+        
 
         Collegue col9 = new Collegue();
-        col9.setNom("TestAnnonce");
-        col9.setPrenom("VED");
+        col9.setNom("McDonald");
+        col9.setPrenom("John");
         col9.setMatricule("C099000i");
         col9.setEmail("usertest@dev.fr");
         col9.setMotDePasse(passwordEncoder.encode("superpass"));
@@ -259,6 +255,8 @@ public class StartupListener {
 			                col1));
 		}
 
-	}
+
+
+    }
 
 }

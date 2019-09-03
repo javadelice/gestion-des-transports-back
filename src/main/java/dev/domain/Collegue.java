@@ -25,6 +25,7 @@ public class Collegue {
 	private String telephone;
 	private String permis;
 	private String motDePasse;
+	private String urlPhoto;
 
 	@OneToMany(mappedBy = "collegue", cascade = CascadeType.PERSIST)
 	private List<RoleCollegue> roles;
@@ -41,7 +42,7 @@ public class Collegue {
 
 
     public Collegue(Long id, String matricule, String nom, String prenom, String email, String telephone, String permis,
-			String motDePasse, List<RoleCollegue> roles) {
+			String motDePasse, String urlPhoto, List<RoleCollegue> roles) {
 		super();
 		this.id = id;
 		this.matricule = matricule;
@@ -51,10 +52,19 @@ public class Collegue {
 		this.telephone = telephone;
 		this.permis = permis;
 		this.motDePasse = motDePasse;
+		this.urlPhoto = urlPhoto;
 		this.roles = roles;
 	}
     
-    public Collegue(String nom, String prenom, String email, String telephone, String permis,
+    public String getUrlPhoto() {
+		return urlPhoto;
+	}
+
+	public void setUrlPhoto(String urlPhoto) {
+		this.urlPhoto = urlPhoto;
+	}
+
+	public Collegue(String nom, String prenom, String email, String telephone, String permis,
 			String motDePasse, List<RoleCollegue> roles) {
 		super();
 		this.nom = nom;

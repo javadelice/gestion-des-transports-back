@@ -1,5 +1,15 @@
 package dev.controller;
 
+import dev.domain.Dispo;
+import dev.domain.Vehicule;
+import dev.dto.*;
+import dev.service.AdminVehiculeService;
+import dev.service.ResaVehiculeService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -8,27 +18,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import dev.domain.Dispo;
-import dev.domain.Vehicule;
-import dev.dto.CollegueDTO;
-import dev.dto.InfoResaCreation;
-import dev.dto.ResaVehiculeDTO;
-import dev.service.ResaVehiculeService;
-
 @RestController
 public class ResaVehiculeController {
 
     @Autowired
     private ResaVehiculeService resaVehiculeService;
+
+    @Autowired
+    private AdminVehiculeService adminVehiculeService;
+
 
     @Secured("ROLE_UTILISATEUR")
     @RequestMapping(method = RequestMethod.GET, path = "collaborateur/reservations/vehicule")
@@ -114,5 +112,26 @@ public class ResaVehiculeController {
 
         resaVehiculeService.verifierDate(dateTimeDepart, dateTimeRetour, infoResa.getVehiculeSociete(), email, infoResa.isAvecChauffeur());
     }
+
+    @Secured("ROLE_ADMINISTRATEUR")
+	@RequestMapping(
+            method = RequestMethod.GET,
+           path = "vehicules/{immatriculation}"
+            )
+
+    public VehiculeDetailsDTO recupVehiculeFromImmatriculation (@PathVariable String immatriculation) {
+    	VehiculeDetailsDTO vehiculeDetailsDTO = new VehiculeDetailsDTO();
+    	Vehicule vehicule = adminVehiculeService.chercherParImmatriculation(immatriculation);
+    	vehiculeDetailsDTO.setVehicule(vehicule);
+    	List<ResaVehiculeLightDTO> resaVehiculesEnCours = resaVehiculeService.getVehiculeReservationsEnCours(vehicule);
+    	vehiculeDetailsDTO.setListResasEnCours(resaVehiculesEnCours);
+    	List<ResaVehiculeLightDTO> resaVehiculesPassees = resaVehiculeService.getVehiculeReservationsPassees(vehicule);
+    	vehiculeDetailsDTO.setListResasPassees(resaVehiculesPassees);
+
+    	return vehiculeDetailsDTO;
+    }
+
+
+
 
 }

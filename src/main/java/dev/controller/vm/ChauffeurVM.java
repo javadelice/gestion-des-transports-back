@@ -20,6 +20,7 @@ public class ChauffeurVM {
 	    private String prenom;
 	    private String telephone;
 	    private String permis;	    
+	    private String urlPhoto;
 	    private List<Role> roles = new ArrayList<>();
 
 	    
@@ -33,6 +34,7 @@ public class ChauffeurVM {
 			this.prenom = col.getPrenom();
 			this.telephone = col.getTelephone();
 			this.permis = col.getPermis();
+			this.urlPhoto = col.getUrlPhoto();
 			this.roles = col.getRoles().stream().map(roleCollegue -> roleCollegue.getRole()).collect(Collectors.toList());
 		}
 
@@ -98,6 +100,14 @@ public class ChauffeurVM {
 
 		public void setMatricule(String matricule) {
 			this.matricule = matricule;
+		}
+
+		public String getUrlPhoto() {
+			return urlPhoto;
+		}
+
+		public void setUrlPhoto(String urlPhoto) {
+			this.urlPhoto = urlPhoto;
 		}
 
 		

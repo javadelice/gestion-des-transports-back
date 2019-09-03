@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import javax.mail.MessagingException;
@@ -76,6 +78,16 @@ public class AnnonceCovoitService {
 		if (infoCo.getNbPlaceDispo() > PLACE_MAXIMUM_DISPONIBLE || infoCo.getNbPlaceDispo() < PLACE_MINIMUM_DISPONIBLE) {
 			erreurs.put("nbPlaceDispo", "Le nombre de places doit être compris entre 1 et 20.");
 		}
+		
+		if (infoCo.getImmatriculation() != null) {
+			Pattern p = Pattern.compile("[A-Z]{2}-[0-9]{3}-[A-Z]{2}");
+            Matcher m = p.matcher(infoCo.getImmatriculation().toUpperCase());
+            if (!m.matches()) erreurs.put("immatriculation", "Immatriculation invalide");
+            else {
+                Optional<Vehicule> vehiculeE = this.vehiRepo.getVehiculeByImmatriculation(infoCo.getImmatriculation());
+                vehiculeE.ifPresent(vehicule1 -> erreurs.put("immatriculation","Immatriculation déjà enregistrée"));
+            }
+		}
 
 		if (!erreurs.isEmpty()) {
 			throw new AnnonceInvalidException(erreurs);
@@ -83,7 +95,6 @@ public class AnnonceCovoitService {
 		if (dateTime != null
 		        && dateTime.isAfter(LocalDateTime.now())
 		        && infoCo.getMarque() != null
-		        && infoCo.getImmatriculation() != null
 		        && infoCo.getModele() != 0) {
 
 			Itineraire itineraire = calculItineraire(infoCo.getAdresseDepart(), infoCo.getAdresseDestination());

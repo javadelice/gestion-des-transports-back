@@ -1,9 +1,8 @@
 package dev.dto;
 
-import dev.domain.Collegue;
 import dev.domain.Vehicule;
 
-public class InfosResa {
+public class InfoResaCreation {
 
     private String heureDepart;
     private String minuteDepart;
@@ -12,13 +11,13 @@ public class InfosResa {
     private String minuteRetour;
     private String dateRetour;
     private Vehicule vehiculeSociete;
-    private Collegue chauffeur;
+    private boolean avecChauffeur;
 
-    public InfosResa() {
+    public InfoResaCreation() {
     }
 
-    public InfosResa(String heureDepart, String minuteDepart, String dateDepart, String heureRetour,
-            String minuteRetour, String dateRetour, Vehicule vehiculeSociete, Collegue chauffeur) {
+    public InfoResaCreation(String heureDepart, String minuteDepart, String dateDepart, String heureRetour,
+            String minuteRetour, String dateRetour, Vehicule vehiculeSociete, boolean avecChauffeur) {
         this.heureDepart = heureDepart;
         this.minuteDepart = minuteDepart;
         this.dateDepart = dateDepart;
@@ -26,7 +25,7 @@ public class InfosResa {
         this.minuteRetour = minuteRetour;
         this.dateRetour = dateRetour;
         this.vehiculeSociete = vehiculeSociete;
-        this.chauffeur = chauffeur;
+        this.avecChauffeur = avecChauffeur;
     }
 
     public String getHeureDepart() {
@@ -85,35 +84,12 @@ public class InfosResa {
         this.vehiculeSociete = vehiculeSociete;
     }
 
-    public Collegue getChauffeur() {
-        return chauffeur;
+    public boolean isAvecChauffeur() {
+        return avecChauffeur;
     }
 
-    public void setChauffeur(Collegue chauffeur) {
-        this.chauffeur = chauffeur;
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("InfosResa [heureDepart=");
-        builder.append(heureDepart);
-        builder.append(", minuteDepart=");
-        builder.append(minuteDepart);
-        builder.append(", dateDepart=");
-        builder.append(dateDepart);
-        builder.append(", heureRetour=");
-        builder.append(heureRetour);
-        builder.append(", minuteRetour=");
-        builder.append(minuteRetour);
-        builder.append(", dateRetour=");
-        builder.append(dateRetour);
-        builder.append(", vehiculeSociete=");
-        builder.append(vehiculeSociete);
-        builder.append(", chauffeur=");
-        builder.append(chauffeur);
-        builder.append("]");
-        return builder.toString();
+    public void setAvecChauffeur(boolean avecChauffeur) {
+        this.avecChauffeur = avecChauffeur;
     }
 
 }

@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Arrays;
 
+import dev.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -12,17 +13,6 @@ import org.springframework.context.event.EventListener;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import dev.domain.AnnonceCovoit;
-import dev.domain.Categorie;
-import dev.domain.Collegue;
-import dev.domain.Dispo;
-import dev.domain.Itineraire;
-import dev.domain.ResaVehicule;
-import dev.domain.ReservationCovoit;
-import dev.domain.Role;
-import dev.domain.RoleCollegue;
-import dev.domain.Vehicule;
-import dev.domain.Version;
 import dev.repository.AnnonceCovoitRepo;
 import dev.repository.CollegueRepo;
 import dev.repository.InfosVilleRepo;
@@ -73,67 +63,98 @@ public class StartupListener {
 
 		// Création d'utilisateurs
 
-		Collegue col1 = new Collegue();
-		col1.setNom("Admin");
-		col1.setPrenom("Tintin");
-		col1.setEmail("tintin@yopmail.com");
-		col1.setMotDePasse(passwordEncoder.encode("superpass"));
-		col1.setRoles(Arrays.asList(new RoleCollegue(col1, Role.ROLE_ADMINISTRATEUR), new RoleCollegue(col1, Role.ROLE_UTILISATEUR)));
-		this.collegueRepo.save(col1);
+        Collegue col1 = new Collegue();
+        col1.setNom("Admin");
+        col1.setPrenom("Tintin");
+        col1.setMatricule("C011000a");
+        col1.setEmail("tintin@yopmail.com");
+        col1.setMotDePasse(passwordEncoder.encode("superpass"));
+        col1.setRoles(Arrays.asList(new RoleCollegue(col1, Role.ROLE_ADMINISTRATEUR), new RoleCollegue(col1, Role.ROLE_UTILISATEUR)));
+        this.collegueRepo.save(col1);
 
-		Collegue col2 = new Collegue();
-		col2.setNom("User");
-		col2.setPrenom("Milou");
-		col2.setEmail("milou@yopmail.com");
-		col2.setMotDePasse(passwordEncoder.encode("superpass"));
-		col2.setRoles(Arrays.asList(new RoleCollegue(col2, Role.ROLE_UTILISATEUR)));
-		this.collegueRepo.save(col2);
+        Collegue col2 = new Collegue();
+        col2.setNom("User");
+        col2.setPrenom("Milou");
+        col2.setMatricule("C022000b");
+        col2.setEmail("milou@yopmail.com");
+        col2.setMotDePasse(passwordEncoder.encode("superpass"));
+        col2.setRoles(Arrays.asList(new RoleCollegue(col2, Role.ROLE_UTILISATEUR)));
+        this.collegueRepo.save(col2);
 
-		Collegue col9 = new Collegue();
-		col9.setNom("TestAnnonce");
-		col9.setPrenom("VED");
-		col9.setEmail("usertest@dev.fr");
-		col9.setMotDePasse(passwordEncoder.encode("superpass"));
-		col9.setRoles(Arrays.asList(new RoleCollegue(col9, Role.ROLE_UTILISATEUR)));
-		this.collegueRepo.save(col9);
+        Collegue col3 = new Collegue();
+        col3.setNom("Dupont");
+        col3.setPrenom("Robert");
+        col3.setMatricule("C033000c");
+        col3.setEmail("robert.dupont@dev.fr");
+        col3.setPermis("6849-8934-1098");
+        col3.setTelephone("06.89.67.99.01");
+        col3.setMotDePasse(passwordEncoder.encode("superpass"));
+        col3.setRoles(Arrays.asList(new RoleCollegue(col3, Role.ROLE_CHAUFFEUR), new RoleCollegue(col3, Role.ROLE_UTILISATEUR)));
+        this.collegueRepo.save(col3);
 
-		Collegue col3 = new Collegue();
-		col3.setNom("Dupont");
-		col3.setPrenom("Robert");
-		col3.setEmail("robert.dupont@dev.fr");
-		col3.setMotDePasse(passwordEncoder.encode("superpass"));
-		col3.setRoles(Arrays.asList(new RoleCollegue(col3, Role.ROLE_CHAUFFEUR), new RoleCollegue(col3, Role.ROLE_UTILISATEUR)));
-		this.collegueRepo.save(col3);
+        Collegue col4 = new Collegue();
+        col4.setNom("Dupont");
+        col4.setPrenom("Martine");
+        col4.setMatricule("C044000d");
+        col4.setEmail("adchauvin44@gmail.com");
+        col4.setPermis("4580-9344-0986");
+        col4.setTelephone("06.70.05.98.00");
+        col4.setMotDePasse(passwordEncoder.encode("superpass"));
+        col4.setRoles(Arrays.asList(new RoleCollegue(col4, Role.ROLE_UTILISATEUR), new RoleCollegue(col4, Role.ROLE_CHAUFFEUR)));
+        this.collegueRepo.save(col4);
 
-		Collegue col4 = new Collegue();
-		col4.setNom("Dupont");
-		col4.setPrenom("Martine");
-		col4.setEmail("adchauvin44@gmail.com");
-		col4.setMotDePasse(passwordEncoder.encode("superpass"));
-		col4.setRoles(Arrays.asList(new RoleCollegue(col4, Role.ROLE_UTILISATEUR)));
-		this.collegueRepo.save(col4);
+        Collegue col5 = new Collegue();
+        col5.setNom("Bertrand");
+        col5.setPrenom("Martine");
+        col5.setMatricule("C055000e");
+        col5.setEmail("adrienchauvin@hotmail.fr");
+        col5.setMotDePasse(passwordEncoder.encode("superpass"));
+        col5.setRoles(Arrays.asList(new RoleCollegue(col5, Role.ROLE_UTILISATEUR)));
+        this.collegueRepo.save(col5);
 
-		Collegue col5 = new Collegue();
-		col5.setNom("Bertrand");
-		col5.setPrenom("Martine");
-		col5.setEmail("adrienchauvin@hotmail.fr");
-		col5.setMotDePasse(passwordEncoder.encode("superpass"));
-		col5.setRoles(Arrays.asList(new RoleCollegue(col5, Role.ROLE_UTILISATEUR)));
-		this.collegueRepo.save(col5);
+        Collegue col6 = new Collegue();
+        col6.setNom("Jean-Michel");
+        col6.setPrenom("FACILE");
+        col6.setMatricule("C066000f");
+        col6.setEmail("adrienchauvin44@gmail.com");
+        col6.setMotDePasse(passwordEncoder.encode("superpass"));
+        col6.setRoles(Arrays.asList(new RoleCollegue(col6, Role.ROLE_UTILISATEUR)));
+        this.collegueRepo.save(col6);
 
-		Collegue col6 = new Collegue();
-		col6.setNom("Jean-Michel");
-		col6.setPrenom("FACILE");
-		col6.setEmail("adrienchauvin44@gmail.com");
-		col6.setMotDePasse(passwordEncoder.encode("superpass"));
-		col6.setRoles(Arrays.asList(new RoleCollegue(col6, Role.ROLE_UTILISATEUR)));
-		this.collegueRepo.save(col6);
+        Collegue col7 = new Collegue();
+        col7.setNom("Chauffeur");
+        col7.setPrenom("Michel");
+        col7.setMatricule("C077000g");
+        col7.setEmail("michou@dev.fr");
+        col7.setMotDePasse(passwordEncoder.encode("s"));
+        col7.setRoles(Arrays.asList(new RoleCollegue(col7, Role.ROLE_UTILISATEUR), new RoleCollegue(col7, Role.ROLE_CHAUFFEUR)));
+        this.collegueRepo.save(col7);
 
-		// Création véhicule de société
-		Vehicule vehiculeSo = new Vehicule("AC-985-CA", "Peugeot", 2008, 3, true,
-		        "https://images.caradisiac.com/images/6/8/4/3/176843/S1-nouvelle-peugeot-208-prix-a-partir-de-15-500-eur-593600.jpg",
-		        Categorie.SUV, Dispo.Disponible);
-		this.vehiculeRepo.save(vehiculeSo);
+        Collegue col8 = new Collegue();
+        col8.setNom("Ratmayana");
+        col8.setPrenom("Widya");
+        col8.setMatricule("C088000h");
+        col8.setEmail("widya.ratmayana@gmail.id");
+        col8.setTelephone("06.47.55.66.99");
+        col8.setPermis("7894-5679-5657");
+        col8.setMotDePasse(passwordEncoder.encode("superpass"));
+        col8.setRoles(Arrays.asList(new RoleCollegue(col8, Role.ROLE_UTILISATEUR), new RoleCollegue(col8, Role.ROLE_CHAUFFEUR)));
+
+        Collegue col9 = new Collegue();
+        col9.setNom("TestAnnonce");
+        col9.setPrenom("VED");
+        col9.setMatricule("C099000i");
+        col9.setEmail("usertest@dev.fr");
+        col9.setMotDePasse(passwordEncoder.encode("superpass"));
+        col9.setRoles(Arrays.asList(new RoleCollegue(col9, Role.ROLE_UTILISATEUR)));
+        this.collegueRepo.save(col9);
+
+
+        // Création véhicule de société
+        Vehicule vehiculeSo = new Vehicule("AC-985-CA", "Peugeot", 2008, 3, true,
+                "https://images.caradisiac.com/images/6/8/4/3/176843/S1-nouvelle-peugeot-208-prix-a-partir-de-15-500-eur-593600.jpg",
+                Categorie.SUV, Dispo.Disponible);
+        this.vehiculeRepo.save(vehiculeSo);
 
 		Vehicule vehiculeSo2 = new Vehicule("VF-133-ZE", "Ford", 1999, 3, true,
 		        "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/2018_Ford_Focus_ST-Line_EcoBoost_1.0.jpg/800px-2018_Ford_Focus_ST-Line_EcoBoost_1.0.jpg",
@@ -152,8 +173,8 @@ public class StartupListener {
 
 		// Création véhicule particuluer
 
-		Vehicule vehicule2 = new Vehicule("AC-359-FD", "Peugeot", 2014, 3);
-		this.vehiculeRepo.save(vehicule2);
+        Vehicule vehicule2 = new Vehicule("AC-359-FD", "Peugeot", 2014, 3);
+        this.vehiculeRepo.save(vehicule2);
 
 		// Création des réservations
 		resaVehiculeRepo.save(new ResaVehicule(LocalDateTime.of(2019, 8, 26, 17, 30),
@@ -165,16 +186,14 @@ public class StartupListener {
 		resaVehiculeRepo.save(new ResaVehicule(LocalDateTime.of(2017, 01, 01, 11, 00),
 		        LocalDateTime.of(2017, 01, 11, 15, 00), col1, vehiculeSo3));
 
-		// Création d'un jeu de donnée pour une reservation
-		Collegue col7 = new Collegue();
-		col7.setNom("Chauffeur");
-		col7.setPrenom("Michel");
-		col7.setEmail("michou@dev.fr");
-		col7.setMotDePasse(passwordEncoder.encode("s"));
-		col7.setRoles(Arrays.asList(new RoleCollegue(col7, Role.ROLE_UTILISATEUR), new RoleCollegue(col7, Role.ROLE_CHAUFFEUR)));
-		this.collegueRepo.save(col7);
 
-		// Création d'un jeu de donnée pour une reservation
+        // Création d'un historique
+        resaVehiculeRepo.save(new ResaVehicule(LocalDateTime.of(2019, 8, 26, 17, 30),
+                LocalDateTime.of(2019, 8, 30, 12, 30), col3, vehiculeSo, col7, StatutResaChauffeur.ACCEPTEE));
+        resaVehiculeRepo.save(new ResaVehicule(LocalDateTime.of(2019, 8, 28, 11, 00),
+                LocalDateTime.of(2019, 8, 31, 12, 30), col3, vehiculeSo2));
+
+        // Création d'un jeu de donnée pour une reservation
 
 		Itineraire itineraire = new Itineraire("Montpellier", "Nantes", "7h", 825);
 		this.itineraireRepo.save(itineraire);
@@ -182,17 +201,17 @@ public class StartupListener {
 		Itineraire itineraire1 = new Itineraire("Nantes", "Montpellier", "7h", 825);
 		this.itineraireRepo.save(itineraire1);
 
-		Vehicule vehicule = new Vehicule("AB-344-CA", "Renault", 2008, 3);
-		this.vehiculeRepo.save(vehicule);
-		Itineraire itineraire2 = new Itineraire("Paris", "Nantes", "3h45", 385);
-		this.itineraireRepo.save(itineraire2);
+        Vehicule vehicule = new Vehicule("AB-344-CA", "Renault", 2008, 3);
+        this.vehiculeRepo.save(vehicule);
+        Itineraire itineraire2 = new Itineraire("Paris", "Nantes", "3h45", 385);
+        this.itineraireRepo.save(itineraire2);
 
 		// InfosVille
 //        InfosVille infosVille1 = new InfosVille("Nantes", -1.55, 47.2167);
 //        this.infosVilleRepo.save(infosVille1);
-//        
-//        InfosVille infosVille2 = new InfosVille("Bordeaux", -0.566667, 44.8333); 
-//        this.infosVilleRepo.save(infosVille2); 
+//
+//        InfosVille infosVille2 = new InfosVille("Bordeaux", -0.566667, 44.8333);
+//        this.infosVilleRepo.save(infosVille2);
 
 		// Annonces
 		AnnonceCovoit annonceCovoit = new AnnonceCovoit(col2, itineraire, vehicule,

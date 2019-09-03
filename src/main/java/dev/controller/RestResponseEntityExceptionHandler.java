@@ -1,19 +1,12 @@
 package dev.controller;
 
 
+import dev.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
-
-import dev.exception.AdresseNonTrouveeException;
-import dev.exception.AnnonceInvalidException;
-import dev.exception.AnnonceNonTrouveException;
-import dev.exception.CollegueNonTrouveException;
-import dev.exception.DateReservationVehiculeInvalide;
-import dev.exception.ReservationNonTrouveException;
-import dev.exception.VoyageCompletException;
 
 @ControllerAdvice
 public class RestResponseEntityExceptionHandler {
@@ -52,11 +45,19 @@ public class RestResponseEntityExceptionHandler {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getErreurs());
     }
-    
+
     @ExceptionHandler(value = { AdresseNonTrouveeException.class })
     protected ResponseEntity<Object> handleConflict(AdresseNonTrouveeException ex) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
+
+    @ExceptionHandler(value = { VehiculeInvalideException.class })
+    protected ResponseEntity<Object> handleConflict(VehiculeInvalideException ex) {
+        if (ex.getErreurs().isEmpty())
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getErreurs());
+    }
+
 }
 
 

@@ -78,7 +78,7 @@ public class AnnonceCovoitService {
 		if (infoCo.getNbPlaceDispo() > PLACE_MAXIMUM_DISPONIBLE || infoCo.getNbPlaceDispo() < PLACE_MINIMUM_DISPONIBLE) {
 			erreurs.put("nbPlaceDispo", "Le nombre de places doit être compris entre 1 et 20.");
 		}
-		
+
 		if (infoCo.getImmatriculation() != null) {
 			Pattern p = Pattern.compile("[A-Z]{2}-[0-9]{3}-[A-Z]{2}");
             Matcher m = p.matcher(infoCo.getImmatriculation().toUpperCase());
@@ -213,6 +213,14 @@ public class AnnonceCovoitService {
 
 		javaMailSender.send(message);
 
+	}
+
+	public List<AnnonceCovoit> getAnnoncesCovoitParLieuDepart(String lieuDepart){
+		return this.annonceCoRepo.getAnnonceCovoitsByItineraire_AdresseDepart(lieuDepart);
+	}
+
+	public List<AnnonceCovoit> getAnnoncesCovoitParLieuDepartAndLieuArrive(String lieuDepart,String lieuArrive){
+		return this.annonceCoRepo.getAnnonceCovoitsByItineraire_AdresseDepartAndItineraire_AdresseDest(lieuDepart,lieuArrive);
 	}
 
 	public Itineraire calculItineraire(String adresseDepart, String adresseDest) {

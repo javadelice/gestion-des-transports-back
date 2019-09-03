@@ -11,7 +11,7 @@ public interface AnnonceCovoitRepo extends JpaRepository<AnnonceCovoit, Integer>
 
 	List<AnnonceCovoit> getAllByDateTimeBetween (LocalDateTime start, LocalDateTime end);
 	AnnonceCovoit getAnnonceById (int id);
-
-
+	List<AnnonceCovoit> getAnnonceCovoitsByItineraire_AdresseDepart(String addresseDepart);
+	List<AnnonceCovoit> getAnnonceCovoitsByItineraire_AdresseDepartAndItineraire_AdresseDest(String addresseDepart, String addresseArrive);
 }
 
